@@ -1,2 +1,6 @@
 /target/
 nb-configuration.xml
+# Ignore IntelliJ IDEA project files
+.idea/
+*.iml
+out/
