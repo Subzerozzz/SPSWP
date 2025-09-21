@@ -7,8 +7,11 @@ package com.fall25.sp.swp.quanly.dal.implement;
 import com.fall25.sp.swp.quanly.dal.DBContext;
 import com.fall25.sp.swp.quanly.dal.I_DAO;
 import com.fall25.sp.swp.quanly.entity.Account;
+import static java.sql.DriverManager.getConnection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
@@ -17,32 +20,25 @@ import java.util.ArrayList;
  *
  * @author Dell
  */
-public class AccountDAO extends DBContext implements I_DAO<Account>{
+public class AccountDAO extends DBContext implements I_DAO<Account> {
 
     @Override
     public List<Account> findAll() {
-        List<Account> accounts = new ArrayList<>();
-        String sql = "SELECT * FROM account";
+        List<Account> account = new ArrayList<>();
         try {
             connection = getConnection();
+            String sql = "SELECT * FROM Account";
             statement = connection.prepareStatement(sql);
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                Account acc = getFromResultSet(resultSet);
-                accounts.add(acc);
+                account.add(getFromResultSet(resultSet));
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         } finally {
-            try {
-                if (resultSet != null) resultSet.close();
-                if (statement != null) statement.close();
-                if (connection != null) connection.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            closeResources();
         }
-        return accounts;
+        return account;
     }
 
 
@@ -88,7 +84,6 @@ public class AccountDAO extends DBContext implements I_DAO<Account>{
 
     @Override
     public Account findById(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     public static void main(String[] args) {
@@ -99,4 +94,8 @@ public class AccountDAO extends DBContext implements I_DAO<Account>{
         }
     }
     
-}
+    public static void main(String[] args) {
+        for(Account a : new AccountDAO().findAll()){
+            System.out.println(a.toString());
+        }
+    }
