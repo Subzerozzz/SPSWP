@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.Date;
+
 @ToString
 @Builder
 @Data
@@ -23,4 +25,15 @@ public class Account {
 
     private Integer id;
     private String email;
+    private String password;
+    private String fullname;
+    private String role;
+    private String phone ;
+    private String gender;
+    private Date bod;
+    private Date created_at;
+    private Date updated_at;
+    private String status;
+    private String address;
+    private String student_id;
 }
