@@ -144,6 +144,21 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
     return generatedId;
   }
 
+  public boolean updatePassword(int id, String newPassword) {
+    boolean result = false;
+    try {
+      connection = getConnection();
+      String sql = "UPDATE account SET password=? WHERE id=?";
+      statement = connection.prepareStatement(sql);
+      statement.setString(1, newPassword);
+      statement.setInt(2, id);
+      result = statement.executeUpdate() > 0;
+    }catch (Exception ex){
+      ex.printStackTrace();
+    }
+    return result;
+  }
+
   @Override
   public Account findById(Integer id) {
     Account account = null;
@@ -152,6 +167,25 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
       String sql = "SELECT * FROM account WHERE id=?";
       statement = connection.prepareStatement(sql);
       statement.setInt(1, id);
+      resultSet = statement.executeQuery();
+      if (resultSet.next()) {
+        account = getFromResultSet(resultSet);
+      }
+    } catch (SQLException ex) {
+      ex.printStackTrace();
+    } finally {
+      closeResources();
+    }
+    return account;
+  }
+
+  public Account findByEmail(String email) {
+    Account account = null;
+    try {
+      connection = getConnection();
+      String sql = "SELECT * FROM account WHERE email=?";
+      statement = connection.prepareStatement(sql);
+      statement.setString(1, email);
       resultSet = statement.executeQuery();
       if (resultSet.next()) {
         account = getFromResultSet(resultSet);
