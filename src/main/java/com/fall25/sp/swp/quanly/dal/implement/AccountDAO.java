@@ -90,6 +90,21 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
     return result;
   }
 
+  public boolean updatePassword(int id , String password) {
+    boolean result = false;
+    try {
+      connection = getConnection();
+      String sql = "UPDATE account SET password=? WHERE id=?";
+      statement = connection.prepareStatement(sql);
+      statement.setString(1, password);
+      statement.setInt(2, id);
+      result = statement.executeUpdate() > 0;
+    } catch (Exception e) {
+        throw new RuntimeException(e);
+    }
+    return result;
+  }
+
   @Override
   public boolean delete(Account t) {
     boolean result = false;
@@ -164,6 +179,25 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
     return account;
   }
 
+  public Account findByEmail(String email) {
+    Account account = null;
+    try {
+      connection = getConnection();
+      String sql = "SELECT * FROM account WHERE email=?";
+      statement = connection.prepareStatement(sql);
+      statement.setString(1, email);
+      resultSet = statement.executeQuery();
+      if (resultSet.next()) {
+        account = getFromResultSet(resultSet);
+      }
+    } catch (SQLException ex) {
+      ex.printStackTrace();
+    } finally {
+      closeResources();
+    }
+    return account;
+  }
+
   @Override
   public Account getFromResultSet(ResultSet rs) throws SQLException {
     Account account = new Account();
@@ -185,9 +219,6 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
 
   public static void main(String[] args) {
     AccountDAO dao = new AccountDAO();
-    List<Account> list = dao.findAll();
-    for (Account account : list) {
-      System.out.println(account.toString());
-    }
+    dao.updatePassword(1,"12345");
   }
 }
