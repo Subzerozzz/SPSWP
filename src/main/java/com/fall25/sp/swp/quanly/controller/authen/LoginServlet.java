@@ -1,5 +1,6 @@
 package com.fall25.sp.swp.quanly.controller.authen;
 
+import com.fall25.sp.swp.quanly.config.GlobalConfig;
 import com.fall25.sp.swp.quanly.dal.implement.AccountDAO;
 import com.fall25.sp.swp.quanly.entity.Account;
 import jakarta.servlet.ServletException;
@@ -30,13 +31,15 @@ public class LoginServlet extends HttpServlet {
         AccountDAO accountDAO = new AccountDAO();
         List<Account> listAc = accountDAO.findAll();
         for (Account ac : listAc) {
-            if (verifyPassword(password,ac.getPassword()) && ac.getEmail().equals(username)) {
-                System.out.println("genPass : "+ hashPassword(password));
+            if (verifyPassword(password, ac.getPassword()) && ac.getEmail().equals(username)) {
+                System.out.println("genPass : " + hashPassword(password));
                 System.out.println("Dang nhap thanh cong");
                 HttpSession session = request.getSession();
                 session.setAttribute("userName", ac.getEmail());
                 session.setAttribute("userId", ac.getId());
                 session.setAttribute("fullName", ac.getFullname());
+                //set account lên session => sau nay bấm view account không cần truy vấn lại
+                session.setAttribute(GlobalConfig.SESSION_ACCOUNT, ac);
                 request.getRequestDispatcher("view/guest/homePage.jsp").forward(request, response);
                 return;
             }
@@ -60,8 +63,8 @@ public class LoginServlet extends HttpServlet {
             byte[] hash = skf.generateSecret(spec).getEncoded();
 
             // Lưu salt và hash
-            return Base64.getEncoder().encodeToString(salt) + "$" +
-                    Base64.getEncoder().encodeToString(hash);
+            return Base64.getEncoder().encodeToString(salt) + "$"
+                    + Base64.getEncoder().encodeToString(hash);
         } catch (Exception e) {
             throw new RuntimeException("Lỗi mã hoá mật khẩu", e);
         }
