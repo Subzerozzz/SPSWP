@@ -101,6 +101,8 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
       result = statement.executeUpdate() > 0;
     } catch (Exception e) {
         throw new RuntimeException(e);
+    }finally {
+      closeResources();
     }
     return result;
   }
@@ -150,28 +152,34 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         if (rs.next()) {
           generatedId = rs.getInt(1);
         }
-        return account;
+      }
+    } catch (SQLException ex) {
+      ex.printStackTrace();
+    } finally {
+      closeResources();
     }
+    return generatedId;
+  }
 
-    @Override
-    public Map<Integer, Account> findAllMap() {
-        Map<Integer, Account> accountMap = new HashMap<>();
-        try {
-            connection = getConnection();
-            String sql = "SELECT * FROM account";
-            statement = connection.prepareStatement(sql);
-            resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                Account account = getFromResultSet(resultSet);
-                accountMap.put(account.getId(), account);
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        } finally {
-            closeResources();
-        }
-        return accountMap;
+  @Override
+  public Account findById(Integer id) {
+    Account account = null;
+    try {
+      connection = getConnection();
+      String sql = "SELECT * FROM account WHERE id=?";
+      statement = connection.prepareStatement(sql);
+      statement.setInt(1, id);
+      resultSet = statement.executeQuery();
+      if (resultSet.next()) {
+        account = getFromResultSet(resultSet);
+      }
+    } catch (SQLException ex) {
+      ex.printStackTrace();
+    } finally {
+      closeResources();
     }
+    return account;
+  }
 
   public Account findByEmail(String email) {
     Account account = null;
