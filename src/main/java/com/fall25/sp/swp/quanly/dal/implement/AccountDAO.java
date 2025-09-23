@@ -220,7 +220,8 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
   }
 
   public static void main(String[] args) {
-    AccountDAO dao = new AccountDAO();
-    dao.updatePassword(1,"12345");
+    for(Account a : new AccountDAO().findAll()){
+        System.out.println(a.toString());
+    }
   }
 }

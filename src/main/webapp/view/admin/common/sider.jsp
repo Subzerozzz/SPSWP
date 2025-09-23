@@ -24,10 +24,10 @@
                 <a href="${pageContext.request.contextPath}/account" class="nav-link"><i class="flaticon-dashboard"></i><span>My Account</span></a>
             </li>
             <li class="nav-item sidebar-nav-item">
-              <a href="#" class="nav-link"><i class="flaticon-classmates"></i><span>Change Password</span></a>              
+              <a href="${pageContext.request.contextPath}/manager-account?action=list-account" class="nav-link"><i class="flaticon-classmates"></i><span>Change Password</span></a>              
             </li>
             <li class="nav-item sidebar-nav-item">
-              <a href="#" class="nav-link"><i class="flaticon-multiple-users-silhouette"></i><span>View Accounts</span></a>             
+              <a href="${pageContext.request.contextPath}/manager-account?action=list-account" class="nav-link"><i class="flaticon-multiple-users-silhouette"></i><span>View Accounts</span></a>             
             </li>
 <!--            <li class="nav-item sidebar-nav-item">
               <a href="#" class="nav-link"><i class="flaticon-couple"></i><span>Parents</span></a>
