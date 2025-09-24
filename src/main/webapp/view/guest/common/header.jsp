@@ -10,26 +10,29 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
+        <!--Link icon-->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"/>
     </head>
     <style>
         .dropdown {
             position: relative;
             display: inline-block;
+            height: 50px;
+            padding-top: 15px
         }
 
         .dropdown-menu {
             display: none;
             position: absolute;
-            top: 100%;
             width: 100%;
-            left: -15px;
-            background: #682727;
-            border: 1px solid #292222;
+            top:40px;
+            right: 30px;
+            background: white;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             z-index: 999;
-
         }
+        
 
         .dropdown-menu a {
             display: block;
@@ -37,10 +40,14 @@
             padding: 10px 15px;
             color: #000000;
             text-decoration: none;
+            color: black
         }
 
         .dropdown-menu a:hover {
-            background: #201717;
+            background: #F77204;
+            width: 100%;
+            color: white;
+            font-weight: 600;
         }
 
         .dropdown:hover .dropdown-menu {
@@ -174,19 +181,19 @@
                     <!-- Nếu chưa đăng nhập thì hiển thị -->
                     <a class="btn--primary eg-btn"
                        href="${pageContext.request.contextPath}/view/guest/authen/login.jsp"
-                       style="${empty sessionScope.account ? '' : 'display:none;'}">
+                       style="${empty sessionScope.account ? '' : 'display:none'}">
                         Đăng nhập
                     </a>
 
                     <!-- Nếu đã đăng nhập thì hiển thị -->
-                    <div class="dropdown"
-                         style="${not empty sessionScope.account ? '' : 'display:none;'}">
-                        <a class="btn--primary eg-btn dropdown-toggle" href="#">
-                            ${sessionScope.account.fullname}
-                        </a>
-                        <div class="dropdown-menu">
-                            <a href="${pageContext.request.contextPath}/view/user/profile.jsp">Hồ sơ</a>
-                            <a href="${pageContext.request.contextPath}/logout">Đăng xuất</a>
+                    <div class="dropdown" style="${not empty sessionScope.account ? '' : 'display:none;'}">
+                        <div style="width: 80px">
+                            <i class="fa-regular fa-user" style="font-size: 20px;"></i>
+                        </div>
+                        
+                       <div class="dropdown-menu">
+                            <a style="color: black" href="${pageContext.request.contextPath}/account">Hồ sơ</a>
+                            <a style="color: black" href="${pageContext.request.contextPath}/logout">Đăng xuất</a>
                         </div>
                     </div>
                 </div>
@@ -196,5 +203,23 @@
                 </div>
             </div>
         </header>
+                        
+        <script>
+            const dropdown = document.getElementById("userDropdown");
+            let hideTimeout;
+
+            dropdown.addEventListener("mouseenter", () => {
+              clearTimeout(hideTimeout);
+              dropdown.classList.add("show");
+            });
+
+            dropdown.addEventListener("mouseleave", () => {
+              hideTimeout = setTimeout(() => {
+                dropdown.classList.remove("show");
+              }, 3000); // 3 giây
+            });
+        </script>
     </body>
+    
+    
 </html>
