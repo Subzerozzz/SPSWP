@@ -138,35 +138,12 @@
 <div class="container" id="container">
   <div class="form-container">
 
-<<<<<<< HEAD
     <!-- Form Đăng Nhập -->
     <div class="login-container">
       <h2>Đăng Nhập</h2>
       <form id="loginForm" method="post" action="${pageContext.request.contextPath}/login">
         <div class="input-group">
           <input type="text" placeholder="Tên đăng nhập hoặc Email" name="username" required>
-=======
-        <!-- Form Đăng Nhập -->
-        <div class="login-container">
-            <h2>Đăng Nhập</h2>
-            <form id="loginForm" method="post" action="${pageContext.request.contextPath}/login">
-                <div class="input-group">
-                    <input type="text" placeholder="Email" name="username" required>
-                </div>
-                <div class="input-group">
-                    <input type="password" placeholder="Mật khẩu" name="password" required>
-                </div>
-                <div class="remember-forgot">
-                    <a href="${pageContext.request.contextPath}/view/authen/forgotPassword.jsp">Quên mật khẩu?</a>
-                </div>
-                <button type="submit" class="btn">Đăng Nhập</button>
-            </form>
-
-            <!-- Hiển thị lỗi -->
-            <div class="social-login" style="margin-top:20px; color: red">
-                ${error}
-            </div>
->>>>>>> origin/main
         </div>
         <div class="input-group">
           <input type="password" placeholder="Mật khẩu" name="password" required>
