@@ -142,7 +142,7 @@
             <h2>Đăng Nhập</h2>
             <form id="loginForm" method="post" action="${pageContext.request.contextPath}/login">
                 <div class="input-group">
-                    <input type="text" placeholder="Tên đăng nhập hoặc Email" name="username" required>
+                    <input type="text" placeholder="Email" name="username" required>
                 </div>
                 <div class="input-group">
                     <input type="password" placeholder="Mật khẩu" name="password" required>

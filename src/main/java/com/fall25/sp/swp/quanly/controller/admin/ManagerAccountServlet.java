@@ -15,8 +15,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.security.SecureRandom;
 import java.sql.Date;
+import java.util.Base64;
 import java.util.List;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 
 /**
  *
@@ -25,12 +29,17 @@ import java.util.List;
 @WebServlet(name = "ManagerAccountServlet", urlPatterns = {"/manager-account"})
 public class ManagerAccountServlet extends HttpServlet {
     
+    private static final int ITERATIONS = 65536;
+    private static final int KEY_LENGTH = 256;
+    private static final int SALT_LENGTH = 16;
+
+
     AccountDAO accountDAO = new AccountDAO();
-    
+
     public static final String URL_LIST_ACCOUNT = "view/admin/admin/list-account.jsp";
     public static final String URL_ACCOUNT = "view/admin/admin/account.jsp";
     public static final String URL_ADD_ACCOUNT = "view/admin/admin/add-account.jsp";
-    
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -49,7 +58,7 @@ public class ManagerAccountServlet extends HttpServlet {
                 throw new AssertionError();
         }
     }
-    
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -68,7 +77,7 @@ public class ManagerAccountServlet extends HttpServlet {
                 throw new AssertionError();
         }
     }
-    
+
     private void viewListAccount(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // gọi tới hàm findAll() của AccountDAO
@@ -77,7 +86,7 @@ public class ManagerAccountServlet extends HttpServlet {
         request.setAttribute("listAccount", listAccount);
         request.getRequestDispatcher(URL_LIST_ACCOUNT).forward(request, response);
     }
-    
+
     private void viewAccoutDetail(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Integer id = Integer.parseInt(request.getParameter("id"));
@@ -88,7 +97,7 @@ public class ManagerAccountServlet extends HttpServlet {
         request.setAttribute("typeOfAction", "view");
         request.getRequestDispatcher(URL_ACCOUNT).forward(request, response);
     }
-    
+
     private void updateAccount(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Integer id = Integer.parseInt(request.getParameter("id"));
@@ -99,7 +108,7 @@ public class ManagerAccountServlet extends HttpServlet {
         request.setAttribute("typeOfAction", "update");
         request.getRequestDispatcher(URL_ACCOUNT).forward(request, response);
     }
-    
+
     private void updateAccountDoPost(HttpServletRequest request, HttpServletResponse response) {
         try {
             // Lấy các trường dữ liệu từ form
@@ -108,7 +117,7 @@ public class ManagerAccountServlet extends HttpServlet {
             // Lấy thông tin tài khoản hiện tại từ database để giữ nguyên các trường
             // readonly
             Account currentAccount = accountDAO.findById(id);
-            
+
             if (currentAccount != null) {
                 // Lấy các trường có thể chỉnh sửa từ form
                 String role = request.getParameter("role");
@@ -149,7 +158,7 @@ public class ManagerAccountServlet extends HttpServlet {
             }
         }
     }
-    
+
     private void deleteAccountDoPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             HttpSession session = request.getSession();
@@ -173,7 +182,7 @@ public class ManagerAccountServlet extends HttpServlet {
             System.out.println(e.getMessage());
         }
     }
-    
+
     private void addAccountDoPost(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
         try {
@@ -184,7 +193,7 @@ public class ManagerAccountServlet extends HttpServlet {
             String gender = request.getParameter("gender");
             String dobString = request.getParameter("dob");
             String role = request.getParameter("role");
-            String club = request.getParameter("club"); 
+            String club = request.getParameter("club");
             String student_id = request.getParameter("student_id");
             String address = request.getParameter("address");
             String phone = request.getParameter("phone");
@@ -222,7 +231,7 @@ public class ManagerAccountServlet extends HttpServlet {
             // Tạo đối tượng Account mới
             Account newAccount = new Account();
             newAccount.setFullname(fullname);
-            newAccount.setPassword(password);
+            newAccount.setPassword(hashPassword(password));
             newAccount.setEmail(email);
             newAccount.setGender(gender);
             newAccount.setBod(dob);
@@ -239,7 +248,7 @@ public class ManagerAccountServlet extends HttpServlet {
 
             // Thực hiện thêm tài khoản vào database
             boolean result = accountDAO.insert(newAccount) != -1 ? true : false;
-            
+
             if (result) {
                 // Chuyển hướng về trang danh sách tài khoản nếu thêm thành công
                 List<Account> listAccount = accountDAO.findAll();
@@ -263,6 +272,23 @@ public class ManagerAccountServlet extends HttpServlet {
             } catch (ServletException | IOException ex) {
                 ex.printStackTrace();
             }
+        }
+    }
+    
+    public static String hashPassword(String password) {
+        try {
+            byte[] salt = new byte[SALT_LENGTH];
+            new SecureRandom().nextBytes(salt);
+
+            PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt, ITERATIONS, KEY_LENGTH);
+            SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+            byte[] hash = skf.generateSecret(spec).getEncoded();
+
+            // Lưu salt và hash
+            return Base64.getEncoder().encodeToString(salt) + "$"
+                    + Base64.getEncoder().encodeToString(hash);
+        } catch (Exception e) {
+            throw new RuntimeException("Lỗi mã hoá mật khẩu", e);
         }
     }
 }
