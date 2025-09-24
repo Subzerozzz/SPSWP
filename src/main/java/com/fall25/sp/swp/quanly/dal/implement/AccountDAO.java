@@ -4,18 +4,16 @@
  */
 package com.fall25.sp.swp.quanly.dal.implement;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.fall25.sp.swp.quanly.dal.DBContext;
 import com.fall25.sp.swp.quanly.dal.I_DAO;
 import com.fall25.sp.swp.quanly.entity.Account;
-import static java.sql.DriverManager.getConnection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  *
@@ -161,6 +159,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
     return generatedId;
   }
 
+ 
   @Override
   public Account findById(Integer id) {
     Account account = null;

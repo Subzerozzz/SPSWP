@@ -8,8 +8,13 @@
             30
         </session-timeout>
     </session-config>
+<<<<<<< HEAD
+    <welcome-file-list>
+        <welcome-file>view/guest/homePage.jsp</welcome-file>
+=======
     
     <welcome-file-list>
         <welcome-file>home</welcome-file>
+>>>>>>> origin/main
     </welcome-file-list>
 </web-app>

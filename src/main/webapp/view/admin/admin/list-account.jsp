@@ -19,7 +19,7 @@
         <!-- Normalize CSS -->
         <link rel="stylesheet" href="${pageContext.request.contextPath}/admin//css/normalize.css">
         <!-- Main CSS -->
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/admin/css/main.css" <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/admin/css/main.css"> <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="${pageContext.request.contextPath}/admin/css/bootstrap.min.css">
         <!-- Fontawesome CSS -->
         <link rel="stylesheet" href="${pageContext.request.contextPath}/admin/css/all.min.css">
