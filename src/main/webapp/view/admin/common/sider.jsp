@@ -1,41 +1,54 @@
-<%-- 
-    Document   : sider
-    Created on : Sep 22, 2025, 10:05:16 AM
-    Author     : Dell
---%>
+<%-- Document : sider Created on : Sep 22, 2025, 10:05:16 AM Author : Dell --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-    <head>
+  <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+    <%@page contentType="text/html" pageEncoding="UTF-8" %>
+      <!DOCTYPE html>
+      <html>
+
+      <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
-    </head>
-    <body>
+      </head>
+
+      <body>
         <div class="sidebar-main sidebar-menu-one sidebar-expand-md sidebar-color">
-        <div class="mobile-sidebar-header d-md-none">
-          <div class="header-logo">
-            <a href="index.html"><img src="${pageContext.request.contextPath}/admin/img/logo1.png" alt="logo"></a>
+          <div class="mobile-sidebar-header d-md-none">
+            <div class="header-logo">
+              <a href="index.html"><img src="${pageContext.request.contextPath}/admin/img/logo1.png" alt="logo"></a>
+            </div>
           </div>
-        </div>
-        <div class="sidebar-menu-content">
-          <ul class="nav nav-sidebar-menu sidebar-toggle-view">
-            <li class="nav-item sidebar-nav-item">
-                <a href="${pageContext.request.contextPath}/account" class="nav-link"><i class="flaticon-dashboard"></i><span>My Account</span></a>
-            </li>
-            <li class="nav-item sidebar-nav-item">
-              <a href="${pageContext.request.contextPath}/manager-account?action=list-account" class="nav-link"><i class="flaticon-classmates"></i><span>Change Password</span></a>              
-            </li>
-            <li class="nav-item sidebar-nav-item">
-              <a href="${pageContext.request.contextPath}/manager-account?action=list-account" class="nav-link"><i class="flaticon-multiple-users-silhouette"></i><span>View Accounts</span></a>             
-            </li>
-            <li class="nav-item sidebar-nav-item">
-              <a href="${pageContext.request.contextPath}/view/admin/admin/add-account.jsp" class="nav-link"><i class="flaticon-technological"></i><span>Add Account</span></a>
-            </li>
-            <li class="nav-item sidebar-nav-item">
-                <a href="${pageContext.request.contextPath}/view/admin/manager/list-club.jsp" class="nav-link"><i class="flaticon-technological"></i><span>View All Club</span></a>
-            </li>
-<!--            <li class="nav-item sidebar-nav-item">
+          <div class="sidebar-menu-content">
+            <ul class="nav nav-sidebar-menu sidebar-toggle-view">
+              <li class="nav-item sidebar-nav-item">
+                <a href="${pageContext.request.contextPath}/account" class="nav-link"><i
+                    class="flaticon-dashboard"></i><span>My Account</span></a>
+              </li>
+              <li class="nav-item sidebar-nav-item">
+                <a href="${pageContext.request.contextPath}/change-password" class="nav-link"><i
+                    class="flaticon-classmates"></i><span>Change Password</span></a>
+              </li>
+
+              <c:choose>
+                <c:when test="${sessionScope.account.role == 'admin'}">
+                  <li class="nav-item sidebar-nav-item">
+                    <a href="${pageContext.request.contextPath}/manager-account?action=list-account" class="nav-link"><i
+                        class="flaticon-multiple-users-silhouette"></i><span>View Accounts</span></a>
+                  </li>
+                  <li class="nav-item sidebar-nav-item">
+                    <a href="${pageContext.request.contextPath}/view/admin/admin/add-account.jsp" class="nav-link"><i
+                        class="flaticon-technological"></i><span>Add Account</span></a>
+                  </li>
+                </c:when>
+                <c:when test="${sessionScope.account.role == 'manager'}">
+                  <li class="nav-item sidebar-nav-item">
+                    <a href="${pageContext.request.contextPath}/view/admin/manager/list-club.jsp" class="nav-link"><i
+                        class="flaticon-technological"></i><span>View All Club</span></a>
+                  </li>
+                </c:when>
+              </c:choose>
+
+
+              <!--            <li class="nav-item sidebar-nav-item">
               <a href="#" class="nav-link"><i class="flaticon-books"></i><span>Library</span></a>
               <ul class="nav sub-group-menu">
                 <li class="nav-item">
@@ -146,8 +159,9 @@
             <li class="nav-item">
               <a href="account-settings.html" class="nav-link"><i class="flaticon-settings"></i><span>Account</span></a>
             </li>-->
-          </ul>
+            </ul>
+          </div>
         </div>
-      </div>
-    </body>
-</html>
+      </body>
+
+      </html>

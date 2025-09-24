@@ -61,7 +61,7 @@
                             <div class="item-content">
                                 <!--Header Infomation-->
                                 <div class="header-inline item-header">
-                                    <h3 class="text-dark-medium font-medium">Steven Johnson</h3>
+                                    <h3 class="text-dark-medium font-medium">${sessionScope.account.fullname}</h3>
                                 </div>
                                 <!--Header Information--> 
                                 
@@ -71,35 +71,35 @@
                                         <tbody>
                                             <tr>
                                                 <td>Họ và tên:</td>
-                                                <td class="font-medium text-dark-medium">Steven Johnson</td>
+                                                <td class="font-medium text-dark-medium">${sessionScope.account.fullname}</td>
                                             </tr>
                                             <tr>
                                                 <td>Giới tính:</td>
-                                                <td class="font-medium text-dark-medium">Male</td>
+                                                <td class="font-medium text-dark-medium">${sessionScope.account.gender == 'male' ? "Nam" : "Nữ"}</td>
                                             </tr>
                                             <tr>
                                                 <td>Chức vụ:</td>
-                                                <td class="font-medium text-dark-medium">Steve Jones</td>
+                                                <td class="font-medium text-dark-medium">${sessionScope.account.role}</td>
                                             </tr>
                                             <tr>
                                                 <td>Email:</td>
-                                                <td class="font-medium text-dark-medium">Naomi Rose</td>
+                                                <td class="font-medium text-dark-medium">${sessionScope.account.email}</td>
                                             </tr>
                                             <tr>
                                                 <td>Ngày sinh:</td>
-                                                <td class="font-medium text-dark-medium">Islam</td>
+                                                <td class="font-medium text-dark-medium">${sessionScope.account.bod}</td>
                                             </tr>
                                             <tr>
                                                 <td>Địa chỉ:</td>
-                                                <td class="font-medium text-dark-medium">07.08.2016</td>
+                                                <td class="font-medium text-dark-medium">${sessionScope.account.address}</td>
                                             </tr>
                                             <tr>
-                                                <td>E-mail:</td>
-                                                <td class="font-medium text-dark-medium">stevenjohnson@gmail.com</td>
+                                                <td>Mã số sinh viên:</td>
+                                                <td class="font-medium text-dark-medium">${sessionScope.account.student_id}</td>
                                             </tr>
                                             <tr>
                                                 <td>Trạng thái:</td>
-                                                <td class="font-medium text-dark-medium">2</td>
+                                                <td class="font-medium text-dark-medium">${sessionScope.account.status}</td>
                                             </tr>
                                             <tr>
                                                 <td>Thuộc CLB:</td>
@@ -107,7 +107,7 @@
                                             </tr>
                                             <tr>
                                                 <td>Phone:</td>
-                                                <td class="font-medium text-dark-medium">+ 88 98568888418</td>
+                                                <td class="font-medium text-dark-medium">${sessionScope.account.phone}</td>
                                             </tr>
                                         </tbody>
                                     </table>

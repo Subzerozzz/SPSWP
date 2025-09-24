@@ -236,7 +236,6 @@
                 session.removeAttribute("message");
             %>
         </c:if>
-      
       <!--Thông báo add success--> 
       <c:if test="${addSuccess == true}">
             <script>

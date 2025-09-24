@@ -42,12 +42,8 @@
         <ul class="navbar-nav">
           <li class="navbar-item header-search-bar">
             <div class="input-group stylish-input-group">
-              <span class="input-group-addon">
-                <button type="submit">
-                  <span class="flaticon-search" aria-hidden="true"></span>
-                </button>
-              </span>
-              <input type="text" class="form-control" placeholder="Find Something . . .">
+              
+              <input type="hidden" class="form-control" placeholder="Find Something . . .">
             </div>
           </li>
         </ul>
@@ -56,8 +52,8 @@
             <a class="navbar-nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"
               aria-expanded="false">
               <div class="admin-title">
-                <h5 class="item-title">Stevne Zone</h5>
-                <span>Admin</span>
+                  <h5 class="item-title">${sessionScope.account.fullname}</h5>
+                <span>${sessionScope.account.role}</span>
               </div>
               <div class="admin-img">
                 <img src="${pageContext.request.contextPath}/admin/img/figure/admin.jpg" alt="Admin">
@@ -65,16 +61,11 @@
             </a>
             <div class="dropdown-menu dropdown-menu-right">
               <div class="item-header">
-                <h6 class="item-title">Steven Zone</h6>
+                <h6 class="item-title">${sessionScope.account.fullname}</h6>
               </div>
               <div class="item-content">
                 <ul class="settings-list">
-<!--                  <li><a href="#"><i class="flaticon-user"></i>My Profile</a></li>
-                  <li><a href="#"><i class="flaticon-list"></i>Task</a></li>
-                  <li><a href="#"><i class="flaticon-chat-comment-oval-speech-bubble-with-text-lines"></i>Message</a>
-                  </li>
-                  <li><a href="#"><i class="flaticon-gear-loading"></i>Account Settings</a></li>-->
-                  <li><a href="login.html"><i class="flaticon-turn-off"></i>Log Out</a></li>
+                  <li><a href="${pageContext.request.contextPath}/logout"><i class="flaticon-turn-off"></i>Log Out</a></li>
                 </ul>
               </div>
             </div>
