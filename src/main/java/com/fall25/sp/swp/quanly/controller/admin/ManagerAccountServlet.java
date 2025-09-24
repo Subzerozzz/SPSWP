@@ -15,8 +15,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.security.SecureRandom;
 import java.sql.Date;
+import java.util.Base64;
 import java.util.List;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 
 /**
  *
@@ -24,11 +28,17 @@ import java.util.List;
  */
 @WebServlet(name = "ManagerAccountServlet", urlPatterns = {"/manager-account"})
 public class ManagerAccountServlet extends HttpServlet {
+    
+    private static final int ITERATIONS = 65536;
+    private static final int KEY_LENGTH = 256;
+    private static final int SALT_LENGTH = 16;
+
 
     AccountDAO accountDAO = new AccountDAO();
 
     public static final String URL_LIST_ACCOUNT = "view/admin/admin/list-account.jsp";
     public static final String URL_ACCOUNT = "view/admin/admin/account.jsp";
+    public static final String URL_ADD_ACCOUNT = "view/admin/admin/add-account.jsp";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -59,6 +69,9 @@ public class ManagerAccountServlet extends HttpServlet {
                 break;
             case "account-delete":
                 deleteAccountDoPost(request, response);
+                break;
+            case "account-add":
+                addAccountDoPost(request, response);
                 break;
             default:
                 throw new AssertionError();
@@ -148,6 +161,7 @@ public class ManagerAccountServlet extends HttpServlet {
 
     private void deleteAccountDoPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
+            HttpSession session = request.getSession();
             // Lấy ID của tài khoản cần xóa từ request
             Integer id = Integer.parseInt(request.getParameter("id"));
 
@@ -159,12 +173,122 @@ public class ManagerAccountServlet extends HttpServlet {
             List<Account> listAccount = accountDAO.findAll();
 
             // Set kết quả lên session
-            request.setAttribute("isSucess", result);
-            request.setAttribute("listAccount", listAccount);
+            session.setAttribute("deleteSuccess", result);
+            session.setAttribute("message", "Đã xóa tài khoản thành công!");
+            session.setAttribute("listAccount", listAccount);
             // Chuyển hướng về trang danh sách tài khoản  
-            request.getRequestDispatcher(URL_LIST_ACCOUNT).forward(request, response);
+            response.sendRedirect(URL_LIST_ACCOUNT);
         } catch (Exception e) {
             System.out.println(e.getMessage());
+        }
+    }
+
+    private void addAccountDoPost(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession();
+        try {
+            // Lấy các trường dữ liệu từ form
+            String fullname = request.getParameter("fullname");
+            String password = request.getParameter("password");
+            String email = request.getParameter("email");
+            String gender = request.getParameter("gender");
+            String dobString = request.getParameter("dob");
+            String role = request.getParameter("role");
+            String club = request.getParameter("club");
+            String student_id = request.getParameter("student_id");
+            String address = request.getParameter("address");
+            String phone = request.getParameter("phone");
+
+            // Kiểm tra các trường bắt buộc
+            if (fullname == null || fullname.isEmpty()
+                    || password == null || password.isEmpty()
+                    || email == null || email.isEmpty()
+                    || gender == null || gender.isEmpty()
+                    || role == null || role.isEmpty()) {
+
+                // Chuyển hướng về trang thêm tài khoản với thông báo lỗi
+                session.setAttribute("error", true);
+                session.setAttribute("message", "Vui lòng điền đầy đủ thông tin bắt buộc");
+                request.getRequestDispatcher(URL_ADD_ACCOUNT).forward(request, response);
+                return;
+            }
+
+            // Chuyển đổi chuỗi ngày tháng thành đối tượng Date
+            java.sql.Date dob = null;
+            if (dobString != null && !dobString.isEmpty()) {
+                try {
+                    // Giả sử định dạng ngày là dd/mm/yyyy
+                    String[] dateParts = dobString.split("/");
+                    if (dateParts.length == 3) {
+                        String formattedDate = dateParts[2] + "-" + dateParts[1] + "-" + dateParts[0];
+                        dob = java.sql.Date.valueOf(formattedDate);
+                    }
+                } catch (Exception e) {
+                    // Xử lý lỗi chuyển đổi ngày tháng
+                    e.printStackTrace();
+                }
+            }
+
+            // Tạo đối tượng Account mới
+            Account newAccount = new Account();
+            newAccount.setFullname(fullname);
+            newAccount.setPassword(hashPassword(password));
+            newAccount.setEmail(email);
+            newAccount.setGender(gender);
+            newAccount.setBod(dob);
+            newAccount.setRole(role);
+            newAccount.setStudent_id(student_id);
+            newAccount.setAddress(address);
+            newAccount.setPhone(phone);
+            newAccount.setStatus("active"); // Mặc định trạng thái là active
+
+            // Thiết lập thời gian tạo và cập nhật
+            java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
+            newAccount.setCreated_at(currentDate);
+            newAccount.setUpdated_at(currentDate);
+
+            // Thực hiện thêm tài khoản vào database
+            boolean result = accountDAO.insert(newAccount) != -1 ? true : false;
+
+            if (result) {
+                // Chuyển hướng về trang danh sách tài khoản nếu thêm thành công
+                List<Account> listAccount = accountDAO.findAll();
+                session.setAttribute("listAccount", listAccount);
+                session.setAttribute("addSuccess", true);
+                session.setAttribute("message", "Thêm tài khoản thành công");
+                response.sendRedirect(URL_LIST_ACCOUNT);
+//                request.getRequestDispatcher(URL_LIST_ACCOUNT).forward(request, response);
+            } else {
+                // Chuyển hướng về trang thêm tài khoản nếu thêm thất bại
+                session.setAttribute("addSuccess", false);
+                session.setAttribute("message", "Thêm tài khoản thất bại");
+                request.getRequestDispatcher("view/admin/admin/add-account.jsp").forward(request, response);
+            }
+        } catch (Exception e) {
+            // Xử lý ngoại lệ
+            e.printStackTrace();
+            try {
+                request.setAttribute("error", "Đã xảy ra lỗi: " + e.getMessage());
+                request.getRequestDispatcher("view/admin/admin/add-account.jsp").forward(request, response);
+            } catch (ServletException | IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+    
+    public static String hashPassword(String password) {
+        try {
+            byte[] salt = new byte[SALT_LENGTH];
+            new SecureRandom().nextBytes(salt);
+
+            PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt, ITERATIONS, KEY_LENGTH);
+            SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+            byte[] hash = skf.generateSecret(spec).getEncoded();
+
+            // Lưu salt và hash
+            return Base64.getEncoder().encodeToString(salt) + "$"
+                    + Base64.getEncoder().encodeToString(hash);
+        } catch (Exception e) {
+            throw new RuntimeException("Lỗi mã hoá mật khẩu", e);
         }
     }
 }
