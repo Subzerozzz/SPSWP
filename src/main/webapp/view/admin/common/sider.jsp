@@ -29,23 +29,10 @@
             <li class="nav-item sidebar-nav-item">
               <a href="${pageContext.request.contextPath}/manager-account?action=list-account" class="nav-link"><i class="flaticon-multiple-users-silhouette"></i><span>View Accounts</span></a>             
             </li>
-<!--            <li class="nav-item sidebar-nav-item">
-              <a href="#" class="nav-link"><i class="flaticon-couple"></i><span>Parents</span></a>
-              <ul class="nav sub-group-menu">
-                <li class="nav-item">
-                  <a href="all-parents.html" class="nav-link"><i class="fas fa-angle-right"></i>All
-                    Parents</a>
-                </li>
-                <li class="nav-item">
-                  <a href="parents-details.html" class="nav-link"><i class="fas fa-angle-right"></i>Parents Details</a>
-                </li>
-                <li class="nav-item">
-                  <a href="add-parents.html" class="nav-link"><i class="fas fa-angle-right"></i>Add
-                    Parent</a>
-                </li>
-              </ul>
-            </li>
             <li class="nav-item sidebar-nav-item">
+              <a href="${pageContext.request.contextPath}/view/admin/admin/add-account.jsp" class="nav-link"><i class="flaticon-technological"></i><span>Add Account</span></a>
+            </li>
+<!--            <li class="nav-item sidebar-nav-item">
               <a href="#" class="nav-link"><i class="flaticon-books"></i><span>Library</span></a>
               <ul class="nav sub-group-menu">
                 <li class="nav-item">

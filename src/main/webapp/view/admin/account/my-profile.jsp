@@ -113,6 +113,116 @@
                                     </table>
                                 </div>
                                 <!--Infomation--> 
+                                
+                                <!--Button update--> 
+                                <button data-toggle="modal" data-target="#updateModal"
+                                    style="color: white; background-color: #009DDC ; border: none; padding: 5px 10px; border-radius: 10px; cursor: pointer">
+                                    Update Information
+                                </button>
+                                <!--Button update--> 
+                                
+                                <!-- Modal Update  -->
+                                    <div class="modal fade" id="updateModal" tabindex="-1" role="dialog"
+                                      aria-labelledby="updateModalLabel" aria-hidden="true">
+                                      <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                          <div class="modal-header">
+                                            <h5 class="modal-title" id="updateModalLabel">Cập nhật thông tin tài khoản</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                              <span aria-hidden="true">&times;</span>
+                                            </button>
+                                          </div>
+                                          <div class="modal-body">
+                                            <form action="${pageContext.request.contextPath}/manager-account?action=account-update"
+                                              method="post">
+                                              <input type="hidden" name="id" value="${account.id}">
+
+                                              <div class="row">
+                                                <div class="col-md-6 form-group">
+                                                  <label for="fullname">Họ và tên:</label>
+                                                  <input type="text" class="form-control" id="fullname" name="fullname"
+                                                    value="${account.fullname}" readonly>
+                                                </div>
+
+                                                <div class="col-md-6 form-group">
+                                                  <label for="email">Email:</label>
+                                                  <input type="email" class="form-control" id="email" name="email"
+                                                    value="${account.email}" readonly>
+                                                </div>
+                                              </div>
+
+                                              <div class="row">
+                                                <div class="col-md-6 form-group">
+                                                  <label for="phone">Số điện thoại:</label>
+                                                  <input type="text" class="form-control" id="phone" name="phone"
+                                                    value="${account.phone}" readonly>
+                                                </div>
+
+                                                <div class="col-md-6 form-group">
+                                                  <label for="gender">Giới tính:</label>
+                                                  <select class="form-control" id="gender" name="gender" disabled>
+                                                    <option value="male" ${account.gender=='male' ? 'selected' : '' }>Nam</option>
+                                                    <option value="female" ${account.gender=='female' ? 'selected' : '' }>Nữ</option>
+                                                  </select>
+                                                </div>
+                                              </div>
+
+                                              <div class="row">
+                                                <div class="col-md-6 form-group">
+                                                  <label for="bod">Ngày sinh:</label>
+                                                  <input type="date" class="form-control" id="bod" name="bod" value="${account.bod}"
+                                                    readonly>
+                                                </div>
+
+                                                <div class="col-md-6 form-group">
+                                                  <label for="role">Chức vụ:</label>
+                                                  <select class="form-control" id="role" name="role">
+                                                    <option value="Admin" ${account.role=='admin' ? 'selected' : '' }>Admin</option>
+                                                    <option value="Manager" ${account.role=='student' ? 'selected' : '' }>Mananger
+                                                    </option>
+                                                    <option value="President" ${account.role=='teacher' ? 'selected' : '' }>President
+                                                    </option>
+                                                    <option value="Head" ${account.role=='teacher' ? 'selected' : '' }>Head
+                                                    </option>
+                                                    <option value="Member" ${account.role=='teacher' ? 'selected' : '' }>Member
+                                                    </option>
+                                                  </select>
+                                                </div>
+                                              </div>
+
+                                              <div class="row">
+                                                <div class="col-md-6 form-group">
+                                                  <label for="student_id">Mã số sinh viên:</label>
+                                                  <input type="text" class="form-control" id="student_id" name="student_id"
+                                                    value="${account.student_id}" readonly>
+                                                </div>
+
+                                                <div class="col-md-6 form-group">
+                                                  <label for="status">Trạng thái:</label>
+                                                  <select class="form-control" id="status" name="status">
+                                                    <option value="active" ${account.status=='active' ? 'selected' : '' }>Active
+                                                    </option>
+                                                    <option value="banned" ${account.status=='banned' ? 'selected' : '' }>Banned
+                                                    </option>
+                                                  </select>
+                                                </div>
+                                              </div>
+
+                                              <div class="form-group">
+                                                <label for="address">Địa chỉ:</label>
+                                                <textarea class="form-control" id="address" name="address"
+                                                  rows="3">${account.address}</textarea>
+                                              </div>
+
+                                              <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                                                <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                                              </div>
+                                            </form>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
                             </div>
                         </div>
                     </div>

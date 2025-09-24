@@ -31,6 +31,10 @@
         <link rel="stylesheet" href="${pageContext.request.contextPath}/admin/css/jquery.dataTables.min.css">
         <!-- Custom CSS -->
         <link rel="stylesheet" href="${pageContext.request.contextPath}/admin/style.css">
+        
+        <!--IzizToast-->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
         <!-- Modernize js -->
         <script src="${pageContext.request.contextPath}/admin/js/modernizr-3.6.0.min.js"></script>
       </head>
@@ -206,13 +210,67 @@
 
       </body>
 
-
+      <!--Hiển thị modal delete-->
       <script>
         function confirmDelete(accountId) {
           document.getElementById('deleteAccountId').value = accountId;
           $('#deleteConfirmModal').modal('show');
         }
       </script>
+      
+      <!--Thông báo delete success--> 
+      <c:if test="${deleteSuccess == true}">
+            <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                    iziToast.success({
+                        title: "Thông báo",
+                        message: "${message}",
+                        position: 'topRight',
+                        timeout: 5000,
+                        backgroundColor:"#d4edda"
+                    });
+                });
+            </script>
+            <%
+                session.removeAttribute("deleteSuccess");
+                session.removeAttribute("message");
+            %>
+        </c:if>
+      
+      <!--Thông báo add success--> 
+      <c:if test="${addSuccess == true}">
+            <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                    iziToast.success({
+                        title: "Thông báo",
+                        message: "${message}",
+                        position: 'topRight',
+                        timeout: 5000,
+                    });
+                });
+            </script>
+            <%
+                session.removeAttribute("addSuccess");
+                session.removeAttribute("message");
+            %>
+        </c:if>
+      <!--Thông báo add failed-->       
+      <c:if test="${addSuccess == false}">
+            <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                    iziToast.error({
+                        title: "Thông báo",
+                        message: "${message}",
+                        position: 'topRight',
+                        timeout: 5000,
+                    });
+                });
+            </script>
+            <%
+                session.removeAttribute("addSuccess");
+                session.removeAttribute("message");
+            %>
+        </c:if>
 
       <!-- Mirrored from www.radiustheme.com/demo/html/psdboss/akkhor/akkhor/all-student.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 20 Sep 2025 14:36:13 GMT -->
 
