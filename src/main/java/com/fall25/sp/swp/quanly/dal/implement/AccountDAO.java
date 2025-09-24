@@ -219,8 +219,6 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
   }
 
   public static void main(String[] args) {
-    for(Account a : new AccountDAO().findAll()){
-        System.out.println(a.toString());
-    }
+      System.out.println(new AccountDAO().findByEmail("levana2@gmail.com"));
   }
 }

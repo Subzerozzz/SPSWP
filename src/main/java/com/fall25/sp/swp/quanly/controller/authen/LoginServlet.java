@@ -18,6 +18,7 @@ import java.util.List;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
+    AccountDAO dao = new AccountDAO();
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String username = req.getParameter("username");
@@ -28,7 +29,7 @@ public class LoginServlet extends HttpServlet {
             req.getRequestDispatcher("view/guest/authen/login.jsp").forward(req, resp);
         }
         else{
-            AccountDAO dao = new AccountDAO();
+            
             Account ac = dao.findByEmail(username);
             if(ac == null){
                 req.setAttribute("error","Tài khoản không tồn tại");
@@ -40,9 +41,7 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("userId", ac.getId());
                 session.setAttribute("fullName", ac.getFullname());
                 session.setAttribute("account",ac);
-                if(ac.getRole()==null||ac.getRole().equals("member")||ac.getRole().isEmpty()){
-                    req.getRequestDispatcher("view/guest/homePage.jsp").forward(req, resp);
-                }
+                req.getRequestDispatcher("view/guest/homePage.jsp").forward(req, resp);
                 
             }
             else {
