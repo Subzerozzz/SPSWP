@@ -11,6 +11,42 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
     </head>
+    <style>
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            width: 100%;
+            left: -15px;
+            background: #682727;
+            border: 1px solid #292222;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            z-index: 999;
+
+        }
+
+        .dropdown-menu a {
+            display: block;
+            width: 100%;
+            padding: 10px 15px;
+            color: #000000;
+            text-decoration: none;
+        }
+
+        .dropdown-menu a:hover {
+            background: #201717;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+    </style>
     <body>
         <header class="header-area style-1">
             <div class="main-menu">
@@ -135,8 +171,26 @@
                     </div>
                 </div>
                 <div class="header-btn">
-                    <a class="btn--primary eg-btn" href="${pageContext.request.contextPath}/view/guest/authen/login.jsp">Đăng nhập </a>
+                    <!-- Nếu chưa đăng nhập thì hiển thị -->
+                    <a class="btn--primary eg-btn"
+                       href="${pageContext.request.contextPath}/view/guest/authen/login.jsp"
+                       style="${empty sessionScope.account ? '' : 'display:none;'}">
+                        Đăng nhập
+                    </a>
+
+                    <!-- Nếu đã đăng nhập thì hiển thị -->
+                    <div class="dropdown"
+                         style="${not empty sessionScope.account ? '' : 'display:none;'}">
+                        <a class="btn--primary eg-btn dropdown-toggle" href="#">
+                            ${sessionScope.account.fullname}
+                        </a>
+                        <div class="dropdown-menu">
+                            <a href="${pageContext.request.contextPath}/view/user/profile.jsp">Hồ sơ</a>
+                            <a href="${pageContext.request.contextPath}/logout">Đăng xuất</a>
+                        </div>
+                    </div>
                 </div>
+
                 <div class="mobile-menu-btn d-lg-none d-block">
                     <i class='bx bx-menu'></i>
                 </div>
