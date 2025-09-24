@@ -32,6 +32,9 @@
             <li class="nav-item sidebar-nav-item">
               <a href="${pageContext.request.contextPath}/view/admin/admin/add-account.jsp" class="nav-link"><i class="flaticon-technological"></i><span>Add Account</span></a>
             </li>
+            <li class="nav-item sidebar-nav-item">
+                <a href="${pageContext.request.contextPath}/view/admin/manager/list-club.jsp" class="nav-link"><i class="flaticon-technological"></i><span>View All Club</span></a>
+            </li>
 <!--            <li class="nav-item sidebar-nav-item">
               <a href="#" class="nav-link"><i class="flaticon-books"></i><span>Library</span></a>
               <ul class="nav sub-group-menu">
