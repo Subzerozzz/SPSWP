@@ -29,22 +29,26 @@ public class LoginServlet extends HttpServlet {
         }
         else{
             AccountDAO dao = new AccountDAO();
-            List<Account> listAc =dao.findAll();
-            for(Account ac : listAc){
-                if(ac.getEmail().equals(username) && verifyPassword(password,ac.getPassword())){
-                    HttpSession session = req.getSession();
-                    session.setAttribute("userName", ac.getEmail());
-                    session.setAttribute("userId", ac.getId());
-                    session.setAttribute("fullName", ac.getFullname());
-                    session.setAttribute("account",ac);
-                    if(ac.getRole()==null||ac.getRole().equals("member")||ac.getRole().isEmpty()){
-                        req.getRequestDispatcher("view/guest/homePage.jsp").forward(req, resp);
-                    }
-                    return;
-                }
+            Account ac = dao.findByEmail(username);
+            if(ac == null){
+                req.setAttribute("error","Tài khoản không tồn tại");
+                req.getRequestDispatcher("view/guest/authen/login.jsp").forward(req, resp);
             }
-            req.setAttribute("error","Sai email hoặc mật khẩu");
-            req.getRequestDispatcher("view/guest/authen/login.jsp").forward(req, resp);
+            else if(LoginServlet.verifyPassword(password,ac.getPassword())){
+                HttpSession session = req.getSession();
+                session.setAttribute("userName", ac.getEmail());
+                session.setAttribute("userId", ac.getId());
+                session.setAttribute("fullName", ac.getFullname());
+                session.setAttribute("account",ac);
+                if(ac.getRole()==null||ac.getRole().equals("member")||ac.getRole().isEmpty()){
+                    req.getRequestDispatcher("view/guest/homePage.jsp").forward(req, resp);
+                }
+                
+            }
+            else {
+                req.setAttribute("error","Mật khẩu sai");
+                req.getRequestDispatcher("view/guest/authen/login.jsp").forward(req, resp);
+            }
         }
 
     }
