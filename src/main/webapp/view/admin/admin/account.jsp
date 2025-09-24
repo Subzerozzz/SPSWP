@@ -205,14 +205,14 @@
                                 <div class="col-md-6 form-group">
                                   <label for="role">Chức vụ:</label>
                                   <select class="form-control" id="role" name="role">
-                                    <option value="admin" ${account.role=='admin' ? 'selected' : '' }>Admin</option>
-                                    <option value="student" ${account.role=='student' ? 'selected' : '' }>Mananger
+                                    <option value="Admin" ${account.role=='admin' ? 'selected' : '' }>Admin</option>
+                                    <option value="Manager" ${account.role=='student' ? 'selected' : '' }>Mananger
                                     </option>
-                                    <option value="teacher" ${account.role=='teacher' ? 'selected' : '' }>President
+                                    <option value="President" ${account.role=='teacher' ? 'selected' : '' }>President
                                     </option>
-                                    <option value="teacher" ${account.role=='teacher' ? 'selected' : '' }>Head
+                                    <option value="Head" ${account.role=='teacher' ? 'selected' : '' }>Head
                                     </option>
-                                    <option value="teacher" ${account.role=='teacher' ? 'selected' : '' }>Member
+                                    <option value="Member" ${account.role=='teacher' ? 'selected' : '' }>Member
                                     </option>
                                   </select>
                                 </div>

@@ -138,11 +138,12 @@
                                   <a class="dropdown-item"
                                     href="${pageContext.request.contextPath}/manager-account?action=account-detail&id=${account.id}"><i
                                       class="fas fa-eye text-orange-peel"></i>View Detail</a>
-                                  <a class="dropdown-item" href="${pageContext.request.contextPath}/manager-account?action=account-update&id=${account.id}"><i
+                                  <a class="dropdown-item"
+                                    href="${pageContext.request.contextPath}/manager-account?action=account-update&id=${account.id}"><i
                                       class="fas fa-cogs text-dark-pastel-green"></i>Update</a>
-                                  <a class="dropdown-item" href="#"><i
+                                  <a class="dropdown-item" href="javascript:void(0);"
+                                    onclick="confirmDelete(${account.id});"><i
                                       class="fas fa-times text-orange-red"></i>Delete</a>
-
                                 </div>
                               </div>
                             </td>
@@ -150,6 +151,33 @@
                         </c:forEach>
                       </tbody>
                     </table>
+                  </div>
+                  <!-- Modal Xác Nhận Xóa -->
+                  <div class="modal fade" id="deleteConfirmModal" tabindex="-1" role="dialog"
+                    aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="deleteConfirmModalLabel">Xác nhận xóa tài khoản</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <p>Bạn có chắc chắn muốn xóa tài khoản này?</p>
+                          <form id="deleteAccountForm"
+                            action="${pageContext.request.contextPath}/manager-account?action=account-delete"
+                            method="post">
+                            <input type="hidden" id="deleteAccountId" name="id" value="">
+                          </form>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                          <button type="button" class="btn btn-danger"
+                            onclick="document.getElementById('deleteAccountForm').submit();">Xóa</button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -178,6 +206,13 @@
 
       </body>
 
+
+      <script>
+        function confirmDelete(accountId) {
+          document.getElementById('deleteAccountId').value = accountId;
+          $('#deleteConfirmModal').modal('show');
+        }
+      </script>
 
       <!-- Mirrored from www.radiustheme.com/demo/html/psdboss/akkhor/akkhor/all-student.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 20 Sep 2025 14:36:13 GMT -->
 
