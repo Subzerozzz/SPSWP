@@ -25,7 +25,7 @@ public class LoginServlet extends HttpServlet {
 
         if (username == null || password == null) {
             req.setAttribute("error", "Nhập đủ mật khẩu hoặc email");
-            req.getRequestDispatcher("view/authen/login.jsp").forward(req, resp);
+            req.getRequestDispatcher("view/guest/authen/login.jsp").forward(req, resp);
         }
         else{
             AccountDAO dao = new AccountDAO();
@@ -36,10 +36,15 @@ public class LoginServlet extends HttpServlet {
                     session.setAttribute("userName", ac.getEmail());
                     session.setAttribute("userId", ac.getId());
                     session.setAttribute("fullName", ac.getFullname());
-                    req.getRequestDispatcher("view/guest/homePage.jsp").forward(req, resp);
+                    session.setAttribute("account",ac);
+                    if(ac.getRole()==null||ac.getRole().equals("member")||ac.getRole().isEmpty()){
+                        req.getRequestDispatcher("view/guest/homePage.jsp").forward(req, resp);
+                    }
                     return;
                 }
             }
+            req.setAttribute("error","Sai email hoặc mật khẩu");
+            req.getRequestDispatcher("view/guest/authen/login.jsp").forward(req, resp);
         }
 
     }
@@ -57,7 +62,7 @@ public class LoginServlet extends HttpServlet {
             SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
             byte[] hash = skf.generateSecret(spec).getEncoded();
 
-            // Lưu salt và hash
+
             return Base64.getEncoder().encodeToString(salt) + "$" +
                     Base64.getEncoder().encodeToString(hash);
         } catch (Exception e) {

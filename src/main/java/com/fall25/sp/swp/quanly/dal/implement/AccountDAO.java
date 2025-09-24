@@ -4,18 +4,16 @@
  */
 package com.fall25.sp.swp.quanly.dal.implement;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.fall25.sp.swp.quanly.dal.DBContext;
 import com.fall25.sp.swp.quanly.dal.I_DAO;
 import com.fall25.sp.swp.quanly.entity.Account;
-import static java.sql.DriverManager.getConnection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  *
@@ -90,6 +88,23 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
     return result;
   }
 
+  public boolean updatePassword(int id , String password) {
+    boolean result = false;
+    try {
+      connection = getConnection();
+      String sql = "UPDATE account SET password=? WHERE id=?";
+      statement = connection.prepareStatement(sql);
+      statement.setString(1, password);
+      statement.setInt(2, id);
+      result = statement.executeUpdate() > 0;
+    } catch (Exception e) {
+        throw new RuntimeException(e);
+    }finally {
+      closeResources();
+    }
+    return result;
+  }
+
   @Override
   public boolean delete(Account t) {
     boolean result = false;
@@ -144,21 +159,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
     return generatedId;
   }
 
-  public boolean updatePassword(int id, String newPassword) {
-    boolean result = false;
-    try {
-      connection = getConnection();
-      String sql = "UPDATE account SET password=? WHERE id=?";
-      statement = connection.prepareStatement(sql);
-      statement.setString(1, newPassword);
-      statement.setInt(2, id);
-      result = statement.executeUpdate() > 0;
-    }catch (Exception ex){
-      ex.printStackTrace();
-    }
-    return result;
-  }
-
+ 
   @Override
   public Account findById(Integer id) {
     Account account = null;
@@ -218,10 +219,8 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
   }
 
   public static void main(String[] args) {
-    AccountDAO dao = new AccountDAO();
-    List<Account> list = dao.findAll();
-    for (Account account : list) {
-      System.out.println(account.toString());
+    for(Account a : new AccountDAO().findAll()){
+        System.out.println(a.toString());
     }
   }
 }

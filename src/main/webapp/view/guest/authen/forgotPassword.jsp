@@ -344,7 +344,7 @@
         <button type="submit" class="btn">Gửi yêu cầu</button>
       </form>
       <div class="switch-form">
-        <a href="${pageContext.request.contextPath}/view/authen/login.jsp" id="backToLogin">Quay lại đăng nhập</a>
+        <a href="${pageContext.request.contextPath}/view/guest/authen/login.jsp" id="backToLogin">Quay lại đăng nhập</a>
       </div>
       <div class="social-login" style="margin-top: 15px">
         ${notifi}

@@ -149,7 +149,8 @@
           <input type="password" placeholder="Mật khẩu" name="password" required>
         </div>
         <div class="remember-forgot">
-          <a href="#">Quên mật khẩu?</a>
+          <a href="${pageContext.request.contextPath}/view/guest/authen/registerAccount.jsp" style="margin-right: 20px">Chưa có tài khoản?</a>
+          <a href="${pageContext.request.contextPath}/view/guest/authen/forgotPassword.jsp">Quên mật khẩu?</a>
         </div>
         <button type="submit" class="btn">Đăng Nhập</button>
       </form>

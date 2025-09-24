@@ -32,13 +32,13 @@ public class ForgotPasswordServlet extends HttpServlet {
         String email = req.getParameter("email");
         if (email == null) {
             req.setAttribute("notifi", "Điền email");
-            req.getRequestDispatcher("view/authen/forgotPassword.jsp").forward(req, resp);
+            req.getRequestDispatcher("view/guest/authen/forgotPassword.jsp").forward(req, resp);
         }
         else{
             AccountDAO dao = new AccountDAO();
             if(dao.findByEmail(email)==null){
                 req.setAttribute("notifi","Email không tồn tại");
-                req.getRequestDispatcher("view/authen/forgotPassword.jsp").forward(req, resp);
+                req.getRequestDispatcher("view/guest/authen/forgotPassword.jsp").forward(req, resp);
             }
             else{
                 String newPass =  generateRandomPassword(10);
@@ -46,7 +46,7 @@ public class ForgotPasswordServlet extends HttpServlet {
                 int id = dao.findByEmail(email).getId();
                 if(dao.updatePassword(id,hashPass)&&SendEmail.sendNewPassWord(email,newPass)){
                     req.setAttribute("notifi","Đã gửi mật khẩu mới tới email "+email);
-                    req.getRequestDispatcher("view/authen/forgotPassword.jsp").forward(req, resp);
+                    req.getRequestDispatcher("view/guest/authen/forgotPassword.jsp").forward(req, resp);
                 }
 
 
