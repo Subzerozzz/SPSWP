@@ -18,7 +18,9 @@ import java.util.List;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
+
     AccountDAO dao = new AccountDAO();
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String username = req.getParameter("username");
@@ -27,25 +29,22 @@ public class LoginServlet extends HttpServlet {
         if (username == null || password == null) {
             req.setAttribute("error", "Nhập đủ mật khẩu hoặc email");
             req.getRequestDispatcher("view/guest/authen/login.jsp").forward(req, resp);
-        }
-        else{
-            
+        } else {
+
             Account ac = dao.findByEmail(username);
-            if(ac == null){
-                req.setAttribute("error","Tài khoản không tồn tại");
+            if (ac == null) {
+                req.setAttribute("error", "Tài khoản không tồn tại");
                 req.getRequestDispatcher("view/guest/authen/login.jsp").forward(req, resp);
-            }
-            else if(LoginServlet.verifyPassword(password,ac.getPassword())){
+            } else if (LoginServlet.verifyPassword(password, ac.getPassword())) {
                 HttpSession session = req.getSession();
                 session.setAttribute("userName", ac.getEmail());
                 session.setAttribute("userId", ac.getId());
                 session.setAttribute("fullName", ac.getFullname());
-                session.setAttribute("account",ac);
+                session.setAttribute("account", ac);
                 req.getRequestDispatcher("view/guest/homePage.jsp").forward(req, resp);
-                
-            }
-            else {
-                req.setAttribute("error","Mật khẩu sai");
+
+            } else {
+                req.setAttribute("error", "Mật khẩu sai");
                 req.getRequestDispatcher("view/guest/authen/login.jsp").forward(req, resp);
             }
         }
@@ -65,9 +64,8 @@ public class LoginServlet extends HttpServlet {
             SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
             byte[] hash = skf.generateSecret(spec).getEncoded();
 
-
-            return Base64.getEncoder().encodeToString(salt) + "$" +
-                    Base64.getEncoder().encodeToString(hash);
+            return Base64.getEncoder().encodeToString(salt) + "$"
+                    + Base64.getEncoder().encodeToString(hash);
         } catch (Exception e) {
             throw new RuntimeException("Lỗi mã hoá mật khẩu", e);
         }
