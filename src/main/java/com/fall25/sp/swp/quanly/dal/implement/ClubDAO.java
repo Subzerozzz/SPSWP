@@ -174,4 +174,23 @@ public class ClubDAO extends DBContext implements I_DAO<Club> {
     return club;
   }
 
+  public Club findByPresidentId(Integer id) {
+    Club club = null;
+    try {
+      connection = getConnection();
+      String sql = "SELECT * FROM club WHERE president_id = ?";
+      statement = connection.prepareStatement(sql);
+      statement.setInt(1, id);
+      resultSet = statement.executeQuery();
+      if (resultSet.next()) {
+        club = getFromResultSet(resultSet);
+      }
+    } catch (SQLException ex) {
+      ex.printStackTrace();
+    } finally {
+      closeResources();
+    }
+    return club;
+  }
+
 }

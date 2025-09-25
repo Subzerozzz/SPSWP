@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fall25.sp.swp.quanly.controller.authen.LoginServlet;
 import com.fall25.sp.swp.quanly.dal.DBContext;
 import com.fall25.sp.swp.quanly.dal.I_DAO;
 import com.fall25.sp.swp.quanly.entity.Account;
@@ -218,6 +219,6 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
     }
 
     public static void main(String[] args) {
-        System.out.println(new AccountDAO().findByEmail("levana2@gmail.com"));
+        System.out.println(new AccountDAO().findById(5));
     }
 }

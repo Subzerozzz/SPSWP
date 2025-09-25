@@ -45,6 +45,12 @@
                         class="flaticon-technological"></i><span>View All Club</span></a>
                   </li>
                 </c:when>
+                <c:when test="${sessionScope.account.role == 'president'}">
+                  <li class="nav-item sidebar-nav-item">
+                    <a href="${pageContext.request.contextPath}/managerMember" class="nav-link"><i
+                            class="flaticon-technological"></i><span>View All Member</span></a>
+                  </li>
+                </c:when>
               </c:choose>
 
 

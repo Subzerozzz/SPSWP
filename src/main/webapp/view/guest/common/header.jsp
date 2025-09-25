@@ -26,7 +26,7 @@
             position: absolute;
             width: 100%;
             top:40px;
-            right: 30px;
+            right: -15px;
             background: white;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -59,7 +59,7 @@
             <div class="main-menu">
                 <div class="mobile-logo-area d-lg-none d-flex justify-content-between align-items-center">
                     <div class="mobile-logo-wrap ">
-                        <a href="index.html"><img alt="image" src="${pageContext.request.contextPath}/guest/assets/images/header-logo22.svg"></a>
+                        <a href="index.html"><img alt="image" src="${pageContext.request.contextPath}/guest/assets/video/download.svg"></a>
 
                     </div>
                     <div class="menu-close-btn">
@@ -67,15 +67,8 @@
                     </div>
                 </div>
                 <ul class="menu-list">
-                    <li class="menu-item-has-children">
-                        <a href="#" class="drop-down">Home</a><i class='bx bx-plus dropdown-icon'></i>
-                        <ul class="submenu">
-                            <li><a href="index.html">Home 01</a></li>
-                            <li><a href="index2.html">Home 02</a></li>
-                            <li><a href="index3.html">Home 03</a></li>
-                            <li><a href="index4.html">Home 04</a></li>
-                            <li><a href="index5.html">Home 05</a></li>
-                        </ul>
+                    <li>
+                        <a href="#">Các câu lạc bộ</a>
                     </li>
                     <li>
                         <a href="about.html">About Us</a>
@@ -151,7 +144,7 @@
             </div>
             <div class="header-logo">
                 <div class="logo-inner">
-                    <a href="index.html"><img alt="image" src="${pageContext.request.contextPath}/guest/assets/images/header-logo22.svg"></a>
+                    <a href="index.html"><img alt="image" src="${pageContext.request.contextPath}/guest/assets/video/download.svg"></a>
                 </div>
             </div>
             <div class="nav-right d-flex align-items-center">
@@ -178,23 +171,22 @@
                     </div>
                 </div>
                 <div class="header-btn">
-                    <!-- Nếu chưa đăng nhập thì hiển thị -->
                     <a class="btn--primary eg-btn"
                        href="${pageContext.request.contextPath}/view/guest/authen/login.jsp"
                        style="${empty sessionScope.account ? '' : 'display:none'}">
                         Đăng nhập
                     </a>
 
-                    <!-- Nếu đã đăng nhập thì hiển thị -->
                     <div class="dropdown" style="${not empty sessionScope.account ? '' : 'display:none;'}">
                         <div style="width: 80px">
                             <i class="fa-regular fa-user" style="font-size: 20px;"></i>
                         </div>
-                        
+
                        <div class="dropdown-menu">
+                            <a style="color: black" href="${pageContext.request.contextPath}/managerMember">Trang quản lý</a>
                             <a style="color: black" href="${pageContext.request.contextPath}/account">Hồ sơ</a>
                             <a style="color: black" href="${pageContext.request.contextPath}/logout">Đăng xuất</a>
-                        </div>
+                       </div>
                     </div>
                 </div>
 
@@ -216,7 +208,7 @@
             dropdown.addEventListener("mouseleave", () => {
               hideTimeout = setTimeout(() => {
                 dropdown.classList.remove("show");
-              }, 3000); // 3 giây
+              }, 3000);
             });
         </script>
     </body>
