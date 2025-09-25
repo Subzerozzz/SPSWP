@@ -46,7 +46,10 @@ public class ChangePassServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        //lấy ra tk trên session
+        //lấy ra old password so sánh với password trên session
+        //lấy ra newpassword
+        //gọi accountDao tới hàm updatePassword
     }
 
 

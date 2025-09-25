@@ -41,7 +41,7 @@
                 </c:when>
                 <c:when test="${sessionScope.account.role == 'manager'}">
                   <li class="nav-item sidebar-nav-item">
-                    <a href="${pageContext.request.contextPath}/view/admin/manager/list-club.jsp" class="nav-link"><i
+                    <a href="${pageContext.request.contextPath}/club?action=list-club" class="nav-link"><i
                         class="flaticon-technological"></i><span>View All Club</span></a>
                   </li>
                 </c:when>
