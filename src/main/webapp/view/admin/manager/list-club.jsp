@@ -163,32 +163,49 @@
                                 <td>
                                   <span style="color: #FFA601; font-weight: 700">${item.name}</span>
                                 </td>
-                                <td>${item.president_id}</td>
+                                <td>
+                                  <c:forEach var="account" items="${listAccount}">
+                                    <c:if test="${account.id == item.president_id}">
+                                      <span style="color: #4B2A1F; font-weight: 700">${account.fullname}</span>
+                                    </c:if>
+                                  </c:forEach>
+                                </td>
                                 <td>${item.created_at}</td>
                                 <td>${item.updated_at}</td>
                                 <td>
-                                    <c:choose>
-                                        <c:when test="${account.status == 'active'}">
-                                          <span style="color: white; 
+                                  <c:choose>
+                                    <c:when test="${account.status == 'active'}">
+                                      <span style="color: white; 
                                                 padding: 5px 10px; 
                                                 background-color: #9FD702;
                                                 font-weight: 500;
                                                 border-radius: 10px;
                                                 ">
-                                            Active
-                                          </span>
-                                        </c:when>
-                                        <c:otherwise>
-                                          <span style="color: white; 
+                                        Active
+                                      </span>
+                                    </c:when>
+                                    <c:otherwise>
+                                      <span style="color: white; 
                                                 padding: 5px 10px; 
                                                 background-color: #DE3202;
                                                 font-weight: 500;
                                                 border-radius: 10px;
                                                 ">Banned</span>
-                                        </c:otherwise>
-                                    </c:choose>
+                                    </c:otherwise>
+                                  </c:choose>
                                 </td>
-                                <td>CLB Thể Thao</td>
+                                <td>
+                                  <c:forEach var="category" items="${listCategoryClub}">
+                                    <c:if test="${category.id == item.category_id}">
+                                      <span style="color: white;
+                                                padding: 5px 10px;
+                                                background-color: #0293DE;
+                                                font-weight: 500;
+                                                border-radius: 10px;
+                                                ">${category.name}</span>
+                                    </c:if>
+                                  </c:forEach>
+                                </td>
                                 <td>
                                   <div class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">

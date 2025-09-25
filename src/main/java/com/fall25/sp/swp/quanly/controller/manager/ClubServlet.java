@@ -5,8 +5,10 @@
 package com.fall25.sp.swp.quanly.controller.manager;
 
 import com.fall25.sp.swp.quanly.dal.implement.AccountDAO;
+import com.fall25.sp.swp.quanly.dal.implement.CategoryClubDAO;
 import com.fall25.sp.swp.quanly.dal.implement.ClubDAO;
 import com.fall25.sp.swp.quanly.entity.Account;
+import com.fall25.sp.swp.quanly.entity.CategoryClub;
 import com.fall25.sp.swp.quanly.entity.Club;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -28,6 +30,7 @@ public class ClubServlet extends HttpServlet {
 
   ClubDAO clubDAO = new ClubDAO();
   AccountDAO accountDAO = new AccountDAO();
+  CategoryClubDAO categoryClubDAO = new CategoryClubDAO();
 
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -57,11 +60,14 @@ public class ClubServlet extends HttpServlet {
 
   private void viewListClub(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    //Lấy ra list club
+    // Lấy ra list club
     List<Club> listClub = clubDAO.findAll();
-    //Lấy ra danh sách account
+    // Lấy ra danh sách account
     List<Account> listAccount = accountDAO.findAll();
-    //lấy ra danh mục các club
+    // lấy ra danh mục các club
+    List<CategoryClub> listCategoryClub = categoryClubDAO.findAll();
+    // Gửi dữ liệu lên trang
+    request.setAttribute("listCategoryClub", listCategoryClub);
     request.setAttribute("listClub", listClub);
     request.setAttribute("listAccount", listAccount);
     request.getRequestDispatcher(URL_LIST_CLUB).forward(request, response);
