@@ -1,7 +1,8 @@
 <%-- Document : view-clubs Created on : Sep 24, 2025, 7:58:37 PM Author : Dell --%>
 
-  <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-    <%@page contentType="text/html" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page contentType="text/html" pageEncoding="UTF-8" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
       <!doctype html>
       <html class="no-js" lang="">
 
@@ -36,6 +37,9 @@
         <link rel="stylesheet" href="${pageContext.request.contextPath}/admin/style.css">
         <!-- Modernize js -->
         <script src="${pageContext.request.contextPath}/admin/js/modernizr-3.6.0.min.js"></script>
+        <!--IzizToast-->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
       </head>
 
       <body>
@@ -80,29 +84,27 @@
 
                           <div class="col-12-xxxl col-lg-6 col-12 form-group">
                             <label>Tên CLB *</label>
-                            <input type="text" placeholder="" class="form-control">
+                            <input type="text" placeholder="CLB Name" class="form-control" name="name">
                           </div>
 
                           <div class="col-12-xxxl col-lg-6 col-12 form-group">
                             <label>Trưởng CLB *</label>
-                            <input type="text" placeholder="" class="form-control">
+                            <input type="text" placeholder="President" class="form-control" name="presidentId">
                           </div>
 
                           <div class="col-12-xxxl col-lg-6 col-12 form-group">
                             <label>Loại *</label>
-                            <select class="select2">
-                              <option value="">Please Select</option>
-                              <option value="1">Bangla</option>
-                              <option value="2">English</option>
-                              <option value="3">Mathematics</option>
-                              <option value="3">Economics</option>
-                              <option value="3">Chemistry</option>
+                            <select class="select2" name="categoryId">
+                                <option value="">Please Select</option>
+                                <c:forEach var="item" items="${listCategoryClub}">
+                                    <option value="${item.id}">${item.name}</option>
+                                </c:forEach>
                             </select>
                           </div>
 
                           <div class="col-12-xxxl col-lg-6 col-12 form-group">
                             <label>Mô tả ngắn *</label>
-                            <input type="text" placeholder="Mô tả ngắn" class="form-control">
+                            <input type="text" placeholder="Description" class="form-control" name="description">
                           </div>
 
                           <div class="col-12 form-group mg-t-8">
@@ -163,32 +165,49 @@
                                 <td>
                                   <span style="color: #FFA601; font-weight: 700">${item.name}</span>
                                 </td>
-                                <td>${item.president_id}</td>
+                                <td>
+                                  <c:forEach var="account" items="${listAccount}">
+                                    <c:if test="${account.id == item.president_id}">
+                                      <span style="color: #4B2A1F; font-weight: 700">${account.fullname}</span>
+                                    </c:if>
+                                  </c:forEach>
+                                </td>
                                 <td>${item.created_at}</td>
                                 <td>${item.updated_at}</td>
                                 <td>
-                                    <c:choose>
-                                        <c:when test="${account.status == 'active'}">
-                                          <span style="color: white; 
+                                  <c:choose>
+                                    <c:when test="${item.status == 'active'}">
+                                      <span style="color: white; 
                                                 padding: 5px 10px; 
                                                 background-color: #9FD702;
                                                 font-weight: 500;
                                                 border-radius: 10px;
                                                 ">
-                                            Active
-                                          </span>
-                                        </c:when>
-                                        <c:otherwise>
-                                          <span style="color: white; 
+                                        Active
+                                      </span>
+                                    </c:when>
+                                    <c:otherwise>
+                                      <span style="color: white; 
                                                 padding: 5px 10px; 
                                                 background-color: #DE3202;
                                                 font-weight: 500;
                                                 border-radius: 10px;
                                                 ">Banned</span>
-                                        </c:otherwise>
-                                    </c:choose>
+                                    </c:otherwise>
+                                  </c:choose>
                                 </td>
-                                <td>CLB Thể Thao</td>
+                                <td>
+                                  <c:forEach var="category" items="${listCategoryClub}">
+                                    <c:if test="${category.id == item.category_id}">
+                                      <span style="color: white;
+                                                padding: 5px 10px;
+                                                background-color: #0293DE;
+                                                font-weight: 500;
+                                                border-radius: 10px;
+                                                ">${category.name}</span>
+                                    </c:if>
+                                  </c:forEach>
+                                </td>
                                 <td>
                                   <div class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -238,6 +257,21 @@
         <script src="${pageContext.request.contextPath}/admin/js/jquery.dataTables.min.js"></script>
         <!-- Custom Js -->
         <script src="${pageContext.request.contextPath}/admin/js/main.js"></script>
+        
+        <c:if test="${not empty errors}">
+            <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                    <c:forEach var="entry" items="${errors}">
+                        iziToast.error({
+                        title: "Lỗi",
+                        message: "${fn:escapeXml(entry.value)}",
+                        position: 'topRight',
+                        timeout: 5000
+                        });
+                    </c:forEach>
+            </script>
+            
+        </c:if>
 
       </body>
 

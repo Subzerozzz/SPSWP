@@ -173,7 +173,10 @@
             });
           });
         </script>
-        <% session.removeAttribute("error"); session.removeAttribute("message"); %>
+        <%  
+            session.removeAttribute("error"); 
+            session.removeAttribute("message");
+        %>
       </c:if>
 
     </body>
