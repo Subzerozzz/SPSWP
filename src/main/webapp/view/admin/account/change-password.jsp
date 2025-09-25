@@ -63,7 +63,7 @@
                   </div>
                 </div>
                 <form class="new-added-form" method="post"
-                  action="${pageContext.request.contextPath}/manager-account?action=account-add">
+                  action="${pageContext.request.contextPath}/change-password">
                   <div class="row" style="margin-bottom: 10px">
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                       <label>Old Password *</label>
