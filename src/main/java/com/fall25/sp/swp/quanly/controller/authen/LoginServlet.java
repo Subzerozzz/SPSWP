@@ -36,6 +36,9 @@ public class LoginServlet extends HttpServlet {
                 req.setAttribute("error", "Tài khoản không tồn tại");
                 req.getRequestDispatcher("view/guest/authen/login.jsp").forward(req, resp);
             } else if (LoginServlet.verifyPassword(password, ac.getPassword())) {
+                //Check xem account này có tồn tại ở actor là admin hay manager không => vào thẳng hệ thống
+                
+                //Không thì chuyển sang trang chọn câu lạc bộ
                 HttpSession session = req.getSession();
                 session.setAttribute("userName", ac.getEmail());
                 session.setAttribute("userId", ac.getId());
