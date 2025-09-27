@@ -46,7 +46,7 @@ public class ManagerMemberServlet extends HttpServlet {
 
             if (accountClubs != null) {
                 for (AccountClub a : accountClubs) {
-                    listIdMember.add(a.getAccountId());
+                    listIdMember.add(a.getAccount_id());
                 }
             }
 
