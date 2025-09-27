@@ -53,7 +53,7 @@
               aria-expanded="false">
               <div class="admin-title">
                   <h5 class="item-title">${sessionScope.account.fullname}</h5>
-                <span>${sessionScope.account.role}</span>
+                <span>${sessionScope.account_club.role}</span>
               </div>
               <div class="admin-img">
                 <img src="${pageContext.request.contextPath}/admin/img/figure/admin.jpg" alt="Admin">

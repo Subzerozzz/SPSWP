@@ -29,7 +29,7 @@
               </li>
 
               <c:choose>
-                <c:when test="${sessionScope.account.role == 'admin'}">
+                <c:when test="${sessionScope.account_club.role == 'admin'}">
                   <li class="nav-item sidebar-nav-item">
                     <a href="${pageContext.request.contextPath}/manager-account?action=list-account" class="nav-link"><i
                         class="flaticon-multiple-users-silhouette"></i><span>View Accounts</span></a>
@@ -39,7 +39,7 @@
                         class="flaticon-technological"></i><span>Add Account</span></a>
                   </li>
                 </c:when>
-                <c:when test="${sessionScope.account.role == 'manager'}">
+                <c:when test="${sessionScope.account_club.role == 'manager'}">
                   <li class="nav-item sidebar-nav-item">
                     <a href="${pageContext.request.contextPath}/club?action=list-club" class="nav-link"><i
                         class="flaticon-technological"></i><span>View All Club</span></a>

@@ -85,7 +85,7 @@
                         </tr>
                         <tr>
                           <td>Chức vụ:</td>
-                          <td class="font-medium text-dark-medium">${sessionScope.account.role}</td>
+                          <td class="font-medium text-dark-medium">${sessionScope.account_club.role}</td>
                         </tr>
                         <tr>
                           <td>Email:</td>
@@ -183,14 +183,14 @@
                               <div class="col-md-6 form-group">
                                 <label for="role">Chức vụ:</label>
                                 <select class="form-control" id="role" name="role">
-                                  <option value="Admin" ${account.role=='admin' ? 'selected' : '' }>Admin</option>
-                                  <option value="Manager" ${account.role=='student' ? 'selected' : '' }>Mananger
+                                  <option value="Admin" ${account_club.role=='admin' ? 'selected' : '' }>Admin</option>
+                                  <option value="Manager" ${account_club.role=='student' ? 'selected' : '' }>Mananger
                                   </option>
-                                  <option value="President" ${account.role=='teacher' ? 'selected' : '' }>President
+                                  <option value="President" ${account_club.role=='teacher' ? 'selected' : '' }>President
                                   </option>
-                                  <option value="Head" ${account.role=='teacher' ? 'selected' : '' }>Head
+                                  <option value="Head" ${account_club.role=='teacher' ? 'selected' : '' }>Head
                                   </option>
-                                  <option value="Member" ${account.role=='teacher' ? 'selected' : '' }>Member
+                                  <option value="Member" ${account_club.role=='teacher' ? 'selected' : '' }>Member
                                   </option>
                                 </select>
                               </div>
