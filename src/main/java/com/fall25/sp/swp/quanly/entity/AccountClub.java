@@ -1,3 +1,7 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package com.fall25.sp.swp.quanly.entity;
 
 import lombok.AllArgsConstructor;
@@ -8,8 +12,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.sql.Date;
-
 @ToString
 @Builder
 @Data
@@ -18,7 +20,8 @@ import java.sql.Date;
 @Getter
 @Setter
 public class AccountClub {
-    private int id;
-    private int accountId;
-    private int clubId;
+    private Integer id;
+    private Integer account_id;
+    private Integer club_id;
+    private String role;
 }
