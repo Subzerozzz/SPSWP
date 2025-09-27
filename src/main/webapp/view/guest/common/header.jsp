@@ -59,7 +59,7 @@
             <div class="main-menu">
                 <div class="mobile-logo-area d-lg-none d-flex justify-content-between align-items-center">
                     <div class="mobile-logo-wrap ">
-                        <a href="index.html"><img alt="image" src="${pageContext.request.contextPath}/guest/assets/images/header-logo22.svg"></a>
+                        <a href="index.html"><img alt="image" src="${pageContext.request.contextPath}/guest/assets/images/logoFPT.svghe"></a>
 
                     </div>
                     <div class="menu-close-btn">
