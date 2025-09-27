@@ -21,5 +21,6 @@ public class GlobalConfig {
      * (session)
      */
     public static final String SESSION_ACCOUNT = "account";
+    public static final String SESSION_ACCOUNT_CLUB = "account_club";
     public static final Integer RECORD_PER_PAGE = 10;
 }

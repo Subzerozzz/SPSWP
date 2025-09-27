@@ -22,21 +22,21 @@ public class ClubDAO extends DBContext implements I_DAO<Club> {
 
   @Override
   public List<Club> findAll() {
-    List<Club> account = new ArrayList<>();
+    List<Club> listClub = new ArrayList<>();
     try {
       connection = getConnection();
       String sql = "SELECT * FROM club";
       statement = connection.prepareStatement(sql);
       resultSet = statement.executeQuery();
       while (resultSet.next()) {
-        account.add(getFromResultSet(resultSet));
+        listClub.add(getFromResultSet(resultSet));
       }
     } catch (SQLException ex) {
       ex.printStackTrace();
     } finally {
       closeResources();
     }
-    return account;
+    return listClub;
   }
 
   @Override
