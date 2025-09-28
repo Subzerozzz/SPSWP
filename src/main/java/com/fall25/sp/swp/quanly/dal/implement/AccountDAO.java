@@ -4,6 +4,7 @@
  */
 package com.fall25.sp.swp.quanly.dal.implement;
 
+import com.fall25.sp.swp.quanly.controller.authen.LoginServlet;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.Map;
 import com.fall25.sp.swp.quanly.dal.DBContext;
 import com.fall25.sp.swp.quanly.dal.I_DAO;
 import com.fall25.sp.swp.quanly.entity.Account;
+import com.fall25.sp.swp.quanly.entity.AccountClub;
 
 /**
  *
@@ -149,6 +151,13 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
           generatedId = rs.getInt(1);
         }
       }
+      if (generatedId > 0) {
+        AccountClubDAO accountClubDAO = new AccountClubDAO();
+        AccountClub accountClub = new AccountClub();
+        accountClub.setAccount_id(generatedId);
+        accountClub.setRole("user");
+        accountClubDAO.insert(accountClub);
+      }
     } catch (SQLException ex) {
       ex.printStackTrace();
     } finally {
@@ -215,6 +224,15 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
   }
 
   public static void main(String[] args) {
-    System.out.println(new AccountDAO().findByEmail("levana2@gmail.com"));
+    Account ac  = new Account();
+    AccountDAO acdao = new AccountDAO();
+    ac.setEmail("vankhoapro2k4@gmail.com");
+    ac.setFullname("Pham Van Khoa");
+    ac.setAddress("HANOI");
+    ac.setGender("male");
+    ac.setPassword(LoginServlet.hashPassword("12345"));
+    ac.setStudent_id("HE181066");
+    ac.setStatus("active");
+      System.out.println(acdao.insert(ac));
   }
 }

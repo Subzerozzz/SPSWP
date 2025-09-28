@@ -5,8 +5,10 @@
 package com.fall25.sp.swp.quanly.controller.admin;
 
 import com.fall25.sp.swp.quanly.config.GlobalConfig;
+import com.fall25.sp.swp.quanly.dal.implement.AccountClubDAO;
 import com.fall25.sp.swp.quanly.dal.implement.AccountDAO;
 import com.fall25.sp.swp.quanly.entity.Account;
+import com.fall25.sp.swp.quanly.entity.AccountClub;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -34,6 +36,7 @@ public class ManagerAccountServlet extends HttpServlet {
   private static final int SALT_LENGTH = 16;
 
   AccountDAO accountDAO = new AccountDAO();
+  AccountClubDAO accountClubDao = new AccountClubDAO();
 
   public static final String URL_LIST_ACCOUNT = "view/admin/admin/list-account.jsp";
   public static final String URL_ACCOUNT = "view/admin/admin/account.jsp";

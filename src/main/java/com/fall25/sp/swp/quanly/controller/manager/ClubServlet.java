@@ -74,7 +74,7 @@ public class ClubServlet extends HttpServlet {
     Integer totalPage = totalRecord % recordPerPage == 0 ? totalRecord % recordPerPage
         : totalRecord / recordPerPage + 1;
     // lấy ra số bản ghi của trang đẩu tiên
-    List<Club> listClub = clubDAO.findAllPerPage(1, recordPerPage);
+//    List<Club> listClub = clubDAO.findAllPerPage(1, recordPerPage);
     // Lấy ra danh sách account
     List<Account> listAccount = accountDAO.findAll();
     // lấy ra danh mục các club
@@ -85,7 +85,7 @@ public class ClubServlet extends HttpServlet {
     request.setAttribute("currentPage", 1);
     // Gửi dữ liệu lên trang
     request.setAttribute("listCategoryClub", listCategoryClub);
-    request.setAttribute("listClub", listClub);
+//    request.setAttribute("listClub", listClub);
     request.setAttribute("listAccount", listAccount);
     request.getRequestDispatcher(URL_LIST_CLUB).forward(request, response);
   }

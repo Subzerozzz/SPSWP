@@ -59,7 +59,7 @@
             <div class="mobile-logo-area d-lg-none d-flex justify-content-between align-items-center">
               <div class="mobile-logo-wrap ">
                 <a href="index.html"><img alt="image"
-                    src="${pageContext.request.contextPath}/guest/assets/images/logoFPT.svghe"></a>
+                    src="${pageContext.request.contextPath}/guest/assets/images/logoFPT2.png"></a>
 
               </div>
               <div class="menu-close-btn">
@@ -67,46 +67,23 @@
               </div>
             </div>
             <ul class="menu-list">
-              <li class="menu-item-has-children">
-                <a href="#" class="drop-down">Home</a><i class='bx bx-plus dropdown-icon'></i>
-                <ul class="submenu">
-                  <li><a href="index.html">Home 01</a></li>
-                  <li><a href="index2.html">Home 02</a></li>
-                  <li><a href="index3.html">Home 03</a></li>
-                  <li><a href="index4.html">Home 04</a></li>
-                  <li><a href="index5.html">Home 05</a></li>
-                </ul>
+              <li>
+                <a href="${pageContext.request.contextPath}/home">Trang chủ</a>
+
               </li>
               <li>
-                <a href="about.html">About Us</a>
+                <a href="#">Các câu lạc bộ</a>
               </li>
-              <li class="menu-item-has-children">
-                <a href="#">Suites</a><i class='bx bx-plus dropdown-icon'></i>
-                <ul class="submenu">
-                  <li><a href="room-suits1-2.html">Room & Suits 01</a></li>
-                  <li><a href="room-suits2.html">Room & Suits 02</a></li>
-                  <li><a href="room-suits-details.html">Room & Suits Details</a></li>
-                </ul>
+              <li>
+                <a href="#">Sự kiện</a>
               </li>
-              <li class="menu-item-has-children">
-                <a href="#" class="drop-down">Pages</a><i class='bx bx-plus dropdown-icon'></i>
-                <ul class="submenu">
-                  <li><a href="hotel-facilities.html">Hotel Facilities</a></li>
-                  <li><a href="gallery.html">Gallery</a></li>
-                  <li><a href="faq.html">Faq</a></li>
-                  <li><a href="404.html">Error</a></li>
-                </ul>
-              </li>
-              <li class="menu-item-has-children">
-                <a href="#">Blog</a><i class='bx bx-plus dropdown-icon'></i>
-                <ul class="submenu">
-                  <li><a href="blog.html">Blog Grid</a></li>
-                  <li><a href="blog-sidebar.html">Blog Sidebar</a></li>
-                  <li><a href="blog-standard.html">Blog Standard</a></li>
-                  <li><a href="blog-details.html">Blog Details</a></li>
-                </ul>
-              </li>
-              <li><a href="contact.html">Contact</a></li>
+              <c:choose>
+                <c:when test="${sessionScope.account_club.club_id!=null}">
+                  <li>
+                    <a href="#">Câu lạc bộ của tôi</a>
+                  </li>
+                </c:when>
+              </c:choose>
             </ul>
             <!-- mobile-search-area -->
             <div class="d-lg-none d-block">
@@ -147,8 +124,8 @@
           </div>
           <div class="header-logo">
             <div class="logo-inner">
-              <a href="index.html"><img alt="image"
-                  src="${pageContext.request.contextPath}/guest/assets/images/header-logo22.svg"></a>
+              <a href="${pageContext.request.contextPath}/home"><img alt="image"
+                  src="${pageContext.request.contextPath}/guest/assets/images/download.svg"></a>
             </div>
           </div>
           <div class="nav-right d-flex align-items-center">

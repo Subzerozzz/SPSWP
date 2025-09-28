@@ -174,35 +174,23 @@ public class ClubDAO extends DBContext implements I_DAO<Club> {
     return club;
   }
 
-  public List<Club> findAllPerPage(int currentPage, Integer limit) {
-    List<Club> list = new ArrayList<>();
-    String sql = "SELECT *\n"
-        + "FROM club\n"
-        + "ORDER BY id DESC\n"
-        + "LIMIT ? OFFSET ?;";
-    // Tính số bản ghi cần bỏ qua
-    Integer recordOffset = (currentPage - 1) * limit;
+  public Club findByPresidentId(Integer id) {
+    Club club = null;
     try {
       connection = getConnection();
+      String sql = "SELECT * FROM club WHERE president_id = ?";
       statement = connection.prepareStatement(sql);
-      statement.setInt(1, limit);
-      statement.setInt(2, recordOffset);
+      statement.setInt(1, id);
       resultSet = statement.executeQuery();
-      while (resultSet.next()) {
-        list.add(getFromResultSet(resultSet));
+      if (resultSet.next()) {
+        club = getFromResultSet(resultSet);
       }
-
-    } catch (Exception e) {
-      e.printStackTrace();// TODO: handle exception
+    } catch (SQLException ex) {
+      ex.printStackTrace();
     } finally {
       closeResources();
     }
-    return list;
+    return club;
   }
 
-  public static void main(String[] args) {
-    for (Club club : new ClubDAO().findAllPerPage(1, 10)) {
-      System.out.println(club);
-    }
-  }
 }
