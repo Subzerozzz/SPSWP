@@ -224,7 +224,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
   }
 
   public static void main(String[] args) {
-    Account ac  = new Account();
+    Account ac = new Account();
     AccountDAO acdao = new AccountDAO();
     ac.setEmail("vankhoapro2k4@gmail.com");
     ac.setFullname("Pham Van Khoa");
@@ -233,6 +233,24 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
     ac.setPassword(LoginServlet.hashPassword("12345"));
     ac.setStudent_id("HE181066");
     ac.setStatus("active");
-      System.out.println(acdao.insert(ac));
+    System.out.println(acdao.insert(ac));
+  }
+
+  public Account findLastId() {
+    Account account = null;
+    try {
+      connection = getConnection();
+      String sql = "SELECT * FROM account ORDER BY id DESC LIMIT 1";
+      statement = connection.prepareStatement(sql);
+      resultSet = statement.executeQuery();
+      if (resultSet.next()) {
+        account = getFromResultSet(resultSet);
+      }
+    } catch (SQLException ex) {
+      ex.printStackTrace();
+    } finally {
+      closeResources();
+    }
+    return account;
   }
 }

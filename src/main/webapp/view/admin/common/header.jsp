@@ -15,7 +15,7 @@
         <div class="navbar navbar-expand-md header-menu-one bg-light">
       <div class="nav-bar-header-one">
         <div class="header-logo">
-          <a href="index.html">
+            <a href="${pageContext.request.contextPath}/home">
             <img src="${pageContext.request.contextPath}/admin/img/logo.png" alt="logo">
           </a>
         </div>

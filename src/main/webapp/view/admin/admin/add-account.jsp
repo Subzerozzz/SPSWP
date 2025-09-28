@@ -1,5 +1,6 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-  <%@page contentType="text/html" pageEncoding="UTF-8" %>
+  <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+    <%@page contentType="text/html" pageEncoding="UTF-8" %>
+      <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
     <!doctype html>
     <html class="no-js" lang="">
 
@@ -95,7 +96,6 @@
                       <label>Role *</label>
                       <select class="select2" name="role">
                         <option value="">Please Select Role *</option>
-                        <option value="admin">Admin</option>
                         <option value="manager">Manager</option>
                         <option value="president">President</option>
                         <option value="head">Head</option>
@@ -104,14 +104,11 @@
                     </div>
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                       <label>Club *</label>
-                      <select class="select2">
+                      <select class="select2" name="club">
                         <option value="">Please Select Club *</option>
-                        <option value="1">A+</option>
-                        <option value="2">A-</option>
-                        <option value="3">B+</option>
-                        <option value="3">B-</option>
-                        <option value="3">O+</option>
-                        <option value="3">O-</option>
+                        <c:forEach var="club" items="${listClub}">
+                          <option value="${club.id}">${club.name}</option>
+                        </c:forEach>
                       </select>
                     </div>
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
@@ -162,20 +159,21 @@
       <!-- Custom Js -->
       <script src="${pageContext.request.contextPath}/admin/js/main.js"></script>
 
-      <c:if test="${error == true}">
+      <c:if test="${not empty errors}">
         <script>
           document.addEventListener("DOMContentLoaded", () => {
-            iziToast.error({
-              title: "Thông báo",
-              message: "${message}",
-              position: 'topRight',
-              timeout: 5000,
-            });
+            <c:forEach var="entry" items="${errors}">
+              iziToast.error({
+                title: "Lỗi",
+                message: "<c:out value='${entry.value}' />",
+                position: 'topRight',
+                timeout: 5000
+                });
+            </c:forEach>
           });
         </script>
-        <%  
-            session.removeAttribute("error"); 
-            session.removeAttribute("message");
+        <%
+            session.removeAttribute("errors");
         %>
       </c:if>
 
