@@ -60,21 +60,20 @@ public class EmailUtils {
         return true;
     }
 
-    // public static String sendOTPMail(String to) {
-    // int otp = GlobalUtils.generateOTP(6); // Sử dụng phương thức generateOTP để
-    // tạo OTP
-    // String subject = "Mã OTP";
-    // String content = "Mã OTP của bạn là: " + otp + "<br><br>Mã OTP sẽ hết hạn sau
-    // 5 phút.";
-    //
-    // try {
-    // sendMail(to, subject, content);
-    // } catch (MessagingException ex) {
-    // Logger.getLogger(EmailUtils.class.getName()).log(Level.SEVERE, null, ex);
-    // }
-    //
-    // return otp + "";
-    // }
+    public static String sendOTPMail(String to) {
+        int otp = GlobalUtils.generateOTP(6); // Sử dụng phương thức generateOTP để tạo OTP
+        String subject = "Mã OTP";
+        String content = "Mã OTP của bạn là: " + otp + "<br><br>Mã OTP sẽ hết hạn sau 5 phút.";
+
+        try {
+            sendMail(to, subject, content);
+        } catch (MessagingException ex) {
+            Logger.getLogger(EmailUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return otp + "";
+    }
+
     public static String sendAccountMail(String to, String email, String password) throws MessagingException {
         String subject = "Tài Khoản Truy Cập Hệ Thống CLubs FPT University:";
         String content = "<h3>Xin chào,</h3>"
