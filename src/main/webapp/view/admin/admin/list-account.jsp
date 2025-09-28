@@ -89,7 +89,6 @@
                           <th>ID</th>
                           <th>Name</th>
                           <th>Gender</th>
-                          <th>Role</th>
                           <th>StudentID</th>
                           <th>Address</th>
                           <th>Date Of Birth</th>
@@ -105,7 +104,6 @@
                             <td>${account.id}</td>
                             <td>${account.fullname}</td>
                             <td>${account.gender}</td>
-                            <td>${account.role}</td>
                             <td>${account.student_id}</td>
                             <td>${account.address}</td>
                             <td>${account.bod}</td>
