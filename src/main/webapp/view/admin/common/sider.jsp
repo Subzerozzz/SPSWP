@@ -1,60 +1,60 @@
 <%-- Document : sider Created on : Sep 22, 2025, 10:05:16 AM Author : Dell --%>
 
-  <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-    <%@page contentType="text/html" pageEncoding="UTF-8" %>
-      <!DOCTYPE html>
-      <html>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page contentType="text/html" pageEncoding="UTF-8" %>
+<!DOCTYPE html>
+<html>
 
-      <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
-      </head>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>JSP Page</title>
+</head>
 
-      <body>
-        <div class="sidebar-main sidebar-menu-one sidebar-expand-md sidebar-color">
-          <div class="mobile-sidebar-header d-md-none">
-            <div class="header-logo">
-              <a href="index.html"><img src="${pageContext.request.contextPath}/admin/img/logo1.png" alt="logo"></a>
-            </div>
-          </div>
-          <div class="sidebar-menu-content">
-            <ul class="nav nav-sidebar-menu sidebar-toggle-view">
-              <li class="nav-item sidebar-nav-item">
-                <a href="${pageContext.request.contextPath}/account" class="nav-link"><i
-                    class="flaticon-dashboard"></i><span>My Account</span></a>
-              </li>
-              <li class="nav-item sidebar-nav-item">
-                <a href="${pageContext.request.contextPath}/change-password" class="nav-link"><i
-                    class="flaticon-classmates"></i><span>Change Password</span></a>
-              </li>
+<body>
+  <div class="sidebar-main sidebar-menu-one sidebar-expand-md sidebar-color">
+    <div class="mobile-sidebar-header d-md-none">
+      <div class="header-logo">
+        <a href="index.html"><img src="${pageContext.request.contextPath}/admin/img/logo1.png" alt="logo"></a>
+      </div>
+    </div>
+    <div class="sidebar-menu-content">
+      <ul class="nav nav-sidebar-menu sidebar-toggle-view">
+        <li class="nav-item sidebar-nav-item">
+          <a href="${pageContext.request.contextPath}/account" class="nav-link"><i
+              class="flaticon-dashboard"></i><span>My Account</span></a>
+        </li>
+        <li class="nav-item sidebar-nav-item">
+          <a href="${pageContext.request.contextPath}/change-password" class="nav-link"><i
+              class="flaticon-classmates"></i><span>Change Password</span></a>
+        </li>
 
-              <c:choose>
-                <c:when test="${sessionScope.account_club.role == 'admin'}">
-                  <li class="nav-item sidebar-nav-item">
-                    <a href="${pageContext.request.contextPath}/manager-account?action=list-account" class="nav-link"><i
-                        class="flaticon-multiple-users-silhouette"></i><span>View Accounts</span></a>
-                  </li>
-                  <li class="nav-item sidebar-nav-item">
-                    <a href="${pageContext.request.contextPath}/view/admin/admin/add-account.jsp" class="nav-link"><i
-                        class="flaticon-technological"></i><span>Add Account</span></a>
-                  </li>
-                </c:when>
-                <c:when test="${sessionScope.account_club.role == 'manager'}">
-                  <li class="nav-item sidebar-nav-item">
-                    <a href="${pageContext.request.contextPath}/club?action=list-club" class="nav-link"><i
-                        class="flaticon-technological"></i><span>View All Club</span></a>
-                  </li>
-                </c:when>
-                <c:when test="${sessionScope.account.role == 'president'}">
-                  <li class="nav-item sidebar-nav-item">
-                    <a href="${pageContext.request.contextPath}/managerMember" class="nav-link"><i
-                            class="flaticon-technological"></i><span>View All Member</span></a>
-                  </li>
-                </c:when>
-              </c:choose>
+        <c:choose>
+          <c:when test="${sessionScope.account_club.role == 'admin'}">
+            <li class="nav-item sidebar-nav-item">
+              <a href="${pageContext.request.contextPath}/manager-account?action=list-account" class="nav-link"><i
+                  class="flaticon-multiple-users-silhouette"></i><span>View Accounts</span></a>
+            </li>
+            <li class="nav-item sidebar-nav-item">
+              <a href="${pageContext.request.contextPath}/view/admin/admin/add-account.jsp" class="nav-link"><i
+                  class="flaticon-technological"></i><span>Add Account</span></a>
+            </li>
+          </c:when>
+          <c:when test="${sessionScope.account_club.role == 'manager'}">
+            <li class="nav-item sidebar-nav-item">
+              <a href="${pageContext.request.contextPath}/club?action=list-club" class="nav-link"><i
+                  class="flaticon-technological"></i><span>View All Club</span></a>
+            </li>
+          </c:when>
+          <c:when test="${sessionScope.account_club.role == 'president'}">
+            <li class="nav-item sidebar-nav-item">
+              <a href="${pageContext.request.contextPath}/managerMember" class="nav-link"><i
+                  class="flaticon-technological"></i><span>View All Member</span></a>
+            </li>
+          </c:when>
+        </c:choose>
 
 
-              <!--            <li class="nav-item sidebar-nav-item">
+        <!--            <li class="nav-item sidebar-nav-item">
               <a href="#" class="nav-link"><i class="flaticon-books"></i><span>Library</span></a>
               <ul class="nav sub-group-menu">
                 <li class="nav-item">
@@ -165,9 +165,9 @@
             <li class="nav-item">
               <a href="account-settings.html" class="nav-link"><i class="flaticon-settings"></i><span>Account</span></a>
             </li>-->
-            </ul>
-          </div>
-        </div>
-      </body>
+      </ul>
+    </div>
+  </div>
+</body>
 
-      </html>
+</html>
