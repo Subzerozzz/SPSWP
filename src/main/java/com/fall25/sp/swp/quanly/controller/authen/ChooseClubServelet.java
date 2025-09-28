@@ -41,7 +41,7 @@ public class ChooseClubServelet extends HttpServlet {
     Account accountSession = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
     Integer accountID = accountSession.getId();
     // lấy clubID
-    Integer clubID = request.getParameter("choose_club") != null? 
+    Integer clubID = request.getParameter("choose_club") != null ? 
             Integer.parseInt(request.getParameter("choose_club")) : 0;
     AccountClub accountClub = null;
     //Neu clubID != 0 => da tham gia CLB
