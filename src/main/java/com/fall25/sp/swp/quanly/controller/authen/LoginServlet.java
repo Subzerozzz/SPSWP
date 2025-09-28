@@ -76,6 +76,7 @@ public class LoginServlet extends HttpServlet {
         } else {
           // Check xem accountClubListFiltered co rong khong
           if (accountClubListFiltered.isEmpty()) {
+            session.setAttribute(GlobalConfig.SESSION_ACCOUNT, ac);
             req.setAttribute("isEmpty", true);
           } else {
             req.setAttribute("isEmpty", false);

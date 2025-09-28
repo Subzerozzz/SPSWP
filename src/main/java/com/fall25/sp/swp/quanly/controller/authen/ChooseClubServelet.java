@@ -41,9 +41,18 @@ public class ChooseClubServelet extends HttpServlet {
     Account accountSession = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
     Integer accountID = accountSession.getId();
     // lấy clubID
-    Integer clubID = Integer.parseInt(request.getParameter("choose_club"));
+    Integer clubID = request.getParameter("choose_club") != null? 
+            Integer.parseInt(request.getParameter("choose_club")) : 0;
+    AccountClub accountClub = null;
+    //Neu clubID != 0 => da tham gia CLB
+    //Neu = 0 thi dang la user
+    if(clubID != 0){
+        accountClub = accountClubDao.findByAccountIdAndClubId(accountID, clubID);
+    }
+    else{
+        accountClub = accountClubDao.findByAccountId(accountID).get(0);
+    }
     // Lấy ra accountClub set lên session
-    AccountClub accountClub = accountClubDao.findByAccountIdAndClubId(accountID, clubID);
     session.setAttribute(GlobalConfig.SESSION_ACCOUNT_CLUB, accountClub);
     request.setAttribute("listClub", clubDao.findAll());
     request.getRequestDispatcher("view/guest/homePage.jsp").forward(request, response);
