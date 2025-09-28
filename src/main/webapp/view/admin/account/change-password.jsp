@@ -62,33 +62,32 @@
                     <h3>Change Password</h3>
                   </div>
                 </div>
-                <form class="new-added-form" method="post"
-                  action="${pageContext.request.contextPath}/change-password">
+                <form class="new-added-form" method="post" action="${pageContext.request.contextPath}/change-password">
                   <div class="row" style="margin-bottom: 10px">
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                       <label>Old Password *</label>
                       <input type="password" placeholder="" class="form-control" name="old-password">
                     </div>
                   </div>
-                  
+
                   <div class="row" style="margin-bottom: 10px">
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                       <label>New Password *</label>
                       <input type="password" placeholder="" class="form-control" name="new-password">
                     </div>
                   </div>
-                  
+
                   <div class="row">
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                       <label>Confirm New Password *</label>
                       <input type="password" placeholder="" class="form-control" name="confirm-password">
                     </div>
                   </div>
-                  
+
                   <br></br>
                   <div class="col-12 form-group mg-t-8">
-                      <button type="submit" class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark">Update</button>
-                      <button type="reset" class="btn-fill-lg bg-blue-dark btn-hover-yellow">Reset</button>
+                    <button type="submit" class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark">Update</button>
+                    <button type="reset" class="btn-fill-lg bg-blue-dark btn-hover-yellow">Reset</button>
                   </div>
                 </form>
               </div>
@@ -134,6 +133,42 @@
         <% session.removeAttribute("error"); session.removeAttribute("message"); %>
       </c:if>
 
+      <!-- Thông báo thay đổi mật khẩu thành công -->
+      <c:if test="${changePass == true}">
+          <script>
+            document.addEventListener("DOMContentLoaded", () => {
+              iziToast.success({
+                title: "Thông báo",
+                message: "${message}",
+                position: 'topRight',
+                timeout: 5000,
+              });
+            });
+          </script>
+          <% 
+            session.removeAttribute("changePass"); 
+            session.removeAttribute("message"); 
+          %>
+      </c:if>
+       
+      <!--Thông báo thay đổi mk thất bại-->
+      <c:if test="${changePass == false}">
+          <script>
+            document.addEventListener("DOMContentLoaded", () => {
+              iziToast.error({
+                title: "Thông báo",
+                message: "${message}",
+                position: 'topRight',
+                timeout: 5000,
+              });
+            });
+          </script>
+          <% 
+            session.removeAttribute("changePass"); 
+            session.removeAttribute("message"); 
+          %>
+      </c:if>
+      
     </body>
 
 
