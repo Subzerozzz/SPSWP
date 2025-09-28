@@ -46,6 +46,7 @@ public class LoginServlet extends HttpServlet {
         req.setAttribute("error", "Tài khoản không tồn tại");
         req.getRequestDispatcher("view/guest/authen/login.jsp").forward(req, resp);
       } else if (LoginServlet.verifyPassword(password, ac.getPassword())) {
+
         // Lấy ra danh sách accountClub theo accountId
         Integer accountId = ac.getId();
         List<AccountClub> accountClubList = accountClubDao.findByAccountId(accountId);
