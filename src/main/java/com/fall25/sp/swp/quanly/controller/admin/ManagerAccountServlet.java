@@ -7,8 +7,12 @@ package com.fall25.sp.swp.quanly.controller.admin;
 import com.fall25.sp.swp.quanly.config.GlobalConfig;
 import com.fall25.sp.swp.quanly.dal.implement.AccountClubDAO;
 import com.fall25.sp.swp.quanly.dal.implement.AccountDAO;
+import com.fall25.sp.swp.quanly.dal.implement.ClubDAO;
 import com.fall25.sp.swp.quanly.entity.Account;
 import com.fall25.sp.swp.quanly.entity.AccountClub;
+import com.fall25.sp.swp.quanly.entity.Club;
+import com.fall25.sp.swp.quanly.utils.EmailUtils;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -20,6 +24,7 @@ import java.io.PrintWriter;
 import java.security.SecureRandom;
 import java.sql.Date;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -37,6 +42,8 @@ public class ManagerAccountServlet extends HttpServlet {
 
   AccountDAO accountDAO = new AccountDAO();
   AccountClubDAO accountClubDao = new AccountClubDAO();
+  ClubDAO clubDao = new ClubDAO();
+  EmailUtils emailUtils = new EmailUtils();
 
   public static final String URL_LIST_ACCOUNT = "view/admin/admin/list-account.jsp";
   public static final String URL_ACCOUNT = "view/admin/admin/account.jsp";
@@ -55,6 +62,9 @@ public class ManagerAccountServlet extends HttpServlet {
         break;
       case "account-update":
         updateAccount(request, response);
+        break;
+      case "account-add":
+        addAccount(request, response);
         break;
       default:
         throw new AssertionError();
@@ -94,8 +104,14 @@ public class ManagerAccountServlet extends HttpServlet {
     Integer id = Integer.parseInt(request.getParameter("id"));
     // find account by ID
     Account account = accountDAO.findById(id);
+    // Tim cac cau lac bo ma tk nay dang tham gia
+    List<AccountClub> listAccountClubById = accountClubDao.findByAccountId(id);
+    // lấy ra các CLB
+    List<Club> listClub = clubDao.findAll();
     // navigate
     request.setAttribute(GlobalConfig.SESSION_ACCOUNT, account);
+    request.setAttribute("listAccountClubById", listAccountClubById);
+    request.setAttribute("listClub", listClub);
     request.setAttribute("typeOfAction", "view");
     request.getRequestDispatcher(URL_ACCOUNT).forward(request, response);
   }
@@ -109,6 +125,14 @@ public class ManagerAccountServlet extends HttpServlet {
     request.setAttribute(GlobalConfig.SESSION_ACCOUNT, account);
     request.setAttribute("typeOfAction", "update");
     request.getRequestDispatcher(URL_ACCOUNT).forward(request, response);
+  }
+
+  private void addAccount(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
+    // Lấy ra các club đang tồn tại trong hệ thống
+    List<Club> listClub = clubDao.findAll();
+    request.setAttribute("listClub", listClub);
+    request.getRequestDispatcher("view/admin/admin/add-account.jsp").forward(request, response);
   }
 
   private void updateAccountDoPost(HttpServletRequest request, HttpServletResponse response) {
@@ -127,7 +151,7 @@ public class ManagerAccountServlet extends HttpServlet {
         String address = request.getParameter("address");
 
         // Cập nhật thông tin mới cho tài khoản
-//        currentAccount.setRole(role);
+        // currentAccount.setRole(role);
         currentAccount.setStatus(status);
         currentAccount.setAddress(address);
         currentAccount.setUpdated_at(new java.sql.Date(System.currentTimeMillis()));
@@ -196,22 +220,46 @@ public class ManagerAccountServlet extends HttpServlet {
       String gender = request.getParameter("gender");
       String dobString = request.getParameter("dob");
       String role = request.getParameter("role");
-      String club = request.getParameter("club");
+      Integer clubId = request.getParameter("club") != null ? Integer.parseInt(request.getParameter("club")) : 0;
       String student_id = request.getParameter("student_id");
       String address = request.getParameter("address");
       String phone = request.getParameter("phone");
 
-      // Kiểm tra các trường bắt buộc
-      if (fullname == null || fullname.isEmpty()
-          || password == null || password.isEmpty()
-          || email == null || email.isEmpty()
-          || gender == null || gender.isEmpty()
-          || role == null || role.isEmpty()) {
+      // Tạo danh sách lỗi
+      HashMap<String, String> errors = new HashMap<>();
 
-        // Chuyển hướng về trang thêm tài khoản với thông báo lỗi
-        session.setAttribute("error", true);
-        session.setAttribute("message", "Vui lòng điền đầy đủ thông tin bắt buộc");
-        request.getRequestDispatcher(URL_ADD_ACCOUNT).forward(request, response);
+      // Kiểm tra các trường dữ liệu
+      if (fullname == null || fullname.isEmpty()) {
+        errors.put("fullname", "Họ và tên không được để trống");
+      }
+      if (password == null || password.isEmpty()) {
+        errors.put("password", "Mật khẩu không được để trống");
+      } else if (password.length() < 6) {
+        errors.put("password", "Mật khẩu phải có ít nhất 6 ký tự");
+      }
+
+      if (email == null || email.isEmpty()) {
+        errors.put("email", "Email không được để trống");
+      }
+      if (gender == null || gender.isEmpty()) {
+        errors.put("gender", "Giới tính không được để trống");
+      }
+      // check dob không null và phải nằm trong số tuổi 18 - 25
+      if (dobString == null || dobString.isEmpty()) {
+        errors.put("dob", "Ngày sinh không được để trống");
+      }
+      if (role == null || role.isEmpty()) {
+        errors.put("role", "Vai trò không được để trống");
+      }
+      if (clubId == null || clubId == 0) {
+        errors.put("club", "CLB không được để trống");
+      }
+
+      // Kiểm tra xem errors.size > 0 thì chuyển lại trang add-account với lỗi
+      if (errors.size() > 0) {
+        request.setAttribute("errors", errors);
+        request.setAttribute("listClub", clubDao.findAll());
+        request.getRequestDispatcher("view/admin/admin/add-account.jsp").forward(request, response);
         return;
       }
 
@@ -238,7 +286,6 @@ public class ManagerAccountServlet extends HttpServlet {
       newAccount.setEmail(email);
       newAccount.setGender(gender);
       newAccount.setBod(dob);
-//      newAccount.setRole(role);
       newAccount.setStudent_id(student_id);
       newAccount.setAddress(address);
       newAccount.setPhone(phone);
@@ -253,11 +300,21 @@ public class ManagerAccountServlet extends HttpServlet {
       boolean result = accountDAO.insert(newAccount) != -1 ? true : false;
 
       if (result) {
+        // Thêm vào bảng account_club
+        AccountClub accountClub = new AccountClub();
+        accountClub.setAccount_id(accountDAO.findLastId().getId());
+        accountClub.setClub_id(clubId);
+        accountClub.setRole(role);
+
+        accountClubDao.insert(accountClub);
+        // Goi toi ham thong báo tk được gửi qua email
+        emailUtils.sendAccountMail(email, email, password);
+
         // Chuyển hướng về trang danh sách tài khoản nếu thêm thành công
         List<Account> listAccount = accountDAO.findAll();
         session.setAttribute("listAccount", listAccount);
         session.setAttribute("addSuccess", true);
-        session.setAttribute("message", "Thêm tài khoản thành công");
+        session.setAttribute("message", "Thêm tài khoản thành công !");
         response.sendRedirect(URL_LIST_ACCOUNT);
         // request.getRequestDispatcher(URL_LIST_ACCOUNT).forward(request, response);
       } else {
@@ -294,4 +351,5 @@ public class ManagerAccountServlet extends HttpServlet {
       throw new RuntimeException("Lỗi mã hoá mật khẩu", e);
     }
   }
+
 }

@@ -140,9 +140,9 @@
                                   <a class="dropdown-item"
                                     href="${pageContext.request.contextPath}/manager-account?action=account-detail&id=${account.id}"><i
                                       class="fas fa-eye text-orange-peel"></i>View Detail</a>
-                                  <a class="dropdown-item"
+<!--                                  <a class="dropdown-item"
                                     href="${pageContext.request.contextPath}/manager-account?action=account-update&id=${account.id}"><i
-                                      class="fas fa-cogs text-dark-pastel-green"></i>Update</a>
+                                      class="fas fa-cogs text-dark-pastel-green"></i>Update</a>-->
                                   <a class="dropdown-item" href="javascript:void(0);"
                                     onclick="confirmDelete(${account.id});"><i
                                       class="fas fa-times text-orange-red"></i>Delete</a>

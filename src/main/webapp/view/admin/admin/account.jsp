@@ -89,8 +89,51 @@
                             </td>
                           </tr>
                           <tr>
-                            <td>Chức vụ:</td>
-                            <td class="font-medium text-dark-medium">${account.role}</td>
+                            <td>Chức vụ trong hệ thống:</td>
+                            <td class="font-medium text-dark-medium">
+                              <c:choose>
+                                <c:when test="${listAccountClubById.size() == 1}">
+                                  <c:choose>
+                                    <c:when test="${listAccountClubById.get(0).role != 'user'}">
+                                      <span>${listAccountClubById.get(0).role}</span>
+                                    </c:when>
+                                    <c:otherwise>
+                                      <span>Tài khoản này chưa tham gia câu lạc bộ.</span>
+                                    </c:otherwise>
+                                  </c:choose>
+                                </c:when>
+                                <c:otherwise>
+                                  <c:forEach items="${listAccountClubById}" var="account_club">
+                                    <c:forEach items="${listClub}" var="club">
+                                      <c:if test="${account_club.club_id == club.id}">
+                                        <div style="font-style: italic; color: #808080">
+                                          <c:choose>
+                                            <c:when test="${account_club.role == 'member'}">
+                                              <span>Thành Viên</span>
+                                            </c:when>
+                                            <c:when test="${account_club.role == 'head'}">
+                                              <span>Trưởng Ban</span>
+                                            </c:when>
+                                            <c:when test="${account_club.role == 'president'}">
+                                              <span>Trưởng CLB</span>
+                                            </c:when>
+                                            <c:when test="${account_club.role == 'manager'}">
+                                              <span>Quản Lý</span>
+                                            </c:when>
+                                            <c:otherwise>
+                                              <span>Admin</span>
+                                            </c:otherwise>
+                                          </c:choose>
+                                          - ${club.name}
+                                        </div>
+
+                                      </c:if>
+                                    </c:forEach>
+                                  </c:forEach>
+                                </c:otherwise>
+                              </c:choose>
+
+                            </td>
                           </tr>
                           <tr>
                             <td>Email:</td>
@@ -134,20 +177,16 @@
                             <td class="font-medium text-dark-medium">${account.student_id}</td>
                           </tr>
                           <tr>
-                            <td>Thuộc CLB:</td>
-                            <td class="font-medium text-dark-medium">House #10, Road #6, Australia</td>
-                          </tr>
-                          <tr>
                             <td>Phone:</td>
                             <td class="font-medium text-dark-medium">${account.phone}</td>
                           </tr>
                         </tbody>
                       </table>
                     </div>
-                    <!--Infomation-->\
+                    <!--Infomation-->
                     <button data-toggle="modal" data-target="#updateModal"
                       style="color: white; background-color: #009DDC ; border: none; padding: 5px 10px; border-radius: 10px; cursor: pointer">
-                      Update
+                      Update Status
                     </button>
                     <!-- Modal Update  -->
                     <div class="modal fade" id="updateModal" tabindex="-1" role="dialog"
@@ -203,19 +242,21 @@
                                 </div>
 
                                 <div class="col-md-6 form-group">
-                                  <label for="role">Chức vụ:</label>
-                                  <select class="form-control" id="role" name="role">
-                                    <option value="Admin" ${account.role=='admin' ? 'selected' : '' }>Admin</option>
-                                    <option value="Manager" ${account.role=='student' ? 'selected' : '' }>Mananger
-                                    </option>
-                                    <option value="President" ${account.role=='teacher' ? 'selected' : '' }>President
-                                    </option>
-                                    <option value="Head" ${account.role=='teacher' ? 'selected' : '' }>Head
-                                    </option>
-                                    <option value="Member" ${account.role=='teacher' ? 'selected' : '' }>Member
-                                    </option>
+                                  <label for="club_id">CLB đã tham gia:</label>
+                                  <select class="form-control" id="club_id" name="club_id"
+                                    onchange="updateRoleOptions()">
+                                    <option value="">Chọn CLB</option>
+                                    <c:forEach items="${listClub}" var="club">
+                                      <c:forEach items="${listAccountClubById}" var="account_club">
+                                        <c:if test="${account_club.club_id == club.id}">
+                                          <option value="${club.id}" data-account-club-id="${account_club.id}"
+                                            data-role="${account_club.role}">${club.name}</option>
+                                        </c:if>
+                                      </c:forEach>
+                                    </c:forEach>
                                   </select>
                                 </div>
+
                               </div>
 
                               <div class="row">
@@ -238,8 +279,8 @@
 
                               <div class="form-group">
                                 <label for="address">Địa chỉ:</label>
-                                <textarea class="form-control" id="address" name="address"
-                                  rows="3">${account.address}</textarea>
+                                <textarea class="form-control" id="address" name="address" rows="3"
+                                  readonly="">${account.address}</textarea>
                               </div>
 
                               <div class="modal-footer">
@@ -279,6 +320,22 @@
 
 
     </body>
+
+    <!--Thông báo update success-->
+    <c:if test="${updateSuccess == true}">
+      <script>
+        document.addEventListener("DOMContentLoaded", () => {
+          iziToast.success({
+            title: "Thông báo",
+            message: "${message}",
+            position: 'topRight',
+            timeout: 5000,
+            backgroundColor: "#d4edda"
+          });
+        });
+      </script>
+      <% session.removeAttribute("updateSuccess"); session.removeAttribute("message"); %>
+    </c:if>
 
 
     <!-- Mirrored from www.radiustheme.com/demo/html/psdboss/akkhor/akkhor/teacher-details.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 20 Sep 2025 14:36:19 GMT -->

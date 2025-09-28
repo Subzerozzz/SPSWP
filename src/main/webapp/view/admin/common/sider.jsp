@@ -14,7 +14,9 @@
   <div class="sidebar-main sidebar-menu-one sidebar-expand-md sidebar-color">
     <div class="mobile-sidebar-header d-md-none">
       <div class="header-logo">
-        <a href="index.html"><img src="${pageContext.request.contextPath}/admin/img/logo1.png" alt="logo"></a>
+          <a href="${pageContext.request.contextPath}/home">
+              <img src="${pageContext.request.contextPath}/admin/img/logo1.png" alt="logo">
+          </a>
       </div>
     </div>
     <div class="sidebar-menu-content">
@@ -35,7 +37,7 @@
                   class="flaticon-multiple-users-silhouette"></i><span>View Accounts</span></a>
             </li>
             <li class="nav-item sidebar-nav-item">
-              <a href="${pageContext.request.contextPath}/view/admin/admin/add-account.jsp" class="nav-link"><i
+              <a href="${pageContext.request.contextPath}/manager-account?action=account-add" class="nav-link"><i
                   class="flaticon-technological"></i><span>Add Account</span></a>
             </li>
           </c:when>
