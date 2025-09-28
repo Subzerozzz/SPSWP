@@ -192,5 +192,11 @@ public class ClubDAO extends DBContext implements I_DAO<Club> {
     }
     return club;
   }
+  
+    public static void main(String[] args) {
+        for(Club club : new ClubDAO().findAll()){
+            System.out.println(club.toString());
+        }
+    }
 
 }
