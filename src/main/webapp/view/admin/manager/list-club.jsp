@@ -267,12 +267,15 @@
                                         <span class="flaticon-more-button-of-three-dots"></span>
                                       </a>
                                       <div class="dropdown-menu dropdown-menu-right">
-                                        <a class="dropdown-item" href="#"><i style="margin-right: 20px"
-                                            class="fas fa-times text-orange-red"></i>Close</a>
-                                        <a class="dropdown-item" href="#"><i style="margin-right: 20px"
-                                            class="fas fa-cogs text-dark-pastel-green"></i>Edit</a>
-                                        <a class="dropdown-item" href="#"><i style="margin-right: 20px"
-                                            class="fas fa-redo-alt text-orange-peel"></i>Refresh</a>
+                                        <a class="dropdown-item"
+                                          href="#"><i
+                                            class="fas fa-eye text-orange-peel"></i>View Detail</a>
+      <!--                                  <a class="dropdown-item"
+                                          href="${pageContext.request.contextPath}/manager-account?action=account-update&id=${account.id}"><i
+                                            class="fas fa-cogs text-dark-pastel-green"></i>Update</a>-->
+                                        <a class="dropdown-item" href="javascript:void(0);"
+                                          onclick="confirmDelete(${account.id});"><i
+                                      class="fas fa-times text-orange-red"></i>Delete</a>
                                       </div>
                                     </div>
                                   </td>
@@ -345,6 +348,34 @@
                 <!--Footer-->
                 <jsp:include page="../common/footer.jsp"></jsp:include>
                 <!--Footer-->
+
+                <!-- Modal Xác Nhận Xóa -->
+                <div class="modal fade" id="deleteConfirmModal" tabindex="-1" role="dialog"
+                aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="deleteConfirmModalLabel">Xác nhận xóa tài khoản</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <p>Bạn có chắc chắn muốn xóa tài khoản này?</p>
+                      <form id="deleteAccountForm"
+                        action="${pageContext.request.contextPath}/manager-account?action=account-delete"
+                        method="post">
+                        <input type="hidden" id="deleteAccountId" name="id" value="">
+                      </form>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                      <button type="button" class="btn btn-danger"
+                        onclick="document.getElementById('deleteAccountForm').submit();">Xóa</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
               </div>
             </div>
             <!-- Page Area End Here -->
@@ -409,6 +440,13 @@
             }
           </script>
 
+          <!--Hiển thị modal delete-->
+          <script>
+            function confirmDelete(accountId) {
+              document.getElementById('deleteAccountId').value = accountId;
+              $('#deleteConfirmModal').modal('show');
+            }
+          </script>
 
         </body>
 
