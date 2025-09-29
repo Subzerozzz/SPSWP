@@ -5,10 +5,12 @@
 package com.fall25.sp.swp.quanly.controller.manager;
 
 import com.fall25.sp.swp.quanly.config.GlobalConfig;
+import com.fall25.sp.swp.quanly.dal.implement.AccountClubDAO;
 import com.fall25.sp.swp.quanly.dal.implement.AccountDAO;
 import com.fall25.sp.swp.quanly.dal.implement.CategoryClubDAO;
 import com.fall25.sp.swp.quanly.dal.implement.ClubDAO;
 import com.fall25.sp.swp.quanly.entity.Account;
+import com.fall25.sp.swp.quanly.entity.AccountClub;
 import com.fall25.sp.swp.quanly.entity.CategoryClub;
 import com.fall25.sp.swp.quanly.entity.Club;
 import jakarta.servlet.ServletException;
@@ -35,6 +37,7 @@ public class ClubServlet extends HttpServlet {
   ClubDAO clubDAO = new ClubDAO();
   AccountDAO accountDAO = new AccountDAO();
   CategoryClubDAO categoryClubDAO = new CategoryClubDAO();
+  AccountClubDAO accountClubDAO = new AccountClubDAO();
 
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -59,6 +62,9 @@ public class ClubServlet extends HttpServlet {
         break;
       case "filterChanning":
         filterChanning(request, response);
+        break;
+      case "delete-club":
+        deleteClubDoPost(request, response);
         break;
       default:
         throw new AssertionError();
@@ -162,41 +168,67 @@ public class ClubServlet extends HttpServlet {
     String status = request.getParameter("status");
     Integer categoryId = request.getParameter("categoryId").equals("") ? 0
         : Integer.parseInt(request.getParameter("categoryId"));
-    Integer currentPage = request.getParameter("currentPage") == null ? 1 : 
-            Integer.parseInt(request.getParameter("currentPage"));
-    
-    //Phân trang 
-    //lay ra tong so ban ghi
+    Integer currentPage = request.getParameter("currentPage") == null ? 1
+        : Integer.parseInt(request.getParameter("currentPage"));
+
+    // Phân trang
+    // lay ra tong so ban ghi
     List<Club> listClubAll = clubDAO.filterAll(name, status, categoryId);
     Integer totalRecord = listClubAll.size();
-    //so trang
-    Integer totalPage = totalRecord % GlobalConfig.RECORD_PER_PAGE == 0? totalRecord % GlobalConfig.RECORD_PER_PAGE
+    // so trang
+    Integer totalPage = totalRecord % GlobalConfig.RECORD_PER_PAGE == 0 ? totalRecord % GlobalConfig.RECORD_PER_PAGE
         : totalRecord / GlobalConfig.RECORD_PER_PAGE + 1;
     // Gui du lieu pagination
     request.setAttribute("totalPage", totalPage);
     request.setAttribute("currentPage", currentPage);
-    
-    //Du lieu Club 
-    //Gọi toi ham filter trong clubDAO
-    List<Club> listClub = clubDAO.filter(name, status, categoryId,currentPage, GlobalConfig.RECORD_PER_PAGE);
-    //lay du lieu account và categoryClub
+
+    // Du lieu Club
+    // Gọi toi ham filter trong clubDAO
+    List<Club> listClub = clubDAO.filter(name, status, categoryId, currentPage, GlobalConfig.RECORD_PER_PAGE);
+    // lay du lieu account và categoryClub
     List<Account> listAccount = accountDAO.findAll();
     List<CategoryClub> listCategoryClub = categoryClubDAO.findAll();
     // Gửi dữ liệu lên trang
     request.setAttribute("listAccount", listAccount);
     request.setAttribute("listCategoryClub", listCategoryClub);
     request.setAttribute("listClub", listClub);
-    
-    //Gui du lieu cu về
+
+    // Gui du lieu cu về
     request.setAttribute("name", name);
     request.setAttribute("status", status);
     request.setAttribute("categoryId", categoryId);
-    
+
     try {
       request.getRequestDispatcher(URL_LIST_CLUB).forward(request, response);
     } catch (ServletException | IOException e) {
       e.printStackTrace();
     }
+  }
+
+  private void deleteClubDoPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    HttpSession session = request.getSession();
+    //lấy ra delete-id
+    Integer deleteId = Integer.parseInt(request.getParameter("delete-id"));
+  
+    //xoa cac bang ghi account_club có delete-id của clb
+    List<AccountClub> listAccountClubDeleted = accountClubDAO.findByClubId(deleteId);
+    for(AccountClub accountClub : listAccountClubDeleted){
+      accountClubDAO.delete(accountClub);
+    }
+    //xoa clb
+    boolean result = clubDAO.delete(clubDAO.findById(deleteId));
+
+    if(result){
+      session.setAttribute("deleteClubSuccess", true);
+      session.setAttribute("message", "Xóa câu lạc bộ thành công");
+      viewListClub(request, response);
+    }
+    else{
+      session.setAttribute("deleteClubSuccess", false);
+      session.setAttribute("message", "Xóa câu lạc bộ không thành công");
+      viewListClub(request, response);
+    }
+    
   }
 
 }

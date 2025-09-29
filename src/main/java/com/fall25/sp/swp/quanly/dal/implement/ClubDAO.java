@@ -236,6 +236,9 @@ public class ClubDAO extends DBContext implements I_DAO<Club> {
             sql.append(" AND c.category_id = ?");
         }
 
+        //  Thêm sắp xếp mới nhất lên đầu
+        sql.append(" ORDER BY c.id DESC");
+
         // Thêm phân trang
         sql.append(" LIMIT ? OFFSET ?");
         // Tính số bản ghi cần bỏ qua 

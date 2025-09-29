@@ -69,7 +69,7 @@
             font-weight: 600;
           }
 
-          .pagination li.active a  {
+          .pagination li.active a {
             background-color: #FFA701;
             color: white;
             font-weight: 600;
@@ -164,31 +164,32 @@
                         <form id="search-club" class="mg-b-20" method="post"
                           action="${pageContext.request.contextPath}/club?action=filterChanning">
                           <div class="row gutters-8">
-                            
+
                             <input type="hidden" name="currentPage" value="${not empty currentPage ? 1 : currentPage}">
-                            
+
                             <div class="col-lg-4 col-12 form-group">
-                                <input type="text" placeholder="Search by Name ..." class="form-control" 
-                                       name="name" value="${not empty name ? name : ''}">
+                              <input type="text" placeholder="Search by Name ..." class="form-control" name="name"
+                                value="${not empty name ? name : ''}">
                             </div>
-                            
+
                             <div class="col-lg-3 col-12 form-group">
                               <select class="select2" name="status">
                                 <option value="">Select by Status</option>
-                                <option value="active" ${status == 'active' ? 'selected' : ''}>Active</option>
-                                <option value="banned" ${status == 'banned' ? 'selected' : ''}>Banned</option>
+                                <option value="active" ${status=='active' ? 'selected' : '' }>Active</option>
+                                <option value="banned" ${status=='banned' ? 'selected' : '' }>Banned</option>
                               </select>
                             </div>
-                              
+
                             <div class="col-lg-3 col-12 form-group">
                               <select class="select2" name="categoryId">
                                 <option value="">Select category</option>
                                 <c:forEach var="item" items="${listCategoryClub}">
-                                  <option value="${item.id}" ${categoryId == item.id ? 'selected' : ''}>${item.name}</option>
+                                  <option value="${item.id}" ${categoryId==item.id ? 'selected' : '' }>${item.name}
+                                  </option>
                                 </c:forEach>
                               </select>
                             </div>
-                              
+
                             <div class="col-lg-2 col-12 form-group">
                               <button type="submit" class="fw-btn-fill btn-gradient-yellow">SEARCH</button>
                             </div>
@@ -267,15 +268,15 @@
                                         <span class="flaticon-more-button-of-three-dots"></span>
                                       </a>
                                       <div class="dropdown-menu dropdown-menu-right">
-                                        <a class="dropdown-item"
-                                          href="#"><i
-                                            class="fas fa-eye text-orange-peel"></i>View Detail</a>
-      <!--                                  <a class="dropdown-item"
-                                          href="${pageContext.request.contextPath}/manager-account?action=account-update&id=${account.id}"><i
-                                            class="fas fa-cogs text-dark-pastel-green"></i>Update</a>-->
+                                        <a class="dropdown-item" href="#">
+                                          <i class="fas fa-eye text-orange-peel" style="margin-right:10px"></i>
+                                          View Detail
+                                        </a>
                                         <a class="dropdown-item" href="javascript:void(0);"
-                                          onclick="confirmDelete(${account.id});"><i
-                                      class="fas fa-times text-orange-red"></i>Delete</a>
+                                          onclick="confirmDelete(${item.id});">
+                                          <i class="fas fa-times text-orange-red" style="margin-right: 10px"></i>
+                                          Delete
+                                        </a>
                                       </div>
                                     </div>
                                   </td>
@@ -302,13 +303,11 @@
                                     </li>
                                   </c:if>
                                   <li class="active">
-                                    <a
-                                      href="#" onclick="handleFormSearch(${currentPage})">${currentPage}</a>
+                                    <a href="#" onclick="handleFormSearch(${currentPage})">${currentPage}</a>
                                   </li>
 
                                   <li class="">
-                                    <a
-                                      href="#" onclick="handleFormSearch(${currentPage+ 1})">${currentPage+ 1}</a>
+                                    <a href="#" onclick="handleFormSearch(${currentPage+ 1})">${currentPage+ 1}</a>
                                   </li>
 
                                   <c:if test="${currentPage < totalPage - 2}">
@@ -318,23 +317,22 @@
                                   </c:if>
 
                                   <li class="">
-                                    <a
-                                      href="#" onclick="handleFormSearch(${totalPage})">${totalPage}</a>
+                                    <a href="#" onclick="handleFormSearch(${totalPage})">${totalPage}</a>
                                   </li>
                                 </c:when>
 
                                 <c:otherwise>
                                   <c:forEach begin="${totalPage-2 <= 0 ? 1 : totalPage - 2}" end="${totalPage}" var="i">
                                     <li class="${currentPage == i ? 'active' : ''}">
-                                      <a
-                                        href="#" onclick="handleFormSearch(${i})">${i}</a>
+                                      <a href="#" onclick="handleFormSearch(${i})">${i}</a>
                                     </li>
                                   </c:forEach>
                                 </c:otherwise>
                               </c:choose>
 
                               <li>
-                                <a href="#" onclick="handleFormSearch(${totalPage})"><i class="fas fa-angle-right"></i></a>
+                                <a href="#" onclick="handleFormSearch(${totalPage})"><i
+                                    class="fas fa-angle-right"></i></a>
                               </li>
                             </ul>
                           </div>
@@ -351,31 +349,30 @@
 
                 <!-- Modal Xác Nhận Xóa -->
                 <div class="modal fade" id="deleteConfirmModal" tabindex="-1" role="dialog"
-                aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="deleteConfirmModalLabel">Xác nhận xóa tài khoản</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div class="modal-body">
-                      <p>Bạn có chắc chắn muốn xóa tài khoản này?</p>
-                      <form id="deleteAccountForm"
-                        action="${pageContext.request.contextPath}/manager-account?action=account-delete"
-                        method="post">
-                        <input type="hidden" id="deleteAccountId" name="id" value="">
-                      </form>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
-                      <button type="button" class="btn btn-danger"
-                        onclick="document.getElementById('deleteAccountForm').submit();">Xóa</button>
+                  aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="deleteConfirmModalLabel">Xác nhận xóa câu lạc bộ</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <p>Bạn có chắc chắn muốn xóa câu lạc bộ này?</p>
+                        <form id="deleteClubForm" action="${pageContext.request.contextPath}/club?action=delete-club"
+                          method="post">
+                          <input type="hidden" id="deleteClubId" name="delete-id" value="">
+                        </form>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                        <button type="button" class="btn btn-danger"
+                          onclick="document.getElementById('deleteClubForm').submit();">Xóa</button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
               </div>
             </div>
             <!-- Page Area End Here -->
@@ -428,6 +425,38 @@
             <% session.removeAttribute("addClubSucess"); session.removeAttribute("message"); %>
           </c:if>
 
+          <!-- Thông báo xóa club thành công  -->
+          <c:if test="${deleteClubSucess == true}">
+            <script>
+              document.addEventListener("DOMContentLoaded", () => {
+                iziToast.success({
+                  title: "Thành công",
+                  message: "${message}",
+                  position: 'topRight',
+                  timeout: 5000
+                });
+              });
+            </script>
+            <% session.removeAttribute("deleteClubSucess"); session.removeAttribute("message"); %>
+          </c:if>
+
+          Thông báo xóa club that bai
+
+          <!-- Thông báo xóa club thành công  -->
+          <c:if test="${deleteClubSucess == false}">
+            <script>
+              document.addEventListener("DOMContentLoaded", () => {
+                iziToast.error({
+                  title: "Thất bại",
+                  message: "${message}",
+                  position: 'topRight',
+                  timeout: 5000
+                })
+              })
+            </script>
+            <% session.removeAttribute("deleteClubSucess"); session.removeAttribute("message"); %>
+          </c:if>
+
           <!-- Script cho form search-club -->
           <script>
             const handleFormSearch = (currentPage) => {
@@ -436,14 +465,14 @@
               inputCurrentPage.value = currentPage;
               formSearch.submit();
               return false; // Ngăn chặn việc gửi form mặc định
-              
+
             }
           </script>
 
           <!--Hiển thị modal delete-->
           <script>
             function confirmDelete(accountId) {
-              document.getElementById('deleteAccountId').value = accountId;
+              document.getElementById('deleteClubId').value = accountId;
               $('#deleteConfirmModal').modal('show');
             }
           </script>
