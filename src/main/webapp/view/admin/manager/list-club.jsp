@@ -440,9 +440,7 @@
             <% session.removeAttribute("deleteClubSucess"); session.removeAttribute("message"); %>
           </c:if>
 
-          Thông báo xóa club that bai
-
-          <!-- Thông báo xóa club thành công  -->
+          <!--Thông báo xóa club that bai-->
           <c:if test="${deleteClubSucess == false}">
             <script>
               document.addEventListener("DOMContentLoaded", () => {
