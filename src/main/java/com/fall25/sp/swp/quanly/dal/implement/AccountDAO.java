@@ -224,16 +224,9 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
   }
 
   public static void main(String[] args) {
-    Account ac = new Account();
-    AccountDAO acdao = new AccountDAO();
-    ac.setEmail("vankhoapro2k4@gmail.com");
-    ac.setFullname("Pham Van Khoa");
-    ac.setAddress("HANOI");
-    ac.setGender("male");
-    ac.setPassword(LoginServlet.hashPassword("12345"));
-    ac.setStudent_id("HE181066");
-    ac.setStatus("active");
-    System.out.println(acdao.insert(ac));
+    for(Account acc : new AccountDAO().findAll()){
+        System.out.println(acc.toString());
+    }
   }
 
   public Account findLastId() {

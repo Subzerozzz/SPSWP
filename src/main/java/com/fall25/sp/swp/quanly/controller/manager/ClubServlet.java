@@ -57,6 +57,9 @@ public class ClubServlet extends HttpServlet {
       case "add-club":
         addClubDoPost(request, response);
         break;
+      case "filterChanning":
+        filterChanning(request, response);
+        break;
       default:
         throw new AssertionError();
     }
@@ -74,7 +77,7 @@ public class ClubServlet extends HttpServlet {
     Integer totalPage = totalRecord % recordPerPage == 0 ? totalRecord % recordPerPage
         : totalRecord / recordPerPage + 1;
     // lấy ra số bản ghi của trang đẩu tiên
-//    List<Club> listClub = clubDAO.findAllPerPage(1, recordPerPage);
+    List<Club> listClub = clubDAO.findRecordPerPage(1, recordPerPage);
     // Lấy ra danh sách account
     List<Account> listAccount = accountDAO.findAll();
     // lấy ra danh mục các club
@@ -85,7 +88,7 @@ public class ClubServlet extends HttpServlet {
     request.setAttribute("currentPage", 1);
     // Gửi dữ liệu lên trang
     request.setAttribute("listCategoryClub", listCategoryClub);
-//    request.setAttribute("listClub", listClub);
+    request.setAttribute("listClub", listClub);
     request.setAttribute("listAccount", listAccount);
     request.getRequestDispatcher(URL_LIST_CLUB).forward(request, response);
   }
@@ -151,6 +154,49 @@ public class ClubServlet extends HttpServlet {
       System.out.println(e.getMessage());
     }
 
+  }
+
+  private void filterChanning(HttpServletRequest request, HttpServletResponse response) {
+    // lấy ra name,status,categoryId,page
+    String name = request.getParameter("name");
+    String status = request.getParameter("status");
+    Integer categoryId = request.getParameter("categoryId").equals("") ? 0
+        : Integer.parseInt(request.getParameter("categoryId"));
+    Integer currentPage = request.getParameter("currentPage") == null ? 1 : 
+            Integer.parseInt(request.getParameter("currentPage"));
+    
+    //Phân trang 
+    //lay ra tong so ban ghi
+    List<Club> listClubAll = clubDAO.filterAll(name, status, categoryId);
+    Integer totalRecord = listClubAll.size();
+    //so trang
+    Integer totalPage = totalRecord % GlobalConfig.RECORD_PER_PAGE == 0? totalRecord % GlobalConfig.RECORD_PER_PAGE
+        : totalRecord / GlobalConfig.RECORD_PER_PAGE + 1;
+    // Gui du lieu pagination
+    request.setAttribute("totalPage", totalPage);
+    request.setAttribute("currentPage", currentPage);
+    
+    //Du lieu Club 
+    //Gọi toi ham filter trong clubDAO
+    List<Club> listClub = clubDAO.filter(name, status, categoryId,currentPage, GlobalConfig.RECORD_PER_PAGE);
+    //lay du lieu account và categoryClub
+    List<Account> listAccount = accountDAO.findAll();
+    List<CategoryClub> listCategoryClub = categoryClubDAO.findAll();
+    // Gửi dữ liệu lên trang
+    request.setAttribute("listAccount", listAccount);
+    request.setAttribute("listCategoryClub", listCategoryClub);
+    request.setAttribute("listClub", listClub);
+    
+    //Gui du lieu cu về
+    request.setAttribute("name", name);
+    request.setAttribute("status", status);
+    request.setAttribute("categoryId", categoryId);
+    
+    try {
+      request.getRequestDispatcher(URL_LIST_CLUB).forward(request, response);
+    } catch (ServletException | IOException e) {
+      e.printStackTrace();
+    }
   }
 
 }

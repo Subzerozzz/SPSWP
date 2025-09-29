@@ -42,6 +42,40 @@
           <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
         </head>
 
+        <style>
+          .pagination {
+            text-align: end;
+          }
+
+          .pagination ul {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            gap: 10px;
+          }
+
+          .pagination li a {
+            border: 1px solid #ccc;
+            padding: 5px 10px;
+            border-radius: 5px;
+            color: black;
+          }
+
+          .pagination li a:hover {
+            background-color: #FFA701;
+            color: white;
+            font-weight: 600;
+          }
+
+          .pagination li.active a  {
+            background-color: #FFA701;
+            color: white;
+            font-weight: 600;
+          }
+        </style>
+
         <body>
           <!-- Preloader Start Here -->
           <div id="preloader"></div>
@@ -127,17 +161,34 @@
                           </div>
                         </div>
                         <!--Form search-->
-                        <form class="mg-b-20">
+                        <form id="search-club" class="mg-b-20" method="post"
+                          action="${pageContext.request.contextPath}/club?action=filterChanning">
                           <div class="row gutters-8">
+                            
+                            <input type="hidden" name="currentPage" value="${not empty currentPage ? 1 : currentPage}">
+                            
                             <div class="col-lg-4 col-12 form-group">
-                              <input type="text" placeholder="Search by Day ..." class="form-control">
+                                <input type="text" placeholder="Search by Name ..." class="form-control" 
+                                       name="name" value="${not empty name ? name : ''}">
                             </div>
+                            
                             <div class="col-lg-3 col-12 form-group">
-                              <input type="text" placeholder="Search by Class ..." class="form-control">
+                              <select class="select2" name="status">
+                                <option value="">Select by Status</option>
+                                <option value="active" ${status == 'active' ? 'selected' : ''}>Active</option>
+                                <option value="banned" ${status == 'banned' ? 'selected' : ''}>Banned</option>
+                              </select>
                             </div>
+                              
                             <div class="col-lg-3 col-12 form-group">
-                              <input type="text" placeholder="Search by Section ..." class="form-control">
+                              <select class="select2" name="categoryId">
+                                <option value="">Select category</option>
+                                <c:forEach var="item" items="${listCategoryClub}">
+                                  <option value="${item.id}" ${categoryId == item.id ? 'selected' : ''}>${item.name}</option>
+                                </c:forEach>
+                              </select>
                             </div>
+                              
                             <div class="col-lg-2 col-12 form-group">
                               <button type="submit" class="fw-btn-fill btn-gradient-yellow">SEARCH</button>
                             </div>
@@ -216,11 +267,11 @@
                                         <span class="flaticon-more-button-of-three-dots"></span>
                                       </a>
                                       <div class="dropdown-menu dropdown-menu-right">
-                                        <a class="dropdown-item" href="#"><i
+                                        <a class="dropdown-item" href="#"><i style="margin-right: 20px"
                                             class="fas fa-times text-orange-red"></i>Close</a>
-                                        <a class="dropdown-item" href="#"><i
+                                        <a class="dropdown-item" href="#"><i style="margin-right: 20px"
                                             class="fas fa-cogs text-dark-pastel-green"></i>Edit</a>
-                                        <a class="dropdown-item" href="#"><i
+                                        <a class="dropdown-item" href="#"><i style="margin-right: 20px"
                                             class="fas fa-redo-alt text-orange-peel"></i>Refresh</a>
                                       </div>
                                     </div>
@@ -236,28 +287,25 @@
                           <div class="pagination">
                             <ul class="wg-pagination">
                               <li>
-                                <a href="#"> 
-                                    <i class="fas fa-angle-left"></i> 
+                                <a href="#" onclick=handleFormSearch(1)>
+                                  <i class="fas fa-angle-left"></i>
                                 </a>
                               </li>
                               <c:choose>
                                 <c:when test="${currentPage <= totalPage - 2}">
                                   <c:if test="${currentPage > 1}">
                                     <li class="">
-                                      <a
-                                        href="${pageContext.request.contextPath}/manage-food?action=searchFilter&name=${foodName}&cateoryID=${categoryID}&page=${currentPage - 1}">${currentPage
-                                        - 1}</a>
+                                      <a href="#" onclick="handleFormSearch(${currentPage- 1})">${currentPage- 1}</a>
                                     </li>
                                   </c:if>
                                   <li class="active">
                                     <a
-                                      href="${pageContext.request.contextPath}/manage-food?action=searchFilter&name=${foodName}&cateoryID=${categoryID}&page=${currentPage}">${currentPage}</a>
+                                      href="#" onclick="handleFormSearch(${currentPage})">${currentPage}</a>
                                   </li>
 
                                   <li class="">
                                     <a
-                                      href="${pageContext.request.contextPath}/manage-food?action=searchFilter&name=${foodName}&cateoryID=${categoryID}&page=${currentPage + 1}">${currentPage
-                                      + 1}</a>
+                                      href="#" onclick="handleFormSearch(${currentPage+ 1})">${currentPage+ 1}</a>
                                   </li>
 
                                   <c:if test="${currentPage < totalPage - 2}">
@@ -266,10 +314,9 @@
                                     </li>
                                   </c:if>
 
-
                                   <li class="">
                                     <a
-                                      href="${pageContext.request.contextPath}/manage-food?action=searchFilter&name=${foodName}&cateoryID=${categoryID}&page=${totalPage}">${totalPage}</a>
+                                      href="#" onclick="handleFormSearch(${totalPage})">${totalPage}</a>
                                   </li>
                                 </c:when>
 
@@ -277,14 +324,14 @@
                                   <c:forEach begin="${totalPage-2 <= 0 ? 1 : totalPage - 2}" end="${totalPage}" var="i">
                                     <li class="${currentPage == i ? 'active' : ''}">
                                       <a
-                                        href="${pageContext.request.contextPath}/manage-food?action=searchFilter&name=${foodName}&cateoryID=${categoryID}&page=${i}">${i}</a>
+                                        href="#" onclick="handleFormSearch(${i})">${i}</a>
                                     </li>
                                   </c:forEach>
                                 </c:otherwise>
                               </c:choose>
 
                               <li>
-                                <a href="#"><i class="fas fa-angle-right"></i></a>
+                                <a href="#" onclick="handleFormSearch(${totalPage})"><i class="fas fa-angle-right"></i></a>
                               </li>
                             </ul>
                           </div>
@@ -350,6 +397,17 @@
             <% session.removeAttribute("addClubSucess"); session.removeAttribute("message"); %>
           </c:if>
 
+          <!-- Script cho form search-club -->
+          <script>
+            const handleFormSearch = (currentPage) => {
+              const formSearch = document.getElementById("search-club");
+              const inputCurrentPage = formSearch.querySelector('input[name="currentPage"]');
+              inputCurrentPage.value = currentPage;
+              formSearch.submit();
+              return false; // Ngăn chặn việc gửi form mặc định
+              
+            }
+          </script>
 
 
         </body>
