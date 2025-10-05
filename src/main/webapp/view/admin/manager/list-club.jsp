@@ -269,7 +269,7 @@
                                       </a>
                                       <div class="dropdown-menu dropdown-menu-right">
                                         <a class="dropdown-item"
-                                          href="${pageContext.request.contextPath}/manager-club?action=detail-club&id=${item.id}">
+                                          href="${pageContext.request.contextPath}/club?action=detail-club&id=${item.id}">
                                           <i class="fas fa-eye text-orange-peel" style="margin-right:10px"></i>
                                           View Detail
                                         </a>

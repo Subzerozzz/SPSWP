@@ -1,4 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
+  <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
   <!doctype html>
   <html class="no-js" lang="">
 
@@ -105,7 +106,29 @@
                         </tr>
                         <tr>
                           <td>Trạng thái:</td>
-                          <td class="font-medium text-dark-medium">${sessionScope.account.status}</td>
+                          <td class="font-medium text-dark-medium">
+                              <c:choose>
+                                <c:when test="${sessionScope.account.status == 'active'}">
+                                  <span style="color: white; 
+                                    padding: 5px 10px; 
+                                    background-color: #9FD702;
+                                    font-weight: 500;
+                                    border-radius: 10px;
+                                    ">
+                                    Active
+                                  </span>
+                                </c:when>
+                                <c:otherwise>
+                                  <span style="color: white; 
+                                        padding: 5px 10px; 
+                                        background-color: #DE3202;
+                                        font-weight: 500;
+                                        border-radius: 10px;
+                                        ">Banned</span>
+                                </c:otherwise>
+                              </c:choose>
+                          </td>
+                          
                         </tr>
                         <tr>
                           <td>Thuộc CLB:</td>
