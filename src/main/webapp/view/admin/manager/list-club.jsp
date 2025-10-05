@@ -268,7 +268,8 @@
                                         <span class="flaticon-more-button-of-three-dots"></span>
                                       </a>
                                       <div class="dropdown-menu dropdown-menu-right">
-                                        <a class="dropdown-item" href="#">
+                                        <a class="dropdown-item"
+                                          href="${pageContext.request.contextPath}/manager-club?action=detail-club&id=${item.id}">
                                           <i class="fas fa-eye text-orange-peel" style="margin-right:10px"></i>
                                           View Detail
                                         </a>
@@ -440,9 +441,7 @@
             <% session.removeAttribute("deleteClubSucess"); session.removeAttribute("message"); %>
           </c:if>
 
-          Thông báo xóa club that bai
-
-          <!-- Thông báo xóa club thành công  -->
+          <!--Thông báo xóa club that bai-->
           <c:if test="${deleteClubSucess == false}">
             <script>
               document.addEventListener("DOMContentLoaded", () => {
