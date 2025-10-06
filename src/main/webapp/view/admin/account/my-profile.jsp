@@ -170,13 +170,13 @@
                               <div class="col-md-6 form-group">
                                 <label for="fullname">Họ và tên:</label>
                                 <input type="text" class="form-control" id="fullname" name="fullname"
-                                  value="${account.fullname}" readonly>
+                                  value="${account.fullname}">
                               </div>
 
                               <div class="col-md-6 form-group">
                                 <label for="email">Email:</label>
                                 <input type="email" class="form-control" id="email" name="email"
-                                  value="${account.email}" readonly>
+                                  value="${account.email}">
                               </div>
                             </div>
 
@@ -184,12 +184,12 @@
                               <div class="col-md-6 form-group">
                                 <label for="phone">Số điện thoại:</label>
                                 <input type="text" class="form-control" id="phone" name="phone" value="${account.phone}"
-                                  readonly>
+                                 >
                               </div>
 
                               <div class="col-md-6 form-group">
                                 <label for="gender">Giới tính:</label>
-                                <select class="form-control" id="gender" name="gender" disabled>
+                                <select class="form-control" id="gender" name="gender">
                                   <option value="male" ${account.gender=='male' ? 'selected' : '' }>Nam</option>
                                   <option value="female" ${account.gender=='female' ? 'selected' : '' }>Nữ</option>
                                 </select>
@@ -200,12 +200,12 @@
                               <div class="col-md-6 form-group">
                                 <label for="bod">Ngày sinh:</label>
                                 <input type="date" class="form-control" id="bod" name="bod" value="${account.bod}"
-                                  readonly>
+                                  >
                               </div>
 
                               <div class="col-md-6 form-group">
                                 <label for="role">Chức vụ:</label>
-                                <select class="form-control" id="role" name="role">
+                                <select class="form-control" id="role" name="role" disabled>
                                   <option value="Admin" ${account_club.role=='admin' ? 'selected' : '' }>Admin</option>
                                   <option value="Manager" ${account_club.role=='student' ? 'selected' : '' }>Mananger
                                   </option>
@@ -223,12 +223,12 @@
                               <div class="col-md-6 form-group">
                                 <label for="student_id">Mã số sinh viên:</label>
                                 <input type="text" class="form-control" id="student_id" name="student_id"
-                                  value="${account.student_id}" readonly>
+                                  value="${account.student_id}">
                               </div>
 
                               <div class="col-md-6 form-group">
                                 <label for="status">Trạng thái:</label>
-                                <select class="form-control" id="status" name="status">
+                                <select class="form-control" id="status" name="status" disabled>
                                   <option value="active" ${account.status=='active' ? 'selected' : '' }>Active
                                   </option>
                                   <option value="banned" ${account.status=='banned' ? 'selected' : '' }>Banned
