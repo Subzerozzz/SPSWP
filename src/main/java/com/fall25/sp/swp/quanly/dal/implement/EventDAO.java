@@ -194,7 +194,7 @@ public class EventDAO extends DBContext implements I_DAO<Event> {
     }
 
     public static void main(String[] args) {
-        for (Event event : new EventDAO().findAll()) {
+        for (Event event : new EventDAO().findByClubId(25)) {
             System.out.println(event.toString());
         }
     }

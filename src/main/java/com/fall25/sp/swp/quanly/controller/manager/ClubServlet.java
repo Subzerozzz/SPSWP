@@ -9,10 +9,14 @@ import com.fall25.sp.swp.quanly.dal.implement.AccountClubDAO;
 import com.fall25.sp.swp.quanly.dal.implement.AccountDAO;
 import com.fall25.sp.swp.quanly.dal.implement.CategoryClubDAO;
 import com.fall25.sp.swp.quanly.dal.implement.ClubDAO;
+import com.fall25.sp.swp.quanly.dal.implement.EventDAO;
 import com.fall25.sp.swp.quanly.entity.Account;
 import com.fall25.sp.swp.quanly.entity.AccountClub;
 import com.fall25.sp.swp.quanly.entity.CategoryClub;
 import com.fall25.sp.swp.quanly.entity.Club;
+import com.fall25.sp.swp.quanly.utils.EmailUtils;
+import jakarta.mail.MessagingException;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -24,6 +28,8 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -39,6 +45,8 @@ public class ClubServlet extends HttpServlet {
   AccountDAO accountDAO = new AccountDAO();
   CategoryClubDAO categoryClubDAO = new CategoryClubDAO();
   AccountClubDAO accountClubDAO = new AccountClubDAO();
+  EventDAO eventDAO = new EventDAO();
+  EmailUtils emailUtils = new EmailUtils();
 
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -64,6 +72,16 @@ public class ClubServlet extends HttpServlet {
       case "add-club":
         addClubDoPost(request, response);
         break;
+      case "update-club":
+        {
+            try {
+                updateStatusDoPost(request, response);
+            } catch (MessagingException ex) {
+                Logger.getLogger(ClubServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        break;
+
       case "filterChanning":
         filterChanning(request, response);
         break;
@@ -249,12 +267,31 @@ public class ClubServlet extends HttpServlet {
     Integer presidentid = club.getPresident_id();
     Account accountPre = accountDAO.findById(presidentid);
     CategoryClub categoryClub = categoryClubDAO.findById(club.getCategory_id());
+    // Lấy số lượng thành viên trong câu lạc bộ
     Integer numberOfClub = accountClubDAO.findByClubId(clubId).size();
+    // Lấy số lượng sự kiện trong câu lạc bộ
+    Integer numberOfEvent = eventDAO.findByClubId(clubId).size();
+    request.setAttribute("numberOfEvent", numberOfEvent);
     request.setAttribute("club", club);
     request.setAttribute("president", accountPre);
     request.setAttribute("categoryClub", categoryClub);
     request.setAttribute("numberOfClub", numberOfClub);
+    request.setAttribute("numberOfEvent", numberOfEvent);
     request.getRequestDispatcher(URL_DETAIL_CLUB).forward(request, response);
+  }
+
+  private void updateStatusDoPost(HttpServletRequest request, HttpServletResponse response) throws MessagingException {
+    // Lấy ra id , status và reason
+    Integer id = Integer.parseInt(request.getParameter("id_club"));
+    String email = request.getParameter("email_club");
+    String status = request.getParameter("status");
+    String reason = request.getParameter("reason");
+    // Cập nhật trạng thái
+    Club clubUpdate = clubDAO.findById(id);
+    clubUpdate.setStatus(status);
+    // Gửi thông báo qua mail của trưởng câu lạc bộ
+    emailUtils.sendStatusForClub(email, status, reason);
+    
   }
 
 }
