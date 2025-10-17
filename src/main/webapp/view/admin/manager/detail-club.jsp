@@ -148,12 +148,14 @@
                             </div>
                             <div class="modal-body">
                               <form action="${pageContext.request.contextPath}/club?action=update-club" method="post">
+                                <input type="hidden" name="id" value="${account.id}">
 
                                 <div class="row">
                                   <!-- ID  -->
-                                  <div class="col-md-6 form-group" style="display: block">
+                                  <div class="col-md-6 form-group" style="display: none">
                                     <label for="fullname">ID:</label>
-                                    <input type="text" class="form-control" id="id_club" name="id" value="${club.id}">
+                                    <input type="text" class="form-control" id="id_club" name="id_club"
+                                      value="${club.id}">
                                   </div>
                                   <!-- Email  -->
                                   <div class="col-md-6 form-group" style="display: none">
@@ -171,9 +173,9 @@
                                   <div class="col-md-6 form-group">
                                     <label for="status">Trạng thái:</label>
                                     <select class="form-control" id="statusCLB" name="status">
-                                      <option value="active" ${club.status=='active' ? 'selected' : '' }>Active
+                                      <option value="active" ${account.status=='active' ? 'selected' : '' }>Active
                                       </option>
-                                      <option value="banned" ${club.status=='banned' ? 'selected' : '' }>Banned
+                                      <option value="banned" ${account.status=='banned' ? 'selected' : '' }>Banned
                                       </option>
                                     </select>
                                   </div>
@@ -230,24 +232,6 @@
             }
           });
         </script>
-        
-        <!--Thông báo cập nhật trạng thái câu lạc bộ--> 
-        <c:if test="${isUpdate == true}">
-            <script>
-                document.addEventListener("DOMContentLoaded", () => {
-                    iziToast.success({
-                        title: "Thông báo",
-                        message: "${message}",
-                        position: 'topRight',
-                        timeout: 5000,
-                    });
-                });
-            </script>
-            <%
-                session.removeAttribute("isUpdate");
-                session.removeAttribute("message");
-            %>
-        </c:if>
 
       </body>
 
