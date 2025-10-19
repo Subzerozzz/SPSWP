@@ -72,13 +72,14 @@ public class ClubServlet extends HttpServlet {
       case "add-club":
         addClubDoPost(request, response);
         break;
-      case "update-club": {
-        try {
-          updateStatusDoPost(request, response);
-        } catch (MessagingException ex) {
-          Logger.getLogger(ClubServlet.class.getName()).log(Level.SEVERE, null, ex);
+      case "update-club":
+        {
+            try {
+                updateStatusDoPost(request, response);
+            } catch (MessagingException ex) {
+                Logger.getLogger(ClubServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-      }
         break;
 
       case "filterChanning":
@@ -290,7 +291,7 @@ public class ClubServlet extends HttpServlet {
     clubUpdate.setStatus(status);
     // Gửi thông báo qua mail của trưởng câu lạc bộ
     emailUtils.sendStatusForClub(email, status, reason);
-
+    
   }
 
 }
