@@ -46,6 +46,10 @@
               <a href="${pageContext.request.contextPath}/club?action=list-club" class="nav-link"><i
                   class="flaticon-technological"></i><span>View All Club</span></a>
             </li>
+            <li class="nav-item sidebar-nav-item">
+              <a href="${pageContext.request.contextPath}/club?action=list-club" class="nav-link"><i
+                  class="flaticon-bed"></i><span>View Event Request</span></a>
+            </li>
           </c:when>
           <c:when test="${sessionScope.account_club.role == 'president'}">
             <li class="nav-item sidebar-nav-item">
