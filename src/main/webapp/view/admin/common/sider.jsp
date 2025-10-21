@@ -7,6 +7,7 @@
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
   <title>JSP Page</title>
 </head>
 
@@ -56,6 +57,14 @@
               <a href="${pageContext.request.contextPath}/managerMember" class="nav-link"><i
                   class="flaticon-technological"></i><span>View All Member</span></a>
             </li>
+            <li class="nav-item sidebar-nav-item">
+              <a href="${pageContext.request.contextPath}/createEvent" class="nav-link"><i class="fa-solid fa-calendar"></i>
+              <span>Tạo sự kiện mới </span></a>
+             </li>
+             <li class="nav-item sidebar-nav-item">
+                           <a href="${pageContext.request.contextPath}/manageEvent" class="nav-link"><i class="fa-solid fa-calendar"></i>
+                           <span>Danh sách sự kiện</span></a>
+                          </li>
           </c:when>
         </c:choose>
 

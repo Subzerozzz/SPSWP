@@ -22,7 +22,8 @@ import lombok.ToString;
 @Setter
 public class Event {
     private Integer id;
-    private String area;
+    private String title;
+    private int area_id;
     private Integer club_id;
     private String status;
     private String description;
