@@ -1,23 +1,14 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.fall25.sp.swp.quanly.dal.implement;
 
 import com.fall25.sp.swp.quanly.dal.DBContext;
 import com.fall25.sp.swp.quanly.dal.I_DAO;
 import com.fall25.sp.swp.quanly.entity.Event;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-/**
- *
- * @author Dell
- */
+import java.sql.*;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.*;
+
 public class EventDAO extends DBContext implements I_DAO<Event> {
 
     @Override
@@ -64,18 +55,19 @@ public class EventDAO extends DBContext implements I_DAO<Event> {
         boolean success = false;
         try {
             connection = getConnection();
-            String sql = "UPDATE event SET area = ?, club_id = ?, status = ?, "
-                    + "description = ?, start = ?, end = ?, updated_at = ? "
+            String sql = "UPDATE event SET area_id = ?, club_id = ?, status = ?, "
+                    + "description = ?, start = ?, end = ?, updated_at = ?, title = ? "
                     + "WHERE id = ?";
             statement = connection.prepareStatement(sql);
-            statement.setString(1, event.getArea());
+            statement.setInt(1, event.getArea_id());
             statement.setInt(2, event.getClub_id());
             statement.setString(3, event.getStatus());
             statement.setString(4, event.getDescription());
             statement.setDate(5, event.getStart());
             statement.setDate(6, event.getEnd());
             statement.setDate(7, event.getUpdated_at());
-            statement.setInt(8, event.getId());
+            statement.setString(8, event.getTitle());
+            statement.setInt(9, event.getId());
 
             int rowsAffected = statement.executeUpdate();
             success = rowsAffected > 0;
@@ -95,7 +87,6 @@ public class EventDAO extends DBContext implements I_DAO<Event> {
             String sql = "DELETE FROM event WHERE id = ?";
             statement = connection.prepareStatement(sql);
             statement.setInt(1, event.getId());
-
             int rowsAffected = statement.executeUpdate();
             success = rowsAffected > 0;
         } catch (SQLException ex) {
@@ -111,11 +102,11 @@ public class EventDAO extends DBContext implements I_DAO<Event> {
         int generatedId = -1;
         try {
             connection = getConnection();
-            String sql = "INSERT INTO event (area, club_id, status, description, "
-                    + "start, end, created_at, updated_at) "
-                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO event (area_id, club_id, status, description, "
+                    + "start, end, created_at, updated_at, title) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             statement = connection.prepareStatement(sql, statement.RETURN_GENERATED_KEYS);
-            statement.setString(1, event.getArea());
+            statement.setInt(1, event.getArea_id());
             statement.setInt(2, event.getClub_id());
             statement.setString(3, event.getStatus());
             statement.setString(4, event.getDescription());
@@ -123,6 +114,7 @@ public class EventDAO extends DBContext implements I_DAO<Event> {
             statement.setDate(6, event.getEnd());
             statement.setDate(7, event.getCreated_at());
             statement.setDate(8, event.getUpdated_at());
+            statement.setString(9, event.getTitle());
 
             int rowsAffected = statement.executeUpdate();
             if (rowsAffected > 0) {
@@ -143,7 +135,8 @@ public class EventDAO extends DBContext implements I_DAO<Event> {
     public Event getFromResultSet(ResultSet resultSet) throws SQLException {
         Event event = new Event();
         event.setId(resultSet.getInt("id"));
-        event.setArea(resultSet.getString("area"));
+        event.setTitle(resultSet.getString("title"));
+        event.setArea_id(resultSet.getInt("area_id"));
         event.setClub_id(resultSet.getInt("club_id"));
         event.setStatus(resultSet.getString("status"));
         event.setDescription(resultSet.getString("description"));
@@ -193,9 +186,69 @@ public class EventDAO extends DBContext implements I_DAO<Event> {
         return events;
     }
 
-    public static void main(String[] args) {
-        for (Event event : new EventDAO().findByClubId(25)) {
-            System.out.println(event.toString());
+    // Lấy danh sách event đã duyệt (approved)
+    public List<Event> getApprovedEvents() {
+        List<Event> list = new ArrayList<>();
+        String sql = "SELECT area_id, start, end FROM event WHERE status = ? AND end >= CURRENT_DATE()";
+        try {
+            connection = getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, "approved");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Event e = new Event();
+                e.setArea_id(rs.getInt("area_id"));
+                e.setStart(rs.getDate("start"));
+                e.setEnd(rs.getDate("end"));
+                list.add(e);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            closeResources();
         }
+        return list;
+    }
+
+    public List<Event> getActiveOrPendingEvents() {
+        List<Event> list = new ArrayList<>();
+        String sql = "SELECT area_id, start, end FROM event WHERE status IN ('pending', 'active') AND end >= CURRENT_DATE()";
+        try {
+            connection = getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Event e = new Event();
+                e.setArea_id(rs.getInt("area_id"));
+                e.setStart(rs.getDate("start"));
+                e.setEnd(rs.getDate("end"));
+                list.add(e);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return list;
+    }
+
+
+    public static void main(String[] args) {
+        EventDAO eventDAO = new EventDAO();
+        Event event = new Event();
+        event.setTitle("Test Event");
+        event.setArea_id(1);
+        event.setClub_id(16);
+        event.setStatus("pending");
+        event.setDescription("Description test");
+        event.setStart(Date.valueOf(LocalDate.now()));
+        event.setEnd(Date.valueOf(LocalDate.now().plusDays(1)));
+        event.setCreated_at(Date.valueOf(LocalDate.now()));
+        event.setUpdated_at(Date.valueOf(LocalDate.now()));
+        System.out.println("Inserted ID: " + eventDAO.insert(event));
     }
 }

@@ -49,7 +49,6 @@ public class ForgotPasswordServlet extends HttpServlet {
                     req.getRequestDispatcher("view/guest/authen/forgotPassword.jsp").forward(req, resp);
                 }
 
-
             }
         }
     }

@@ -138,7 +138,7 @@
 <div class="container" id="container">
     <div class="form-container">
 
-        <!-- Form Đăng Nhập -->
+
         <div class="login-container">
             <h2>Đăng Ký</h2>
             <form id="loginForm" method="post" action="${pageContext.request.contextPath}/registerAccount">
