@@ -1,11 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: vankh
-  Date: 9/25/2025
-  Time: 12:18 PM
-  To change this template use File | Settings | File Templates.
---%>
-<%-- Document : list-account Created on : Sep 22, 2025, 9:48:17 AM Author : Dell --%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
@@ -185,7 +177,7 @@
                                                 <div class="dropdown-menu dropdown-menu-right">
 
                                                     <a class="dropdown-item"
-                                                       href="${pageContext.request.contextPath}/event?action=update&id=${event.id}">
+                                                       href="${pageContext.request.contextPath}/eventDetail?action=viewDetail&&eventId=${event.id}">
                                                         <i class="fas fa-cogs text-dark-pastel-green"></i>Quản lý
                                                     </a>
                                                     <a class="dropdown-item" href="javascript:void(0);"
