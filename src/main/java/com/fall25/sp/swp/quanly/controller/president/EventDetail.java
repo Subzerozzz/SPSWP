@@ -57,6 +57,7 @@ public class EventDetail extends HttpServlet {
         // Lấy danh sách thành viên CLB
         List<Account> listAccount = new ArrayList<>();
         Map<Integer, String> accountRoles = new HashMap<>(); // Map lưu role của từng account
+        Map<Integer, String> accountNames = new HashMap<>(); // Map lưu tên của từng account
         AccountClubDAO accountClubDAO = new AccountClubDAO();
         AccountDAO accountDAO = new AccountDAO();
 
@@ -68,6 +69,7 @@ public class EventDetail extends HttpServlet {
                 if (acc != null) {
                     listAccount.add(acc);
                     accountRoles.put(acc.getId(), ac.getRole()); // Lưu role vào map
+                    accountNames.put(acc.getId(), acc.getFullname()); // Lưu tên vào map
                 }
             }
         }
@@ -80,6 +82,14 @@ public class EventDetail extends HttpServlet {
         TaskDAO taskDAO = new TaskDAO();
         List<Map<String, Object>> tasks = taskDAO.findByEventId(eventId);
 
+// Thêm tên account vào từng task
+        for (Map<String, Object> task : tasks) {
+            Integer accountId = (Integer) task.get("account_id");
+            String accountName = accountNames.get(accountId);
+            task.put("account_name", accountName != null ? accountName : "Unknown");
+        }
+
+
 
         // Đặt attributes
         req.setAttribute("event", event);
@@ -87,8 +97,8 @@ public class EventDetail extends HttpServlet {
         req.setAttribute("listAccount", listAccount);
         req.setAttribute("accountRoles", accountRoles);
         req.setAttribute("tasks", tasks);
-
         req.getRequestDispatcher("view/admin/president/eventDetail.jsp").forward(req, resp);
+
     }
 
     @Override
@@ -98,7 +108,11 @@ public class EventDetail extends HttpServlet {
             case "addParticipant":
                 addTask(req, resp);
                 break;
-            case "delete":
+            case "updateEvent":
+                updateEvent(req, resp);
+                break;
+            case "updateTask":
+                updateTask(req, resp);
                 break;
             default:
                 break;
@@ -117,9 +131,50 @@ public class EventDetail extends HttpServlet {
         if(success) {
             System.out.println("Task added successfully");
             viewDetail(req, resp);
-
         }
+    }
 
+    protected void updateEvent(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Integer eventId = Integer.parseInt(req.getParameter("eventId"));
+        String startDateStr = req.getParameter("start");
+        System.out.println(startDateStr);
+
+
+            Date startDate = java.sql.Date.valueOf(startDateStr.substring(0, 10));
+
+            EventDAO eventDAO = new EventDAO();
+            Event event = eventDAO.findById(eventId);
+            Date startDateOld = event.getStart();
+            Date endDate = event.getEnd();
+
+            String error = null;
+
+            if (startDate.before(startDateOld)) {
+                error = "Ngày bắt đầu mới phải muộn hơn ngày bắt đầu hiện tại";
+                req.setAttribute("error", error);
+                viewDetail(req, resp);
+            } else if (startDate.after(endDate)) {
+                error = "Ngày bắt đầu mới phải sớm hơn ngày kết thúc";
+                req.setAttribute("error", error);
+                viewDetail(req, resp);
+            } else if (startDate.equals(startDateOld)) {
+                error = "Ngày bắt đầu mới phải khác ngày bắt đầu hiện tại";
+                req.setAttribute("error", error);
+                viewDetail(req, resp);
+            }
+            if(eventDAO.updateStart(eventId, startDate)) {
+                viewDetail(req, resp);
+            }
+    }
+
+    protected void updateTask(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Integer eventId = Integer.parseInt(req.getParameter("eventId"));
+        Integer taskId = Integer.parseInt(req.getParameter("taskId"));
+        String taskName = req.getParameter("taskName");
+        String taskDescription = req.getParameter("taskDescription");
+        TaskDAO taskDAO = new TaskDAO();
+        taskDAO.updateTaskWithEventCheck(taskId, eventId, taskName, taskDescription);
+        viewDetail(req, resp);
     }
 
 }
