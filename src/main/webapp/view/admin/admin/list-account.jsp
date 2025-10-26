@@ -31,7 +31,7 @@
         <link rel="stylesheet" href="${pageContext.request.contextPath}/admin/css/jquery.dataTables.min.css">
         <!-- Custom CSS -->
         <link rel="stylesheet" href="${pageContext.request.contextPath}/admin/style.css">
-        
+
         <!--IzizToast-->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
@@ -65,17 +65,23 @@
                     </div>
                   </div>
                   <!--Form Search-->
-                  <form class="mg-b-20">
+                  <form class="mg-b-20" action="${pageContext.request.contextPath}/manager-account?action=filter"
+                    method="POST">
                     <div class="row gutters-8">
                       <div class="col-3-xxxl col-xl-3 col-lg-3 col-12 form-group">
-                        <input type="text" placeholder="Search by Role ..." class="form-control">
-                      </div>
-                      <div class="col-4-xxxl col-xl-4 col-lg-3 col-12 form-group">
-                        <input type="text" placeholder="Search by Name ..." class="form-control">
+                        <input name="name" type="text" placeholder="Search by Name ..." class="form-control" value=${not empty name ? name : ""} >
                       </div>
                       <div class="col-4-xxxl col-xl-3 col-lg-3 col-12 form-group">
-                        <input type="text" placeholder="Search by Email ..." class="form-control">
+                        <input name="email" type="text" placeholder="Search by Email ..." class="form-control" value=${not empty email ? email : ""} >
                       </div>
+                      <div class="col-4-xxxl col-xl-4 col-lg-3 col-12 form-group">
+                        <select class="form-control" name="status">
+                          <option value="">Select status</option>
+                          <option value="active" ${status=='active' ? 'selected' : '' }>Đang hoạt động</option>
+                          <option value="banned" ${status=='active' ? 'selected' : '' }>Dừng hoạt động</option>
+                        </select>
+                      </div>
+
                       <div class="col-1-xxxl col-xl-2 col-lg-3 col-12 form-group">
                         <button type="submit" class="fw-btn-fill btn-gradient-yellow">SEARCH</button>
                       </div>
@@ -140,7 +146,7 @@
                                   <a class="dropdown-item"
                                     href="${pageContext.request.contextPath}/manager-account?action=account-detail&id=${account.id}"><i
                                       class="fas fa-eye text-orange-peel"></i>View Detail</a>
-<!--                                  <a class="dropdown-item"
+                                  <!--                                  <a class="dropdown-item"
                                     href="${pageContext.request.contextPath}/manager-account?action=account-update&id=${account.id}"><i
                                       class="fas fa-cogs text-dark-pastel-green"></i>Update</a>-->
                                   <a class="dropdown-item" href="javascript:void(0);"
@@ -215,59 +221,50 @@
           $('#deleteConfirmModal').modal('show');
         }
       </script>
-      
-      <!--Thông báo delete success--> 
+
+      <!--Thông báo delete success-->
       <c:if test="${deleteSuccess == true}">
-            <script>
-                document.addEventListener("DOMContentLoaded", () => {
-                    iziToast.success({
-                        title: "Thông báo",
-                        message: "${message}",
-                        position: 'topRight',
-                        timeout: 5000,
-                        backgroundColor:"#d4edda"
-                    });
-                });
-            </script>
-            <%
-                session.removeAttribute("deleteSuccess");
-                session.removeAttribute("message");
-            %>
-        </c:if>
-      <!--Thông báo add success--> 
+        <script>
+          document.addEventListener("DOMContentLoaded", () => {
+            iziToast.success({
+              title: "Thông báo",
+              message: "${message}",
+              position: 'topRight',
+              timeout: 5000,
+              backgroundColor: "#d4edda"
+            });
+          });
+        </script>
+        <% session.removeAttribute("deleteSuccess"); session.removeAttribute("message"); %>
+      </c:if>
+      <!--Thông báo add success-->
       <c:if test="${addSuccess == true}">
-            <script>
-                document.addEventListener("DOMContentLoaded", () => {
-                    iziToast.success({
-                        title: "Thông báo",
-                        message: "${message}",
-                        position: 'topRight',
-                        timeout: 5000,
-                    });
-                });
-            </script>
-            <%
-                session.removeAttribute("addSuccess");
-                session.removeAttribute("message");
-            %>
-        </c:if>
-      <!--Thông báo add failed-->       
+        <script>
+          document.addEventListener("DOMContentLoaded", () => {
+            iziToast.success({
+              title: "Thông báo",
+              message: "${message}",
+              position: 'topRight',
+              timeout: 5000,
+            });
+          });
+        </script>
+        <% session.removeAttribute("addSuccess"); session.removeAttribute("message"); %>
+      </c:if>
+      <!--Thông báo add failed-->
       <c:if test="${addSuccess == false}">
-            <script>
-                document.addEventListener("DOMContentLoaded", () => {
-                    iziToast.error({
-                        title: "Thông báo",
-                        message: "${message}",
-                        position: 'topRight',
-                        timeout: 5000,
-                    });
-                });
-            </script>
-            <%
-                session.removeAttribute("addSuccess");
-                session.removeAttribute("message");
-            %>
-        </c:if>
+        <script>
+          document.addEventListener("DOMContentLoaded", () => {
+            iziToast.error({
+              title: "Thông báo",
+              message: "${message}",
+              position: 'topRight',
+              timeout: 5000,
+            });
+          });
+        </script>
+        <% session.removeAttribute("addSuccess"); session.removeAttribute("message"); %>
+      </c:if>
 
       <!-- Mirrored from www.radiustheme.com/demo/html/psdboss/akkhor/akkhor/all-student.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 20 Sep 2025 14:36:13 GMT -->
 

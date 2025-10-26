@@ -85,6 +85,9 @@ public class ManagerAccountServlet extends HttpServlet {
       case "account-add":
         addAccountDoPost(request, response);
         break;
+      case "filter":
+        filterChanning(request, response);
+        break;
       default:
         throw new AssertionError();
     }
@@ -350,6 +353,21 @@ public class ManagerAccountServlet extends HttpServlet {
     } catch (Exception e) {
       throw new RuntimeException("Lỗi mã hoá mật khẩu", e);
     }
+  }
+
+  private void filterChanning(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    String name = request.getParameter("name");
+    String email = request.getParameter("email");
+    String status = request.getParameter("status");
+    //Gọi tới accountDAO để filter 
+    List<Account> listAccount = accountDAO.filter(name , email, status);
+    //Gui du lieu cu ve
+    request.setAttribute("name", name);
+    request.setAttribute("email", email);
+    request.setAttribute("status", status);
+    // set list vào request
+    request.setAttribute("listAccount", listAccount);
+    request.getRequestDispatcher(URL_LIST_ACCOUNT).forward(request, response);
   }
 
 }
