@@ -22,8 +22,8 @@ public class DBContext {
         try {
             // Change the username password and url to connect your own database
             String username = "admin";
-            String password = "12345678";
-            String url = "jdbc:mysql://database-1.cfumgomiyy8m.ap-southeast-1.rds.amazonaws.com:3306/swp391";
+            String password = "admin";
+            String url = "jdbc:mysql://localhost:3306/chessdb?useSSL=false&serverTimezone=UTC";
 
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection(url, username, password);

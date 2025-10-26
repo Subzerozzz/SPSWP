@@ -31,42 +31,14 @@
               class="flaticon-classmates"></i><span>Change Password</span></a>
         </li>
 
-        <c:choose>
-          <c:when test="${sessionScope.account_club.role == 'admin'}">
-            <li class="nav-item sidebar-nav-item">
-              <a href="${pageContext.request.contextPath}/manager-account?action=list-account" class="nav-link"><i
-                  class="flaticon-multiple-users-silhouette"></i><span>View Accounts</span></a>
-            </li>
-            <li class="nav-item sidebar-nav-item">
-              <a href="${pageContext.request.contextPath}/manager-account?action=account-add" class="nav-link"><i
-                  class="flaticon-technological"></i><span>Add Account</span></a>
-            </li>
-          </c:when>
-          <c:when test="${sessionScope.account_club.role == 'manager'}">
-            <li class="nav-item sidebar-nav-item">
-              <a href="${pageContext.request.contextPath}/club?action=list-club" class="nav-link"><i
-                  class="flaticon-technological"></i><span>View All Club</span></a>
-            </li>
-            <li class="nav-item sidebar-nav-item">
-              <a href="${pageContext.request.contextPath}/club?action=list-club" class="nav-link"><i
-                  class="flaticon-bed"></i><span>View Event Request</span></a>
-            </li>
-          </c:when>
-          <c:when test="${sessionScope.account_club.role == 'president'}">
-            <li class="nav-item sidebar-nav-item">
-              <a href="${pageContext.request.contextPath}/managerMember" class="nav-link"><i
-                  class="flaticon-technological"></i><span>View All Member</span></a>
-            </li>
-            <li class="nav-item sidebar-nav-item">
-              <a href="${pageContext.request.contextPath}/createEvent" class="nav-link"><i class="fa-solid fa-calendar"></i>
-              <span>Tạo sự kiện mới </span></a>
-             </li>
-             <li class="nav-item sidebar-nav-item">
-                           <a href="${pageContext.request.contextPath}/manageEvent" class="nav-link"><i class="fa-solid fa-calendar"></i>
-                           <span>Danh sách sự kiện</span></a>
-                          </li>
-          </c:when>
-        </c:choose>
+        <li class="nav-item sidebar-nav-item">
+            <a href="${pageContext.request.contextPath}/manager-account?action=list-account" class="nav-link"><i
+                class="flaticon-multiple-users-silhouette"></i><span>View Accounts</span></a>
+        </li>
+        <li class="nav-item sidebar-nav-item">
+          <a href="${pageContext.request.contextPath}/manager-account?action=account-add" class="nav-link"><i
+              class="flaticon-technological"></i><span>Add Account</span></a>
+        </li>
 
 
         <!--            <li class="nav-item sidebar-nav-item">
