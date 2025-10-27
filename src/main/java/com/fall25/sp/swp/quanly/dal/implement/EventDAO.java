@@ -79,6 +79,26 @@ public class EventDAO extends DBContext implements I_DAO<Event> {
         return success;
     }
 
+    public boolean updateStart(Integer eventId, Date startDate) {
+        boolean success = false;
+        try {
+            connection = getConnection();
+            String sql = "UPDATE event SET start = ?, updated_at = ? WHERE id = ?";
+            statement = connection.prepareStatement(sql);
+            statement.setDate(1, startDate);
+            statement.setDate(2, new java.sql.Date(System.currentTimeMillis())); // updated_at = now
+            statement.setInt(3, eventId);
+
+            int rowsAffected = statement.executeUpdate();
+            success = rowsAffected > 0;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return success;
+    }
+
     @Override
     public boolean delete(Event event) {
         boolean success = false;

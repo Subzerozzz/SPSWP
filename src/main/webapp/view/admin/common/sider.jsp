@@ -65,10 +65,14 @@
                            <a href="${pageContext.request.contextPath}/manageEvent" class="nav-link"><i class="fa-solid fa-calendar"></i>
                            <span>Danh sách sự kiện</span></a>
                           </li>
+             <li class="nav-item sidebar-nav-item">
+                   <a href="${pageContext.request.contextPath}/changePresident" class="nav-link"><i class="fa-solid fa-calendar"></i>
+                   <span>Yêu cầu đổi trưởng CLB</span></a>
+             </li>
           </c:when>
         </c:choose>
 
-
+ 
         <!--            <li class="nav-item sidebar-nav-item">
               <a href="#" class="nav-link"><i class="flaticon-books"></i><span>Library</span></a>
               <ul class="nav sub-group-menu">

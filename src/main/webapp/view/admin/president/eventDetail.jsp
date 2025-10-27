@@ -77,9 +77,9 @@
                             </div>
                         </div>
 
-                        <form class="new-added-form" action="${pageContext.request.contextPath}/event" method="POST">
-                            <input type="hidden" name="action" value="update">
-                            <input type="hidden" name="id" value="${event.id}">
+                        <form class="new-added-form" action="${pageContext.request.contextPath}/eventDetail" method="POST">
+                            <input type="hidden" name="action" value="updateEvent">
+                            <input type="hidden" name="eventId" value="${event.id}">
 
                             <div class="row">
                                 <div class="col-xl-6 col-lg-6 col-12 form-group">
@@ -122,8 +122,8 @@
                                            readonly>
                                 </div>
                                 <div class="col-12 form-group mg-t-8">
+                                <div style="color:red;">${error}</div>
                                     <button type="submit" class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark">Cập nhật</button>
-                                    <a href="${pageContext.request.contextPath}/event?action=list" class="btn-fill-lg bg-blue-dark btn-hover-yellow">Quay lại</a>
                                 </div>
                             </div>
                         </form>
@@ -154,9 +154,9 @@
                                         </thead>
                                         <tbody>
                                             <c:if test="${not empty listAccount}">
-                                                <c:forEach var="account" items="${listAccount}">
+                                                <c:forEach var="account" items="${listAccount}" varStatus="status">
                                                     <tr>
-                                                        <td>${account.id}</td>
+                                                        <td>${status.index+1}</td>
                                                         <td>${account.fullname}</td>
                                                         <td>${accountRoles[account.id]}</td>
 
@@ -196,6 +196,7 @@
                                         <thead>
                                             <tr>
                                                 <th>ID</th>
+                                                <th>Tên thành viên</th>
                                                 <th>Tên nhiệm vụ</th>
                                                 <th>Mô tả</th>
                                                 <th>Thao tác</th>
@@ -206,8 +207,9 @@
                                                 <c:forEach var="task" items="${tasks}" varStatus="status">
                                                     <tr>
                                                         <td>${status.index + 1}</td>
-                                                        <td>${task.name}</td> <!-- Dùng task.name thay vì task.taskName -->
-                                                        <td>${task.description}</td> <!-- Dùng task.description thay vì task.taskDescription -->
+                                                        <td>${task.account_name}</td> <!-- Hiển thị tên từ map -->
+                                                        <td>${task.name}</td>
+                                                        <td>${task.description}</td>
                                                         <td>
                                                             <div class="dropdown">
                                                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -229,7 +231,7 @@
                                             </c:if>
                                             <c:if test="${empty tasks}">
                                                 <tr>
-                                                    <td colspan="4" class="text-center">Chưa có thành viên nào tham gia sự kiện</td>
+                                                    <td colspan="5" class="text-center">Chưa có thành viên nào tham gia sự kiện</td>
                                                 </tr>
                                             </c:if>
                                         </tbody>
@@ -290,9 +292,9 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="${pageContext.request.contextPath}/event" method="POST">
+                <form action="${pageContext.request.contextPath}/eventDetail" method="POST">
                     <input type="hidden" name="action" value="updateTask">
-                    <input type="hidden" name="eventId" value="${event.id}">
+                    <input type="hidden" name="eventId" value="${event.id}"> <!-- Lấy eventId từ event object -->
                     <input type="hidden" name="taskId" id="editParticipantId">
 
                     <div class="modal-body">
@@ -304,6 +306,10 @@
                             <label>Mô tả</label>
                             <textarea class="form-control" name="taskDescription" id="editTaskDescription" rows="3"></textarea>
                         </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-primary">Cập nhật</button> <!-- Nút submit -->
                     </div>
                 </form>
             </div>

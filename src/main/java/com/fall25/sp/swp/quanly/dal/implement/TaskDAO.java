@@ -67,6 +67,33 @@ public class TaskDAO extends DBContext implements I_DAO<Map<String, Object>> {
         return success;
     }
 
+    // Trong TaskDAO
+    public boolean updateTaskWithEventCheck(Integer taskId, Integer eventId, String name, String description) {
+        boolean success = false;
+        try {
+            connection = getConnection();
+            String sql = "UPDATE task SET name = ?, description = ?, updated_at = NOW() WHERE id = ? AND event_id = ?";
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, name);
+            statement.setString(2, description);
+            statement.setInt(3, taskId);
+            statement.setInt(4, eventId); // Kiểm tra event_id
+
+            int rowsAffected = statement.executeUpdate();
+            success = rowsAffected > 0;
+
+            if (!success) {
+                System.out.println("No task found with id: " + taskId + " in event: " + eventId);
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return success;
+    }
+
     @Override
     public boolean delete(Map<String, Object> task) {
         boolean success = false;
