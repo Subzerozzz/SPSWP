@@ -34,6 +34,19 @@ public class ManagerMemberServlet extends HttpServlet {
                 break;
         }
     }
+    
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String action = req.getParameter("action");
+        switch (action){
+            case "delete":
+                deleteMember(req,resp);
+                break;
+            default:
+                break;
+        }
+    }
+    
     protected void viewList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession(false);
         AccountClub accountClub = (session != null) ? (AccountClub) session.getAttribute(GlobalConfig.SESSION_ACCOUNT_CLUB) : null;
@@ -45,7 +58,6 @@ public class ManagerMemberServlet extends HttpServlet {
             return;
         }
 
-        // Lấy danh sách thành viên CLB
         List<Account> listAccount = new ArrayList<>();
         Map<Integer, String> accountRoles = new HashMap<>(); // Map lưu role của từng account
         AccountClubDAO accountClubDAO = new AccountClubDAO();
@@ -66,6 +78,19 @@ public class ManagerMemberServlet extends HttpServlet {
         req.setAttribute("listAccount", listAccount);
         req.setAttribute("accountRoles", accountRoles);
         req.getRequestDispatcher(URL_MANAGER_MEMBER).forward(req, resp);
+    }
+
+    protected void deleteMember(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Integer accountId = Integer.parseInt(req.getParameter("accountId"));
+        AccountClubDAO accountClubDAO = new AccountClubDAO();
+        HttpSession session = req.getSession(false);
+        AccountClub accountClub = (session != null) ? (AccountClub) session.getAttribute(GlobalConfig.SESSION_ACCOUNT_CLUB) : null;
+        Integer clubId = (accountClub != null) ? accountClub.getClub_id() : null;
+        String name = new AccountDAO().findById(accountId).getFullname();
+        if(accountClubDAO.delete(accountClubDAO.findByAccountIdAndClubId(accountId, clubId))){
+            req.setAttribute("deleteMemberSuccess", "Xóa "+name+" thành công!");
+            viewList(req,resp);
+        }
     }
 
 }
