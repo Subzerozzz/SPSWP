@@ -1,5 +1,6 @@
 package com.fall25.sp.swp.quanly.controller.president;
 
+import com.fall25.sp.swp.quanly.config.GlobalConfig;
 import com.fall25.sp.swp.quanly.dal.implement.AccountClubDAO;
 import com.fall25.sp.swp.quanly.dal.implement.AccountDAO;
 import com.fall25.sp.swp.quanly.dal.implement.ClubDAO;
@@ -15,58 +16,55 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet("/managerMember")
 public class ManagerMemberServlet extends HttpServlet {
     private static final String URL_MANAGER_MEMBER = "view/admin/president/listMember.jsp";
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String action = req.getParameter("action");
+        switch (action){
+            case "view":
+                viewList(req,resp);
+                break;
+            default:
+                break;
+        }
+    }
+    protected void viewList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession(false);
-        if (session == null || session.getAttribute("userId") == null) {
+        AccountClub accountClub = (session != null) ? (AccountClub) session.getAttribute(GlobalConfig.SESSION_ACCOUNT_CLUB) : null;
+
+        Integer clubId = (accountClub != null) ? accountClub.getClub_id() : null;
+
+        if (clubId == null) {
             resp.sendRedirect(req.getContextPath() + "/login");
             return;
         }
 
-        int id = (int) session.getAttribute("userId");
-        System.out.println("id = " + id);
-
-        ClubDAO clubDAO = new ClubDAO();
+        // Lấy danh sách thành viên CLB
+        List<Account> listAccount = new ArrayList<>();
+        Map<Integer, String> accountRoles = new HashMap<>(); // Map lưu role của từng account
         AccountClubDAO accountClubDAO = new AccountClubDAO();
         AccountDAO accountDAO = new AccountDAO();
 
-        // Tìm club do president quản lý
-        Club club = clubDAO.findByPresidentId(id);
-        System.out.println("club = " + club);
+        List<AccountClub> accountClubs = accountClubDAO.findByClubId(clubId);
 
-        if (club != null) {
-            List<Integer> listIdMember = new ArrayList<>();
-            List<AccountClub> accountClubs = accountClubDAO.findByClubId(club.getId());
-            System.out.println("accountClubs = " + accountClubs);
-
-            if (accountClubs != null) {
-                for (AccountClub a : accountClubs) {
-                    listIdMember.add(a.getAccount_id());
+        if (accountClubs != null) {
+            for (AccountClub ac : accountClubs) {
+                Account acc = accountDAO.findById(ac.getAccount_id());
+                if (acc != null) {
+                    listAccount.add(acc);
+                    accountRoles.put(acc.getId(), ac.getRole());
                 }
-            }
-
-            System.out.println("listIdMember = " + listIdMember);
-
-            if (!listIdMember.isEmpty()) {
-                List<Account> listAccount = new ArrayList<>();
-                for (Integer memberId : listIdMember) {
-                    System.out.println("memberId = " + memberId);
-                    Account acc = accountDAO.findById(memberId);
-                    System.out.println("acc = " + acc);
-                    if (acc != null) {
-                        listAccount.add(acc);
-                    }
-                }
-                System.out.println("listAccount = " + listAccount);
-                req.setAttribute("listAccount", listAccount);
             }
         }
 
+        req.setAttribute("listAccount", listAccount);
+        req.setAttribute("accountRoles", accountRoles);
         req.getRequestDispatcher(URL_MANAGER_MEMBER).forward(req, resp);
     }
 

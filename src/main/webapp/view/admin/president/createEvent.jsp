@@ -60,17 +60,29 @@
                                 <div class="row">
                                     <div class="col-md-6 form-group" style="display: block; width: 100%;">
                                         <label>Tiêu đề sự kiện <span style="color: red">*</span></label>
-                                        <input type="text" name="title" class="form-control" placeholder="Nhập tiêu đề" required>
+                                        <input type="text" name="title" class="form-control" placeholder="Nhập tiêu đề"
+                                               value="${title}" required>
+                                        <c:if test="${not empty errors['title']}">
+                                            <small class="text-danger"><c:out value="${errors['title']}" /></small>
+                                        </c:if>
                                     </div>
 
                                     <div class="col-md-6 form-group">
                                         <label>Ngày bắt đầu <span style="color: red">*</span></label>
-                                        <input type="datetime-local" name="start_at" class="form-control" required>
+                                        <input type="date" name="start_at" class="form-control"
+                                               value="${start_at}" required>
+                                        <c:if test="${not empty errors['start_at']}">
+                                            <small class="text-danger"><c:out value="${errors['start_at']}" /></small>
+                                        </c:if>
                                     </div>
 
                                     <div class="col-md-6 form-group">
                                         <label>Ngày kết thúc</label>
-                                        <input type="datetime-local" name="end_at" class="form-control" required>
+                                        <input type="date" name="end_at" class="form-control"
+                                               value="${end_at}">
+                                        <c:if test="${not empty errors['end_at']}">
+                                            <small class="text-danger"><c:out value="${errors['end_at']}" /></small>
+                                        </c:if>
                                     </div>
 
                                     <div class="col-md-6 form-group">
@@ -78,19 +90,41 @@
                                         <select name="area" class="form-control" required>
                                             <option value="">-- Chọn địa điểm --</option>
                                             <c:forEach var="a" items="${listArea}">
-                                                <option value="${a.id}">${a.name}</option>
+                                                <option value="${a.id}"
+                                                        <c:if test="${area == a.id}">selected</c:if>>
+                                                    ${a.name}
+                                                </option>
                                             </c:forEach>
                                         </select>
+                                        <c:if test="${not empty errors['area']}">
+                                            <small class="text-danger"><c:out value="${errors['area']}" /></small>
+                                        </c:if>
                                     </div>
+
                                     <div class="col-12 form-group">
                                         <label>Mô tả chi tiết</label>
-                                        <textarea name="description" rows="6" class="form-control" placeholder="Mô tả nội dung sự kiện, lịch trình, người liên hệ..."
-                                                  style="height:150px"
-                                                  required></textarea>
+                                        <textarea name="description" rows="6" class="form-control"
+                                                  placeholder="Mô tả nội dung sự kiện, lịch trình, người liên hệ..."
+                                                  style="height:150px" required>${description}</textarea>
+                                        <c:if test="${not empty errors['description']}">
+                                            <small class="text-danger"><c:out value="${errors['description']}" /></small>
+                                        </c:if>
                                     </div>
+
                                     <div class="col-md-6 form-group">
                                         <label>Người tạo</label>
-                                        <input type="text" name="created_by" class="form-control" value="${sessionScope.account != null ? sessionScope.account.fullname : ''}" readonly>
+                                        <input type="text" name="created_by" class="form-control"
+                                               value="${sessionScope.account != null ? sessionScope.account.fullname : ''}" readonly>
+                                    </div>
+
+                                    <div class="col-md-12 form-group">
+                                        <c:if test="${not empty success}">
+                                            <div class="alert alert-success">
+                                                <ul>
+                                                    <li><c:out value="${success}"/></li>
+                                                </ul>
+                                            </div>
+                                        </c:if>
                                     </div>
 
                                     <div class="col-12 form-group text-right">
@@ -117,13 +151,13 @@
         <%-- Lấy JSON blockedRanges từ request attribute --%>
         <script>
             const blockedEvents = [
-                <c:forEach var="e" items="${blockedEvents}">
-                    {
-                        areaId: ${e.area_id},
-                        start: "${e.start}",
-                        end: "${e.end}"
-                    }<c:if test="${!fn:contains(e, blockedEvents[blockedEvents.size()-1])}">,</c:if>
-                </c:forEach>
+            <c:forEach var="e" items="${blockedEvents}">
+            {
+            areaId: ${e.area_id},
+                    start: "${e.start}",
+                    end: "${e.end}"
+            }<c:if test="${!fn:contains(e, blockedEvents[blockedEvents.size()-1])}">,</c:if>
+            </c:forEach>
             ];
 
             const areaSelect = document.querySelector('select[name="area"]');
@@ -140,7 +174,7 @@
                     const maxDate = new Date(Math.max(...nowBlocked.map(e => new Date(e.end).getTime())));
 
                     // disable khoảng thời gian bị trùng
-                    startInput.min = new Date().toISOString().slice(0,16);
+                    startInput.min = new Date().toISOString().slice(0, 16);
                     startInput.addEventListener('input', () => {
                         const val = new Date(startInput.value);
                         if (val >= minDate && val <= maxDate) {
@@ -161,7 +195,5 @@
                 }
             });
         </script>
-
-
     </body>
 </html>

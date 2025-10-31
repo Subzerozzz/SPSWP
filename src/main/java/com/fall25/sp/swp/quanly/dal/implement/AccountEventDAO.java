@@ -191,15 +191,13 @@ public class AccountEventDAO extends DBContext implements I_DAO<AccountEvent> {
         return accountEvents;
     }
 
-    public boolean deleteByAccountIdAndEventId(Integer accountId, Integer eventId) {
+    public boolean deleteAccountEventByEventId(Integer eventId) {
         boolean success = false;
         try {
             connection = getConnection();
-            String sql = "DELETE FROM account_event WHERE account_id = ? AND event_id = ?";
+            String sql = "DELETE FROM account_event WHERE event_id = ?";
             statement = connection.prepareStatement(sql);
-            statement.setInt(1, accountId);
-            statement.setInt(2, eventId);
-
+            statement.setInt(1, eventId);
             int rowsAffected = statement.executeUpdate();
             success = rowsAffected > 0;
         } catch (SQLException ex) {

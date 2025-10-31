@@ -280,7 +280,7 @@ public class ClubServlet extends HttpServlet {
     request.getRequestDispatcher(URL_DETAIL_CLUB).forward(request, response);
   }
 
-  private void updateStatusDoPost(HttpServletRequest request, HttpServletResponse response) throws MessagingException {
+  private void updateStatusDoPost(HttpServletRequest request, HttpServletResponse response) throws MessagingException, ServletException, IOException {
     // Lấy ra id , status và reason
     Integer id = Integer.parseInt(request.getParameter("id_club"));
     String email = request.getParameter("email_club");
@@ -291,7 +291,7 @@ public class ClubServlet extends HttpServlet {
     clubUpdate.setStatus(status);
     // Gửi thông báo qua mail của trưởng câu lạc bộ
     emailUtils.sendStatusForClub(email, status, reason);
-    
+    viewListClub(request,response);
   }
 
 }

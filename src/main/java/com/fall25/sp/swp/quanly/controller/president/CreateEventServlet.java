@@ -167,7 +167,11 @@ public class CreateEventServlet extends HttpServlet {
         AccountEvent accountEvent = new AccountEvent();
         accountEvent.setEvent_id(idEvent);
         accountEvent.setAccount_id(presidentId);
-        accountEventDAO.insert(accountEvent);
+        boolean success = accountEventDAO.insert(accountEvent)>=1?true:false;
+        System.out.println(success);
+        if (success) {
+            req.setAttribute("success","Tạo sự kiện thành công ! Cần chờ quản lý duyệt");
+        }
         req.getRequestDispatcher("/view/admin/president/createEvent.jsp").forward(req, resp);
     }
 
