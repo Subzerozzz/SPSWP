@@ -73,7 +73,7 @@
                                     </div>
                                 </div>
                                 <!--Form Search-->
-                                <form class="mg-b-20">
+<!--                                <form class="mg-b-20">
                                     <div class="row gutters-8">
                                         <div class="col-3-xxxl col-xl-3 col-lg-3 col-12 form-group">
                                             <input type="text" placeholder="Search by Role ..." class="form-control">
@@ -88,7 +88,7 @@
                                             <button type="submit" class="fw-btn-fill btn-gradient-yellow">SEARCH</button>
                                         </div>
                                     </div>
-                                </form>
+                                </form>-->
                                 <!--Form Search-->
                                 <div class="table-responsive">
                                     <table class="table display data-table text-nowrap">
@@ -152,13 +152,10 @@
                                                             <div class="dropdown-menu dropdown-menu-right">
                                                                 <a class="dropdown-item"
                                                                    href="${pageContext.request.contextPath}/manager-account?action=account-detail&id=${account.id}"><i
-                                                                        class="fas fa-eye text-orange-peel"></i>View Detail</a>
-                                                                <a class="dropdown-item"
-                                                                   href="${pageContext.request.contextPath}/manager-account?action=account-update&id=${account.id}"><i
-                                                                        class="fas fa-cogs text-dark-pastel-green"></i>Update</a>
-                                                                <a class="dropdown-item" href="javascript:void(0);"
+                                                                        class="fas fa-eye text-orange-peel"></i>Thông tin</a>
+                                                                <a class="dropdown-item" href="javascript:void(0)"
                                                                    onclick="confirmDelete(${account.id});"><i
-                                                                        class="fas fa-times text-orange-red"></i>Delete</a>
+                                                                        class="fas fa-times text-orange-red"></i>Xóa</a>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -182,30 +179,41 @@
                                         <div class="modal-body">
                                             <p>Bạn có chắc chắn muốn xóa tài khoản này?</p>
                                             <form id="deleteAccountForm"
-                                                  action="${pageContext.request.contextPath}/manager-account?action=account-delete"
+                                                  action="${pageContext.request.contextPath}/managerMember?action=delete"
                                                   method="post">
-                                                <input type="hidden" id="deleteAccountId" name="id" value="">
+                                                <input type="hidden" id="deleteAccountId" name="accountId" value="">
                                             </form>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
-                                            <button type="button" class="btn btn-danger"
-                                                    onclick="document.getElementById('deleteAccountForm').submit();">Xóa</button>
+                                            <button type="button" class="btn btn-danger" onclick="submitDelete();">Xóa</button>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="col-md-12 form-group">
+                                <c:if test="${not empty deleteMemberSuccess}">
+                                    <div class="alert alert-success">
+                                        ${deleteMemberSuccess}
+                                    </div>
+                                </c:if>
+                                <c:if test="${not empty error}">
+                                    <div class="alert alert-danger">
+                                        ${error}
+                                    </div>
+                                </c:if>
                             </div>
                         </div>
                     </div>
                     <!-- Student Table Area End Here -->
 
                     <!--Footer-->
-                    </div>
                 </div>
-                <!-- Page Area End Here -->
             </div>
-            <!-- jquery-->
-            <script src="${pageContext.request.contextPath}/admin/js/jquery-3.3.1.min.js"></script>
+            <!-- Page Area End Here -->
+        </div>
+        <!-- jquery-->
+        <script src="${pageContext.request.contextPath}/admin/js/jquery-3.3.1.min.js"></script>
         <!-- Plugins js -->
         <script src="${pageContext.request.contextPath}/admin/js/plugins.js"></script>
         <!-- Popper js -->
@@ -223,64 +231,16 @@
 
     <!--Hiển thị modal delete-->
     <script>
-                                                        function confirmDelete(accountId) {
-                                                            document.getElementById('deleteAccountId').value = accountId;
-                                                            $('#deleteConfirmModal').modal('show');
-                                                        }
+                                                function confirmDelete(accountId) {
+                                                    document.getElementById('deleteAccountId').value = accountId;
+                                                    $('#deleteConfirmModal').modal('show');
+                                                }
+
+                                                function submitDelete() {
+                                                    document.getElementById('deleteAccountForm').submit();
+                                                }
     </script>
 
-    <!--Thông báo delete success-->
-    <c:if test="${deleteSuccess == true}">
-        <script>
-            document.addEventListener("DOMContentLoaded", () => {
-                iziToast.success({
-                    title: "Thông báo",
-                    message: "${message}",
-                    position: 'topRight',
-                    timeout: 5000,
-                    backgroundColor: "#d4edda"
-                });
-            });
-        </script>
-        <%
-            session.removeAttribute("deleteSuccess");
-            session.removeAttribute("message");
-        %>
-    </c:if>
-    <!--Thông báo add success-->
-    <c:if test="${addSuccess == true}">
-        <script>
-            document.addEventListener("DOMContentLoaded", () => {
-                iziToast.success({
-                    title: "Thông báo",
-                    message: "${message}",
-                    position: 'topRight',
-                    timeout: 5000,
-                });
-            });
-        </script>
-        <%
-            session.removeAttribute("addSuccess");
-            session.removeAttribute("message");
-        %>
-    </c:if>
-    <!--Thông báo add failed-->
-    <c:if test="${addSuccess == false}">
-        <script>
-            document.addEventListener("DOMContentLoaded", () => {
-                iziToast.error({
-                    title: "Thông báo",
-                    message: "${message}",
-                    position: 'topRight',
-                    timeout: 5000,
-                });
-            });
-        </script>
-        <%
-            session.removeAttribute("addSuccess");
-            session.removeAttribute("message");
-        %>
-    </c:if>
 
     <!-- Mirrored from www.radiustheme.com/demo/html/psdboss/akkhor/akkhor/all-student.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 20 Sep 2025 14:36:13 GMT -->
 
