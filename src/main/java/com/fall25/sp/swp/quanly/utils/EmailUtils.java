@@ -1,6 +1,7 @@
 package com.fall25.sp.swp.quanly.utils;
 
 import com.fall25.sp.swp.quanly.config.GlobalConfig;
+import com.fall25.sp.swp.quanly.controller.manager.ClubServlet;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
 import jakarta.mail.PasswordAuthentication;
@@ -103,6 +104,7 @@ public class EmailUtils {
 
     boolean sent = sendMail(email, subject, content);
     if (sent) {
+
       return "Gửi thông báo trạng thái câu lạc bộ qua email thành công!";
     } else {
       return "Gửi email thất bại!";

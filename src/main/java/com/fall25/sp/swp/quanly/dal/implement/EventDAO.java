@@ -30,6 +30,31 @@ public class EventDAO extends DBContext implements I_DAO<Event> {
         return events;
     }
 
+    public boolean hasOverlappingEvents(Integer areaId, Date startDate, Date endDate, Integer excludeEventId) {
+        String sql = "SELECT COUNT(*) FROM event WHERE area_id = ? AND status IN ('pending', 'active', 'approved') "
+                + "AND id != ? AND ((start BETWEEN ? AND ?) OR (end BETWEEN ? AND ?) OR (start <= ? AND end >= ?))";
+
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, areaId);
+            stmt.setInt(2, excludeEventId);
+            stmt.setDate(3, new java.sql.Date(startDate.getTime()));
+            stmt.setDate(4, new java.sql.Date(endDate.getTime()));
+            stmt.setDate(5, new java.sql.Date(startDate.getTime()));
+            stmt.setDate(6, new java.sql.Date(endDate.getTime()));
+            stmt.setDate(7, new java.sql.Date(startDate.getTime()));
+            stmt.setDate(8, new java.sql.Date(endDate.getTime()));
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     @Override
     public Map<Integer, Event> findAllMap() {
         Map<Integer, Event> eventMap = new HashMap<>();
@@ -107,6 +132,23 @@ public class EventDAO extends DBContext implements I_DAO<Event> {
             String sql = "DELETE FROM event WHERE id = ?";
             statement = connection.prepareStatement(sql);
             statement.setInt(1, event.getId());
+            int rowsAffected = statement.executeUpdate();
+            success = rowsAffected > 0;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return success;
+    }
+
+    public boolean deleteEventByEventId(Integer eventId) {
+        boolean success = false;
+        try {
+            connection = getConnection();
+            String sql = "DELETE FROM event WHERE id = ?";
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, eventId);
             int rowsAffected = statement.executeUpdate();
             success = rowsAffected > 0;
         } catch (SQLException ex) {
@@ -255,7 +297,6 @@ public class EventDAO extends DBContext implements I_DAO<Event> {
         }
         return list;
     }
-
 
     public static void main(String[] args) {
         EventDAO eventDAO = new EventDAO();

@@ -1,4 +1,5 @@
 package com.fall25.sp.swp.quanly.controller.president;
+
 import com.fall25.sp.swp.quanly.entity.Task;
 import com.fall25.sp.swp.quanly.config.GlobalConfig;
 import com.fall25.sp.swp.quanly.dal.implement.*;
@@ -19,14 +20,32 @@ import java.util.Map;
 
 @WebServlet("/eventDetail")
 public class EventDetail extends HttpServlet {
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
-        if ("viewDetail".equals(action)) {
-            viewDetail(req, resp);
-            return;
+        switch (action) {
+            case "viewDetail":
+                viewDetail(req, resp);
+                break;
+            case "deleteTask":
+                deleteTask(req, resp);
+                break;
+            default:
+                req.getRequestDispatcher("view/admin/president/eventDetail.jsp").forward(req, resp);
+                break;
         }
-        req.getRequestDispatcher("view/admin/president/eventDetail.jsp").forward(req, resp);
+
+    }
+    
+    protected void deleteTask(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Integer taskId = Integer.parseInt(req.getParameter("taskId"));
+        boolean success = new TaskDAO().deleteTaskById(taskId);
+        Account account = new AccountDAO().findById(Integer.parseInt(req.getParameter("accountId")));
+        if (success){
+            req.setAttribute("deleteTaskSuccess", "Xóa nhiệm vụ "+account.getFullname()+" thành công!");
+            viewDetail(req, resp);
+        }
     }
 
     protected void viewDetail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -74,24 +93,21 @@ public class EventDetail extends HttpServlet {
             }
         }
 
-        System.out.println("Total members: " + listAccount.size());
-        for(Account acc : listAccount) {
-            System.out.println("Member: " + acc.getId() + " - " + acc.getFullname() + " - Role: " + accountRoles.get(acc.getId()));
-        }
-
         TaskDAO taskDAO = new TaskDAO();
         List<Map<String, Object>> tasks = taskDAO.findByEventId(eventId);
 
-// Thêm tên account vào từng task
         for (Map<String, Object> task : tasks) {
             Integer accountId = (Integer) task.get("account_id");
             String accountName = accountNames.get(accountId);
             task.put("account_name", accountName != null ? accountName : "Unknown");
         }
 
+        List<Area> listArea = areaDAO.findAll();
+        req.setAttribute("listArea", listArea);
 
+        List<Event> blockedEvents = eventDAO.getActiveOrPendingEvents();
+        req.setAttribute("blockedEvents", blockedEvents);
 
-        // Đặt attributes
         req.setAttribute("event", event);
         req.setAttribute("areaMap", areaMap);
         req.setAttribute("listAccount", listAccount);
@@ -125,10 +141,9 @@ public class EventDetail extends HttpServlet {
         String taskName = req.getParameter("taskName");
         String taskDescription = req.getParameter("taskDescription");
 
-
         TaskDAO taskDAO = new TaskDAO();
         boolean success = taskDAO.insertTaskDirect(taskName, eventId, taskDescription, accountId);
-        if(success) {
+        if (success) {
             System.out.println("Task added successfully");
             viewDetail(req, resp);
         }
@@ -137,34 +152,91 @@ public class EventDetail extends HttpServlet {
     protected void updateEvent(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Integer eventId = Integer.parseInt(req.getParameter("eventId"));
         String startDateStr = req.getParameter("start");
-        System.out.println(startDateStr);
+        String endDateStr = req.getParameter("end");
+        Integer area = Integer.parseInt(req.getParameter("area"));
+        String title = req.getParameter("title");
+        String description = req.getParameter("description");
 
+        // Parse dates
+        Date startDate = Date.valueOf(startDateStr.substring(0, 10));
+        Date endDate = Date.valueOf(endDateStr.substring(0, 10));
 
-            Date startDate = java.sql.Date.valueOf(startDateStr.substring(0, 10));
+        EventDAO eventDAO = new EventDAO();
+        Event event = eventDAO.findById(eventId);
+        Date startDateOld = event.getStart();
+        Date endDateOld = event.getEnd();
 
-            EventDAO eventDAO = new EventDAO();
-            Event event = eventDAO.findById(eventId);
-            Date startDateOld = event.getStart();
-            Date endDate = event.getEnd();
+        String error = null;
 
-            String error = null;
+        // Lấy ngày hiện tại - sử dụng java.util.Date
+        java.util.Date currentUtilDate = new java.util.Date();
+        Date currentDate = new Date(currentUtilDate.getTime());
 
-            if (startDate.before(startDateOld)) {
-                error = "Ngày bắt đầu mới phải muộn hơn ngày bắt đầu hiện tại";
-                req.setAttribute("error", error);
-                viewDetail(req, resp);
-            } else if (startDate.after(endDate)) {
-                error = "Ngày bắt đầu mới phải sớm hơn ngày kết thúc";
-                req.setAttribute("error", error);
-                viewDetail(req, resp);
-            } else if (startDate.equals(startDateOld)) {
-                error = "Ngày bắt đầu mới phải khác ngày bắt đầu hiện tại";
-                req.setAttribute("error", error);
-                viewDetail(req, resp);
-            }
-            if(eventDAO.updateStart(eventId, startDate)) {
-                viewDetail(req, resp);
-            }
+        // Validate 1: Ngày bắt đầu mới không được sớm hơn ngày cũ
+        if (startDate.before(startDateOld)) {
+            error = "Ngày bắt đầu mới phải muộn hơn hoặc bằng ngày bắt đầu hiện tại";
+            req.setAttribute("error", error);
+            viewDetail(req, resp);
+            return;
+        }
+
+        // Validate 2: Ngày bắt đầu không được sớm hơn ngày hiện tại
+        if (startDate.before(currentDate)) {
+            error = "Ngày bắt đầu không được ở trong quá khứ";
+            req.setAttribute("error", error);
+            viewDetail(req, resp);
+            return;
+        }
+
+        // Validate 3: Ngày bắt đầu phải sớm hơn ngày kết thúc
+        if (startDate.after(endDate)) {
+            error = "Ngày bắt đầu phải sớm hơn ngày kết thúc";
+            req.setAttribute("error", error);
+            viewDetail(req, resp);
+            return;
+        }
+
+        // Validate 4: Ngày kết thúc không được sớm hơn ngày kết thúc cũ
+        if (endDate.before(endDateOld)) {
+            error = "Ngày kết thúc mới phải muộn hơn hoặc bằng ngày kết thúc hiện tại";
+            req.setAttribute("error", error);
+            viewDetail(req, resp);
+            return;
+        }
+
+        // Validate 5: Kiểm tra khoảng cách tối thiểu giữa start và end (ít nhất 1 ngày)
+        long diffInMillies = Math.abs(endDate.getTime() - startDate.getTime());
+        long diffInDays = diffInMillies / (1000 * 60 * 60 * 24);
+        if (diffInDays < 1) {
+            error = "Sự kiện phải kéo dài ít nhất 1 ngày";
+            req.setAttribute("error", error);
+            viewDetail(req, resp);
+            return;
+        }
+
+        // Validate 6: Kiểm tra trùng lịch với sự kiện khác trong cùng địa điểm
+        if (eventDAO.hasOverlappingEvents(area, startDate, endDate, eventId)) {
+            error = "Địa điểm này đã có sự kiện khác trong khoảng thời gian này";
+            req.setAttribute("error", error);
+            viewDetail(req, resp);
+            return;
+        }
+
+        // Cập nhật thông tin
+        event.setTitle(title);
+        event.setArea_id(area);
+        event.setStart(startDate);
+        event.setEnd(endDate);
+        event.setDescription(description);
+
+        if (eventDAO.update(event)) {
+            req.setAttribute("success", "Cập nhật thành công!");
+            viewDetail(req, resp);
+        } else {
+            error = "Cập nhật thất bại!";
+            req.setAttribute("error", error);
+            viewDetail(req, resp);
+        }
     }
 
     protected void updateTask(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

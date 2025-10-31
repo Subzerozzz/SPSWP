@@ -299,6 +299,36 @@ public class TaskDAO extends DBContext implements I_DAO<Map<String, Object>> {
         return success;
     }
 
+    public boolean deleteTaskByEventId(Integer eventId) {
+        boolean success = false;
+        try {
+            connection = getConnection();
+            String countSql = "SELECT COUNT(*) FROM task WHERE event_id = ?";
+            statement = connection.prepareStatement(countSql);
+            statement.setInt(1, eventId);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                int count = resultSet.getInt(1);
+                if (count == 0) {
+                    success = true;
+                } else {
+                    String deleteSql = "DELETE FROM task WHERE event_id = ?";
+                    statement = connection.prepareStatement(deleteSql);
+                    statement.setInt(1, eventId);
+                    int rowsAffected = statement.executeUpdate();
+                    success = rowsAffected > 0;
+                }
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return success;
+    }
+
     // test nhanh
     public static void main(String[] args) {
         TaskDAO taskDAO = new TaskDAO();
