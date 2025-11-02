@@ -31,5 +31,4 @@ public class Club {
     private Integer category_id;
     private String status;
     private String logo_img;
-
 }

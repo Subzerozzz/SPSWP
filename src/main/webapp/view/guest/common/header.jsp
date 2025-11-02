@@ -72,7 +72,7 @@
 
               </li>
               <li>
-                <a href="#">Các câu lạc bộ</a>
+                <a href="${pageContext.request.contextPath}/clubsForHome?action=viewClubs">Các câu lạc bộ</a>
               </li>
               <li>
                 <a href="#">Sự kiện</a>
