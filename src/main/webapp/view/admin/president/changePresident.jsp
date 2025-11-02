@@ -56,7 +56,7 @@
                             </div>
 
                             <!-- Form đổi trưởng CLB -->
-                            <form action="" method="post">
+                            <form action="${pageContext.request.contextPath}/changePresident?action=changePresident" method="post">
                                 <div class="row">
                                     <!-- Thông tin CLB -->
                                     <div class="col-12 form-group">
@@ -65,14 +65,14 @@
 
                                     <div class="col-md-6 form-group">
                                         <label>Tên Câu Lạc Bộ</label>
-                                        <input type="text" class="form-control" readonly>
-                                        <input type="hidden" name="club_id">
+                                        <input type="text" class="form-control" value="${club.name}" readonly>
+                                        <input type="hidden" name="clubId" value=${club.id}>
                                     </div>
 
                                     <div class="col-md-6 form-group">
                                         <label>Trưởng CLB Hiện Tại</label>
-                                        <input type="text" class="form-control" readonly>
-                                        <input type="hidden" name="current_leader_id">
+                                        <input type="text" class="form-control" value="${account.fullname}" readonly>
+                                        <input type="hidden" name="accountId" value="${account.id}">
                                     </div>
 
                                     <!-- Thông tin trưởng CLB mới -->
@@ -82,24 +82,17 @@
 
                                     <div class="col-md-6 form-group">
                                         <label>Chọn Trưởng CLB Mới</label>
-                                        <select name="new_leader_id" class="form-control">
+                                        <select name="preNew" id="newLeaderSelect" class="form-control" onchange="showRole(this.value)">
                                             <option value="">-- Chọn thành viên --</option>
+                                            <c:forEach var="account" items="${listAccount}">
+                                                <option value="${account.id}">${account.fullname} - ${account.student_id}</option>
+                                            </c:forEach>
                                         </select>
                                     </div>
 
                                     <div class="col-md-6 form-group">
                                         <label>Vai trò hiện tại</label>
-                                        <input type="text" class="form-control" readonly>
-                                    </div>
-
-                                    <div class="col-md-6 form-group">
-                                        <label>Ngày bàn giao</label>
-                                        <input type="date" name="handover_date" class="form-control">
-                                    </div>
-
-                                    <div class="col-md-6 form-group">
-                                        <label>Thời gian bàn giao</label>
-                                        <input type="time" name="handover_time" class="form-control">
+                                        <input type="text" id="currentRole" class="form-control" readonly>
                                     </div>
 
                                     <!-- Lý do đổi trưởng -->
@@ -118,31 +111,9 @@
 
                                     <div class="col-12 form-group">
                                         <label>Mô tả chi tiết lý do</label>
-                                        <textarea name="reason_description" rows="4" class="form-control"
+                                        <textarea name="reason_description" rows="4" class="form-control" style="height:150px"
                                                   placeholder="Mô tả chi tiết lý do đổi trưởng CLB..."></textarea>
                                     </div>
-
-                                    <!-- Thông tin người đề xuất -->
-                                    <div class="col-12 form-group mt-4">
-                                        <h4 class="text-primary mb-3">Thông tin Người Đề Xuất</h4>
-                                    </div>
-
-                                    <div class="col-md-6 form-group">
-                                        <label>Người đề xuất</label>
-                                        <input type="text" class="form-control" readonly>
-                                        <input type="hidden" name="proposed_by">
-                                    </div>
-
-                                    <div class="col-md-6 form-group">
-                                        <label>Vai trò</label>
-                                        <input type="text" class="form-control" readonly>
-                                    </div>
-
-                                    <div class="col-md-6 form-group">
-                                        <label>Ngày đề xuất</label>
-                                        <input type="text" class="form-control" readonly>
-                                    </div>
-
                                     <!-- Xác nhận -->
                                     <div class="col-12 form-group mt-4">
                                         <div class="form-check">
@@ -151,6 +122,16 @@
                                                 Tôi xác nhận thông tin trên là chính xác
                                             </label>
                                         </div>
+                                    </div>
+
+                                    <div class="col-md-12 form-group">
+                                        <c:if test="${not empty successReq}">
+                                            <div class="alert alert-success">
+                                                <ul>
+                                                    <li><c:out value="${successReq}"/></li>
+                                                </ul>
+                                            </div>
+                                        </c:if>
                                     </div>
 
                                     <div class="col-12 form-group text-right mt-4">
@@ -174,4 +155,21 @@
         <script src="${pageContext.request.contextPath}/admin/js/bootstrap.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
     </body>
+    <script>
+                                            // Tạo map chứa role của từng account
+                                            const roleMap = {
+        <c:forEach var="account" items="${listAccount}">
+            ${account.id}: "${accountRoles[account.id]}",
+        </c:forEach>
+                                            };
+
+                                            function showRole(accountId) {
+                                                const roleInput = document.getElementById('currentRole');
+                                                if (accountId && roleMap[accountId]) {
+                                                    roleInput.value = roleMap[accountId];
+                                                } else {
+                                                    roleInput.value = '';
+                                                }
+                                            }
+    </script>
 </html>

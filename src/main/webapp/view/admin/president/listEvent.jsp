@@ -205,7 +205,7 @@
                                                                 <div class="dropdown-menu dropdown-menu-right">
 
                                                                     <a class="dropdown-item"
-                                                                       href="${pageContext.request.contextPath}/eventDetail?action=viewDetail&&eventId=${event.id}">
+                                                                       href="${pageContext.request.coantextPath}/eventDetail?action=viewDetail&&eventId=${event.id}">
                                                                         <i class="fas fa-cogs text-dark-pastel-green"></i>Quản lý
                                                                     </a>
                                                                     <c:if test="${event.status eq 'pending'}">
