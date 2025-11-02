@@ -312,17 +312,6 @@
                 var eventCreated = $(this).data('event-created');
                 var eventDescription = $(this).data('event-description');
 
-                console.log('Event Data:', {
-                    id: eventId,
-                    title: eventTitle,
-                    location: eventLocation,
-                    start: eventStart,
-                    end: eventEnd,
-                    status: eventStatus,
-                    created: eventCreated,
-                    description: eventDescription
-                });
-
                 // Định dạng trạng thái
                 var statusText = '';
                 var statusClass = '';
@@ -359,13 +348,38 @@
                     $('#modal-event-description').html('<em class="text-muted">Không có mô tả</em>');
                 }
 
-                // Lấy danh sách task từ taskMap (sử dụng JSP expression)
-                var taskMap = ${taskMap != null ? taskMap : '{}'};
-                var tasks = taskMap[eventId];
-
-                console.log('Tasks for event ' + eventId + ':', tasks);
+                // Lấy danh sách task từ taskMap - SỬA LẠI PHẦN NÀY
+                var tasks = getTasksForEvent(eventId);
 
                 // Hiển thị nhiệm vụ
+                displayTasks(tasks);
+            });
+
+            // Hàm lấy tasks theo eventId
+            function getTasksForEvent(eventId) {
+                // Sử dụng JSTL để tạo mảng JavaScript
+                var taskMap = {};
+                <c:forEach items="${taskMap}" var="entry">
+                    taskMap[${entry.key}] = [
+                        <c:forEach items="${entry.value}" var="task" varStatus="taskStatus">
+                            {
+                                id: ${task.id},
+                                event_id: ${task.event_id},
+                                name: "${task.name}",
+                                description: "${task.description}",
+                                account_id: ${task.account_id},
+                                account_name: "${task.account_name}",
+                                created_at: "${task.created_at}",
+                                updated_at: "${task.updated_at}"
+                            }<c:if test="${not taskStatus.last}">,</c:if>
+                        </c:forEach>
+                    ];
+                </c:forEach>
+                return taskMap[eventId] || [];
+            }
+
+            // Hàm hiển thị tasks
+            function displayTasks(tasks) {
                 var taskTableBody = $('#taskTableBody');
                 var noTasksMessage = $('#noTasksMessage');
                 var taskTable = $('#taskTable');
@@ -379,11 +393,11 @@
 
                     // Thêm từng task vào bảng
                     tasks.forEach(function(task) {
-                        var roleName = task.account_name || 'Chưa xác định';
+                        var taskName = task.name || 'Chưa xác định';  // Sửa taskName thành name
                         var taskDescription = task.description || 'Không có mô tả';
 
                         var row = '<tr>' +
-                                    '<td class="font-weight-bold">' + roleName + '</td>' +
+                                    '<td class="font-weight-bold">' + taskName + '</td>' +
                                     '<td>' + taskDescription + '</td>' +
                                   '</tr>';
                         taskTableBody.append(row);
@@ -392,7 +406,7 @@
                     taskTable.hide();
                     noTasksMessage.show();
                 }
-            });
+            }
         });
     </script>
 </body>
