@@ -303,7 +303,7 @@
                                             <a href="${pageContext.request.contextPath}/clubsForHome?action=viewClubs" class="back-button">
                                                 <i class="bi bi-arrow-left"></i>Quay lại
                                             </a>
-                                            <a href="${pageContext.request.contextPath}/club/join?id=${club.id}" class="join-button">
+                                            <a href="${pageContext.request.contextPath}/clubsForHome?action=join&clubId=${club.id}" class="join-button">
                                                 <i class="bi bi-person-plus"></i>Tham gia ngay
                                             </a>
                                         </div>
@@ -421,8 +421,6 @@
                                             </div>
                                         </c:forEach>
                                     </div>
-
-                                    
                                 </c:when>
                                 <c:otherwise>
                                     <div class="text-center py-4">

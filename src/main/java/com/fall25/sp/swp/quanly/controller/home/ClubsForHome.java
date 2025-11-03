@@ -1,7 +1,9 @@
 package com.fall25.sp.swp.quanly.controller.home;
 
+import com.fall25.sp.swp.quanly.config.GlobalConfig;
 import com.fall25.sp.swp.quanly.dal.implement.ClubDAO;
 import com.fall25.sp.swp.quanly.dal.implement.EventDAO;
+import com.fall25.sp.swp.quanly.entity.AccountClub;
 import com.fall25.sp.swp.quanly.entity.Club;
 import com.fall25.sp.swp.quanly.entity.Event;
 import jakarta.servlet.ServletException;
@@ -9,6 +11,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.List;
@@ -25,6 +28,9 @@ public class ClubsForHome extends HttpServlet {
                 break;
             case "viewDetail":
                 viewDetail(request, response);
+                break;
+            case "join":
+                joinclub(request, response);
                 break;
             default:
                 break;
@@ -46,6 +52,16 @@ public class ClubsForHome extends HttpServlet {
                 break;
             default:
                 throw new AssertionError();
+        }
+    }
+
+    protected void joinclub(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession(false);
+        AccountClub accountClub = (session != null) ? (AccountClub) session.getAttribute(GlobalConfig.SESSION_ACCOUNT_CLUB) : null;
+        if(accountClub == null){
+            req.getRequestDispatcher("view/guest/authen/login.jsp").forward(req,resp);
+        }else {
+            
         }
     }
 
