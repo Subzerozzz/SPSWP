@@ -57,7 +57,7 @@ public class EventServlet extends HttpServlet {
         request.setAttribute("listArea", listArea);
         request.setAttribute("areaMap", areaMap);
         request.setAttribute("clubMap", clubMap);
-        request.getRequestDispatcher("view/admin/president/listEvent.jsp").forward(request, response);
+        request.getRequestDispatcher("view/admin/manager/listEvent.jsp").forward(request, response);
     }
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
@@ -76,12 +76,9 @@ public class EventServlet extends HttpServlet {
         Event event = eventDAO.findById(eventId);
         String status = request.getParameter("status");
         event.setStatus(status);
-        if(eventDAO.update(event)){
+        if (eventDAO.update(event)) {
             viewList(request, response);
         }
     }
-
-
-
 
 }

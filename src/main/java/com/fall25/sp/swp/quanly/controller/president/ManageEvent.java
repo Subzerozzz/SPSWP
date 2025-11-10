@@ -54,7 +54,7 @@ public class ManageEvent extends HttpServlet {
                 areaMap.put(Integer.parseInt(area.getId()), area.getName());
             }
         }
-
+        System.out.println("den day");
         request.setAttribute("listEvent", listEvent);
         request.setAttribute("listArea", listArea);
         request.setAttribute("areaMap", areaMap); // Thêm areaMap vào request

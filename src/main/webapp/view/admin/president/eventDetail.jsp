@@ -333,6 +333,127 @@
                         <!-- Participants End Here -->
                     </div>
                     <!-- Members Section End Here -->
+                    <!-- Request Join Event Section Start Here -->
+                    <div class="row">
+                        <!-- Pending Requests Start Here -->
+                        <div class="col-lg-6">
+                            <div class="card height-auto">
+                                <div class="card-body">
+                                    <div class="heading-layout1">
+                                        <div class="item-title">
+                                            <h3>Danh sách xin tham gia sự kiện</h3>
+                                            <span class="badge badge-warning">${fn:length(pendingRequests)}</span>
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="table display data-table text-nowrap">
+                                            <thead>
+                                                <tr>
+                                                    <th>STT</th>
+                                                    <th>Họ tên</th>
+                                                    <th>Mã SV</th>
+                                                    <th>Ngày gửi</th>
+                                                    <th>Thao tác</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <c:if test="${not empty pendingRequests}">
+                                                    <c:forEach var="request" items="${pendingRequests}" varStatus="status">
+                                                        <c:set var="account" value="${requestAccountMap[request.id]}"/>
+                                                        <tr>
+                                                            <td>${status.index + 1}</td>
+                                                            <td>${account.fullname}</td>
+                                                            <td>${account.student_id}</td>
+                                                            <td>
+                                                                <fmt:formatDate value="${request.created_at}" pattern="dd/MM/yyyy HH:mm" />
+                                                            </td>
+                                                            <td>
+                                                                <div class="dropdown">
+                                                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                                                        <span class="flaticon-more-button-of-three-dots"></span>
+                                                                    </a>
+                                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                                        <a class="dropdown-item" href="#"
+                                                                           onclick="showRequestDetail(${request.id}, '${account.fullname}', '${account.student_id}', '${account.email}', '${account.phone}', 'pending')">
+                                                                            <i class="fas fa-eye text-dark-pastel-green"></i>Xem chi tiết
+                                                                        </a>
+                                                                        <a class="dropdown-item" href="${pageContext.request.contextPath}/eventDetail?action=approveRequest&requestId=${request.id}&eventId=${event.id}">
+                                                                            <i class="fas fa-check text-success"></i>Duyệt
+                                                                        </a>
+                                                                        <a class="dropdown-item" href="${pageContext.request.contextPath}/eventDetail?action=rejectRequest&requestId=${request.id}&eventId=${event.id}">
+                                                                            <i class="fas fa-times text-danger"></i>Từ chối
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </c:forEach>
+                                                </c:if>
+                                                <c:if test="${empty pendingRequests}">
+                                                    <tr>
+                                                        <td colspan="5" class="text-center">Không có yêu cầu tham gia nào đang chờ duyệt</td>
+                                                    </tr>
+                                                </c:if>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Pending Requests End Here -->
+
+                        <!-- Approved Requests Start Here -->
+                        <div class="col-lg-6">
+                            <div class="card height-auto">
+                                <div class="card-body">
+                                    <div class="heading-layout1">
+                                        <div class="item-title">
+                                            <h3>Đã duyệt tham gia sự kiện</h3>
+                                            <span class="badge badge-success">${fn:length(approvedRequests)}</span>
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="table display data-table text-nowrap">
+                                            <thead>
+                                                <tr>
+                                                    <th>STT</th>
+                                                    <th>Họ tên</th>
+                                                    <th>Mã SV</th>
+                                                    <th>Ngày duyệt</th>
+                                                    <th>Trạng thái</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <c:if test="${not empty approvedRequests}">
+                                                    <c:forEach var="request" items="${approvedRequests}" varStatus="status">
+                                                        <c:set var="account" value="${requestAccountMap[request.id]}"/>
+                                                        <tr>
+                                                            <td>${status.index + 1}</td>
+                                                            <td>${account.fullname}</td>
+                                                            <td>${account.student_id}</td>
+                                                            <td>
+                                                                <fmt:formatDate value="${request.created_at}" pattern="dd/MM/yyyy HH:mm" />
+                                                            </td>
+                                                            <td>
+                                                                <span class="badge badge-success">Đã duyệt</span>
+                                                            </td>
+                                                        </tr>
+                                                    </c:forEach>
+                                                </c:if>
+                                                <c:if test="${empty approvedRequests}">
+                                                    <tr>
+                                                        <td colspan="5" class="text-center">Chưa có yêu cầu nào được duyệt</td>
+                                                    </tr>
+                                                </c:if>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Approved Requests End Here -->
+                    </div>
+                    <!-- Request Join Event Section End Here -->
                 </div>
             </div>
             <!-- Page Area End Here -->
@@ -405,6 +526,44 @@
                 </div>
             </div>
         </div>
+        <!-- Modal Chi Tiết Request -->
+        <div class="modal fade" id="requestDetailModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Chi tiết yêu cầu tham gia</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label><strong>Họ và tên:</strong></label>
+                            <p id="modalFullname"></p>
+                        </div>
+                        <div class="form-group">
+                            <label><strong>Mã sinh viên:</strong></label>
+                            <p id="modalStudentId"></p>
+                        </div>
+                        <div class="form-group">
+                            <label><strong>Email:</strong></label>
+                            <p id="modalEmail"></p>
+                        </div>
+                        <div class="form-group">
+                            <label><strong>Số điện thoại:</strong></label>
+                            <p id="modalPhone"></p>
+                        </div>
+                        <div class="form-group">
+                            <label><strong>Trạng thái:</strong></label>
+                            <p id="modalStatus"></p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- jquery-->
         <script src="${pageContext.request.contextPath}/admin/js/jquery-3.3.1.min.js"></script>
@@ -434,6 +593,30 @@
                                                                                        document.getElementById('editTaskName').value = taskName;
                                                                                        document.getElementById('editTaskDescription').value = taskDescription;
                                                                                        $('#editModal').modal('show');
+                                                                                   }
+
+                                                                                   // Hiển thị chi tiết request
+                                                                                   function showRequestDetail(requestId, fullname, studentId, email, phone, status) {
+                                                                                       document.getElementById('modalFullname').textContent = fullname || 'Chưa có thông tin';
+                                                                                       document.getElementById('modalStudentId').textContent = studentId || 'Chưa có thông tin';
+                                                                                       document.getElementById('modalEmail').textContent = email || 'Chưa có thông tin';
+                                                                                       document.getElementById('modalPhone').textContent = phone || 'Chưa có thông tin';
+
+                                                                                       var statusText = '';
+                                                                                       var statusClass = '';
+                                                                                       if (status === 'pending') {
+                                                                                           statusText = 'Chờ duyệt';
+                                                                                           statusClass = 'badge badge-warning';
+                                                                                       } else if (status === 'active') {
+                                                                                           statusText = 'Đã duyệt';
+                                                                                           statusClass = 'badge badge-success';
+                                                                                       } else {
+                                                                                           statusText = status;
+                                                                                           statusClass = 'badge badge-secondary';
+                                                                                       }
+
+                                                                                       document.getElementById('modalStatus').innerHTML = '<span class="' + statusClass + '">' + statusText + '</span>';
+                                                                                       $('#requestDetailModal').modal('show');
                                                                                    }
         </script>
         <script>

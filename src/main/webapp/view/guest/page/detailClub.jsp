@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,6 +17,8 @@
         <link rel="stylesheet" href="${pageContext.request.contextPath}/guest/assets/css/bootstrap-icons.css">
         <!-- Custom CSS -->
         <link rel="stylesheet" href="${pageContext.request.contextPath}/guest/assets/css/style.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
 
         <style>
             .club-detail-section {
@@ -196,6 +199,64 @@
                 margin-bottom: 10px;
             }
 
+            .event-card {
+                border: 1px solid #e9ecef;
+                border-radius: 15px;
+                padding: 20px;
+                background: white;
+                transition: all 0.3s ease;
+                height: 100%;
+            }
+
+            .event-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            }
+
+            .event-status-badge {
+                font-size: 12px;
+                padding: 4px 12px;
+                border-radius: 12px;
+            }
+
+            .modal-event-image {
+                width: 100%;
+                height: 200px;
+                object-fit: cover;
+                border-radius: 10px;
+                margin-bottom: 15px;
+            }
+
+            .event-detail-item {
+                margin-bottom: 10px;
+                display: flex;
+                align-items: flex-start;
+            }
+
+            .event-detail-label {
+                font-weight: 600;
+                color: #2c3e50;
+                min-width: 120px;
+            }
+
+            .event-detail-value {
+                color: #6c757d;
+                flex: 1;
+            }
+
+            .event-image-placeholder {
+                width: 100%;
+                height: 200px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 18px;
+                margin-bottom: 15px;
+            }
+
             @media (max-width: 768px) {
                 .club-detail-section {
                     padding: 40px 0;
@@ -235,6 +296,15 @@
                 .detail-label {
                     min-width: auto;
                 }
+
+                .event-detail-item {
+                    flex-direction: column;
+                    gap: 5px;
+                }
+
+                .event-detail-label {
+                    min-width: auto;
+                }
             }
         </style>
     </head>
@@ -263,7 +333,7 @@
                                                      onerror="this.src='${pageContext.request.contextPath}/guest/assets/images/club-default.png'">
                                             </c:when>
                                             <c:otherwise>
-                                                <img src="${pageContext.request.contextPath}/guest/assets/images/club-default.png" 
+                                                <img src="${pageContext.request.contextPath}/guest/assets/images/club-default.png"
                                                      alt="${club.name}">
                                             </c:otherwise>
                                         </c:choose>
@@ -303,7 +373,7 @@
                                             <a href="${pageContext.request.contextPath}/clubsForHome?action=viewClubs" class="back-button">
                                                 <i class="bi bi-arrow-left"></i>Quay lại
                                             </a>
-                                            <a href="${pageContext.request.contextPath}/clubsForHome?action=join&clubId=${club.id}" class="join-button">
+                                            <a href="${pageContext.request.contextPath}/clubsForHome?action=joinClub&clubId=${club.id}" class="join-button">
                                                 <i class="bi bi-person-plus"></i>Tham gia ngay
                                             </a>
                                         </div>
@@ -363,7 +433,7 @@
                             </c:if>
                         </div>
 
-                        <!-- Additional Information Section -->
+                        <!-- Events Section -->
                         <div class="club-content">
                             <h3 class="section-title">Hoạt động & Sự kiện</h3>
 
@@ -371,19 +441,28 @@
                                 <c:when test="${not empty eventList}">
                                     <div class="row">
                                         <c:forEach var="event" items="${eventList}">
+                                            <c:set var="today" value="<%= new java.util.Date() %>" />
+                                            <c:set var="eventStatus">
+                                                <c:choose>
+                                                    <c:when test="${today < event.start}">pending</c:when>
+                                                    <c:when test="${today >= event.start && today <= event.end}">active</c:when>
+                                                    <c:when test="${today > event.end}">completed</c:when>
+                                                    <c:otherwise>${event.status}</c:otherwise>
+                                                </c:choose>
+                                            </c:set>
+
                                             <div class="col-lg-6 col-md-12 mb-4">
-                                                <div class="event-card" style="border: 1px solid #e9ecef; border-radius: 10px; padding: 20px; background: #f8f9fa;">
-                                                    <div class="event-header" style="display: flex; justify-content: between; align-items: start; margin-bottom: 15px;">
+                                                <div class="event-card">
+                                                    <div class="event-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
                                                         <h5 class="event-title" style="font-weight: 600; color: #2c3e50; margin: 0; flex: 1;">
                                                             ${event.title}
                                                         </h5>
-                                                        <span class="event-status badge ${event.status eq 'active' ? 'bg-success' : event.status eq 'pending' ? 'bg-warning' : 'bg-secondary'}"
-                                                              style="font-size: 12px; margin-left: 10px;">
+                                                        <span class="event-status-badge badge ${eventStatus eq 'active' ? 'bg-success' : eventStatus eq 'pending' ? 'bg-warning' : 'bg-secondary'}">
                                                             <c:choose>
-                                                                <c:when test="${event.status eq 'active'}">Đang diễn ra</c:when>
-                                                                <c:when test="${event.status eq 'pending'}">Sắp diễn ra</c:when>
-                                                                <c:when test="${event.status eq 'completed'}">Đã kết thúc</c:when>
-                                                                <c:otherwise>${event.status}</c:otherwise>
+                                                                <c:when test="${eventStatus eq 'active'}">Đang diễn ra</c:when>
+                                                                <c:when test="${eventStatus eq 'pending'}">Sắp diễn ra</c:when>
+                                                                <c:when test="${eventStatus eq 'completed'}">Đã kết thúc</c:when>
+                                                                <c:otherwise>${eventStatus}</c:otherwise>
                                                             </c:choose>
                                                         </span>
                                                     </div>
@@ -391,7 +470,7 @@
                                                     <div class="event-description" style="color: #6c757d; font-size: 14px; margin-bottom: 15px; line-height: 1.5;">
                                                         <c:choose>
                                                             <c:when test="${not empty event.description}">
-                                                                ${event.description}
+                                                                ${fn:substring(event.description, 0, 100)}...
                                                             </c:when>
                                                             <c:otherwise>
                                                                 Sự kiện đặc biệt của câu lạc bộ.
@@ -407,15 +486,22 @@
                                                                 - <fmt:formatDate value="${event.end}" pattern="dd/MM/yyyy" />
                                                             </c:if>
                                                         </div>
-
                                                     </div>
 
                                                     <div class="event-actions" style="margin-top: 15px; text-align: right;">
-                                                        <a href="${pageContext.request.contextPath}/event/detail?id=${event.id}"
-                                                           class="btn btn-sm btn-outline-primary"
-                                                           style="text-decoration: none; padding: 5px 15px; border-radius: 15px; font-size: 12px;">
+                                                        <button type="button" class="btn btn-sm btn-outline-primary view-event-detail"
+                                                                data-event-id="${event.id}"
+                                                                data-event-title="${event.title}"
+                                                                data-event-description="${event.description}"
+                                                                data-event-start="<fmt:formatDate value="${event.start}" pattern="dd/MM/yyyy" />"
+                                                                data-event-end="<fmt:formatDate value="${event.end}" pattern="dd/MM/yyyy" />"
+                                                                data-club-id="${club.id}"
+                                                                data-event-status="${eventStatus}"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#eventDetailModal"
+                                                                style="padding: 5px 15px; border-radius: 15px; font-size: 12px;">
                                                             <i class="bi bi-eye me-1"></i>Chi tiết
-                                                        </a>
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -450,6 +536,50 @@
             </div>
         </div>
 
+        <!-- Event Detail Modal -->
+        <div class="modal fade" id="eventDetailModal" tabindex="-1" aria-labelledby="eventDetailModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="eventDetailModalLabel">Chi tiết sự kiện</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="event-image-placeholder">
+                            <i class="bi bi-calendar-event" style="font-size: 48px;"></i>
+                        </div>
+
+                        <div class="mb-3">
+                            <span class="badge event-status-badge" id="modalEventStatus">Trạng thái</span>
+                        </div>
+
+                        <h4 id="modalEventTitle" class="mb-3" style="color: #2c3e50;"></h4>
+
+                        <div class="event-detail-item">
+                            <span class="event-detail-label"><i class="bi bi-calendar-event"></i> Ngày bắt đầu:</span>
+                            <span class="event-detail-value" id="modalEventStart"></span>
+                        </div>
+
+                        <div class="event-detail-item">
+                            <span class="event-detail-label"><i class="bi bi-calendar-check"></i> Ngày kết thúc:</span>
+                            <span class="event-detail-value" id="modalEventEnd"></span>
+                        </div>
+
+                        <div class="event-detail-item">
+                            <span class="event-detail-label"><i class="bi bi-card-text"></i> Mô tả:</span>
+                            <span class="event-detail-value" id="modalEventDescription"></span>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        <button type="button" class="btn btn-primary" id="joinEventBtn" style="display: none;">
+                            <i class="bi bi-person-plus"></i> Đăng ký tham gia
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Footer -->
         <jsp:include page="../common/footer.jsp"></jsp:include>
 
@@ -457,5 +587,150 @@
             <script src="${pageContext.request.contextPath}/guest/assets/js/jquery-3.6.0.min.js"></script>
         <script src="${pageContext.request.contextPath}/guest/assets/js/bootstrap.bundle.min.js"></script>
 
+        <script>
+            $(document).ready(function () {
+                // Xử lý khi click vào nút xem chi tiết sự kiện
+                $('.view-event-detail').on('click', function () {
+                    const eventId = $(this).data('event-id');
+                    const eventTitle = $(this).data('event-title');
+                    const eventDescription = $(this).data('event-description');
+                    const eventStart = $(this).data('event-start');
+                    const eventEnd = $(this).data('event-end');
+                    const eventStatus = $(this).data('event-status');
+                    const clubId = $(this).data('club-id'); // LẤY CLUB ID
+
+                    // Đổ dữ liệu vào modal
+                    $('#modalEventTitle').text(eventTitle);
+                    $('#modalEventDescription').text(eventDescription);
+                    $('#modalEventStart').text(eventStart);
+                    $('#modalEventEnd').text(eventEnd);
+
+                    // Xử lý trạng thái sự kiện
+                    let statusText = '';
+                    let statusClass = '';
+                    let showJoinButton = false;
+
+                    switch (eventStatus) {
+                        case 'pending':
+                            statusText = 'Sắp diễn ra';
+                            statusClass = 'bg-warning';
+                            showJoinButton = true;
+                            break;
+                        case 'active':
+                            statusText = 'Đang diễn ra';
+                            statusClass = 'bg-success';
+                            showJoinButton = false;
+                            break;
+                        case 'completed':
+                            statusText = 'Đã kết thúc';
+                            statusClass = 'bg-secondary';
+                            showJoinButton = false;
+                            break;
+                        default:
+                            statusText = 'Không xác định';
+                            statusClass = 'bg-secondary';
+                            showJoinButton = false;
+                    }
+
+                    $('#modalEventStatus').text(statusText).removeClass().addClass('badge ' + statusClass + ' event-status-badge');
+
+                    // Hiển thị/ẩn nút đăng ký
+                    const joinEventBtn = $('#joinEventBtn');
+                    if (showJoinButton) {
+                        joinEventBtn.show();
+                        // Xử lý sự kiện click cho nút đăng ký
+                        joinEventBtn.off('click').on('click', function () {
+                            if (confirm('Bạn có chắc chắn muốn đăng ký tham gia sự kiện "' + eventTitle + '" không?')) {
+                                // Gửi request đến servlet để đăng ký với cả eventId và clubId
+                                window.location.href = '${pageContext.request.contextPath}/clubsForHome?action=joinEvent&eventId=' + eventId + '&clubId=' + clubId;
+                            }
+                        });
+                    } else {
+                        joinEventBtn.hide();
+                    }
+                });
+
+                // Reset modal khi đóng
+                $('#eventDetailModal').on('hidden.bs.modal', function () {
+                    $('#modalEventTitle').text('');
+                    $('#modalEventDescription').text('');
+                    $('#modalEventStart').text('');
+                    $('#modalEventEnd').text('');
+                    $('#modalEventStatus').text('').removeClass();
+                    $('#joinEventBtn').hide();
+                });
+            });
+        </script>
+        <c:if test="${not empty message}">
+            <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                <c:choose>
+                    <c:when test="${success == true}">
+                    iziToast.success({
+                        title: "Thành công",
+                        message: "${message}",
+                        position: 'topRight',
+                        timeout: 5000
+                    });
+                    </c:when>
+                    <c:when test="${success == false}">
+                    iziToast.error({
+                        title: "Lỗi",
+                        message: "${message}",
+                        position: 'topRight',
+                        timeout: 5000
+                    });
+                    </c:when>
+                    <c:otherwise>
+                    iziToast.info({
+                        title: "Thông báo",
+                        message: "${message}",
+                        position: 'topRight',
+                        timeout: 5000
+                    });
+                    </c:otherwise>
+                </c:choose>
+                });
+            </script>
+            <%
+                session.removeAttribute("success");
+                session.removeAttribute("message");
+            %>
+        </c:if>
+
+        <!-- Thông báo đăng ký thành công -->
+        <c:if test="${joinSuccess == true}">
+            <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                    iziToast.success({
+                        title: "Đăng ký tham gia CLB thành công",
+                        message: "${message}",
+                        position: 'topRight',
+                        timeout: 5000
+                    });
+                });
+            </script>
+            <%
+                session.removeAttribute("joinSuccess");
+                session.removeAttribute("message");
+            %>
+        </c:if>
+            
+            <c:if test="${joinSuccess == false}">
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                iziToast.error({
+                    title: "Bạn đã đăng ký tham gia CLB này rồi , đang chờ duyệt !",
+                    message: "${message}",
+                    position: 'topRight',
+                    timeout: 5000
+                });
+            });
+        </script>
+        <% 
+            session.removeAttribute("joinSuccess"); 
+            session.removeAttribute("message"); 
+        %>
+    </c:if>
     </body>
 </html>

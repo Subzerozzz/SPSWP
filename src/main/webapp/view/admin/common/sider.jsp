@@ -33,10 +33,10 @@
 
                     <c:choose>
                         <c:when test="${sessionScope.account_club.role == 'member'}">
-                        <li class="nav-item sidebar-nav-item">
-                                                        <a href="${pageContext.request.contextPath}/memberTask" class="nav-link"><i
-                                                                class="flaticon-multiple-users-silhouette"></i><span>Danh sách sự kiện và nhiệm vụ</span></a>
-                                                    </li>
+                            <li class="nav-item sidebar-nav-item">
+                                <a href="${pageContext.request.contextPath}/memberTask" class="nav-link"><i
+                                        class="flaticon-multiple-users-silhouette"></i><span>Danh sách sự kiện và nhiệm vụ</span></a>
+                            </li>
                             <li class="nav-item sidebar-nav-item">
                                 <a href="${pageContext.request.contextPath}/outClub" class="nav-link"><i
                                         class="flaticon-multiple-users-silhouette"></i><span>Rời câu lạc bộ</span></a>
@@ -84,6 +84,11 @@
                                 <a href="${pageContext.request.contextPath}/manageEvent?action=view" class="nav-link"><i class="fa-solid fa-calendar"></i>
                                     <span>Danh sách sự kiện</span></a>
                             </li>
+                            <li class="nav-item sidebar-nav-item">
+                                <a href="${pageContext.request.contextPath}/joinClub?action=view" class="nav-link"><i class="fa-solid fa-calendar"></i>
+                                    <span>Yêu cầu tham gia CLB</span></a>
+                            </li>
+
                             <li class="nav-item sidebar-nav-item">
                                 <a href="${pageContext.request.contextPath}/changePresident?action=view" class="nav-link"><i class="fa-solid fa-calendar"></i>
                                     <span>Yêu cầu đổi trưởng CLB</span></a>

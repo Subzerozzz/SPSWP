@@ -31,11 +31,22 @@ public class EventDetail extends HttpServlet {
             case "deleteTask":
                 deleteTask(req, resp);
                 break;
+            case "approveRequest":
+                approveRequest(req, resp);
+                break;
             default:
                 req.getRequestDispatcher("view/admin/president/eventDetail.jsp").forward(req, resp);
                 break;
         }
 
+    }
+
+    protected void approveRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Integer requestId = Integer.parseInt(req.getParameter("requestId"));
+        boolean rl = new RequestJoinEventDAO().updateStatus(requestId,"active");
+        if (rl){
+            viewDetail(req, resp);
+        }
     }
     
     protected void deleteTask(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -108,13 +119,44 @@ public class EventDetail extends HttpServlet {
         List<Event> blockedEvents = eventDAO.getActiveOrPendingEvents();
         req.setAttribute("blockedEvents", blockedEvents);
 
+        // Lấy danh sách request join event
+        RequestJoinEventDAO requestJoinEventDAO = new RequestJoinEventDAO();
+        List<RequestJoinEvent> listJoinEvent = requestJoinEventDAO.findByEventId(eventId);
+
+        // Tạo map để liên kết request với account
+        Map<Integer, Account> requestAccountMap = new HashMap<>();
+        Map<Integer, RequestJoinEvent> requestMap = new HashMap<>();
+
+        // Phân loại request theo status
+        List<RequestJoinEvent> pendingRequests = new ArrayList<>();
+        List<RequestJoinEvent> approvedRequests = new ArrayList<>();
+
+        for (RequestJoinEvent request : listJoinEvent) {
+            Account acc = accountDAO.findById(request.getAccountId());
+            if (acc != null) {
+                requestAccountMap.put(request.getId(), acc);
+                requestMap.put(request.getId(), request);
+
+                // Phân loại theo status
+                if ("pending".equals(request.getStatus())) {
+                    pendingRequests.add(request);
+                } else if ("active".equals(request.getStatus())) {
+                    approvedRequests.add(request);
+                }
+            }
+        }
+
         req.setAttribute("event", event);
         req.setAttribute("areaMap", areaMap);
         req.setAttribute("listAccount", listAccount);
         req.setAttribute("accountRoles", accountRoles);
         req.setAttribute("tasks", tasks);
-        req.getRequestDispatcher("view/admin/president/eventDetail.jsp").forward(req, resp);
+        req.setAttribute("pendingRequests", pendingRequests);
+        req.setAttribute("approvedRequests", approvedRequests);
+        req.setAttribute("requestAccountMap", requestAccountMap);
+        req.setAttribute("requestMap", requestMap);
 
+        req.getRequestDispatcher("view/admin/president/eventDetail.jsp").forward(req, resp);
     }
 
     @Override
