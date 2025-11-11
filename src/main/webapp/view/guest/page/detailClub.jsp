@@ -489,13 +489,19 @@
                                                     </div>
 
                                                     <div class="event-actions" style="margin-top: 15px; text-align: right;">
+                                                        <c:if test="${eventStatus eq 'pending'}">
+                                                            <a href="${pageContext.request.contextPath}/clubsForHome?action=joinEvent&eventId=${event.id}&clubId=${club.id}"
+                                                               class="btn btn-sm btn-primary join-event-btn"
+                                                               style="padding: 5px 15px; border-radius: 15px; font-size: 12px;">
+                                                                <i class="bi bi-person-plus me-1"></i>Đăng ký tham gia
+                                                            </a>
+                                                        </c:if>
                                                         <button type="button" class="btn btn-sm btn-outline-primary view-event-detail"
                                                                 data-event-id="${event.id}"
                                                                 data-event-title="${event.title}"
                                                                 data-event-description="${event.description}"
                                                                 data-event-start="<fmt:formatDate value="${event.start}" pattern="dd/MM/yyyy" />"
                                                                 data-event-end="<fmt:formatDate value="${event.end}" pattern="dd/MM/yyyy" />"
-                                                                data-club-id="${club.id}"
                                                                 data-event-status="${eventStatus}"
                                                                 data-bs-toggle="modal"
                                                                 data-bs-target="#eventDetailModal"
@@ -572,9 +578,6 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                        <button type="button" class="btn btn-primary" id="joinEventBtn" style="display: none;">
-                            <i class="bi bi-person-plus"></i> Đăng ký tham gia
-                        </button>
                     </div>
                 </div>
             </div>
@@ -597,7 +600,6 @@
                     const eventStart = $(this).data('event-start');
                     const eventEnd = $(this).data('event-end');
                     const eventStatus = $(this).data('event-status');
-                    const clubId = $(this).data('club-id'); // LẤY CLUB ID
 
                     // Đổ dữ liệu vào modal
                     $('#modalEventTitle').text(eventTitle);
@@ -608,46 +610,26 @@
                     // Xử lý trạng thái sự kiện
                     let statusText = '';
                     let statusClass = '';
-                    let showJoinButton = false;
 
                     switch (eventStatus) {
                         case 'pending':
                             statusText = 'Sắp diễn ra';
                             statusClass = 'bg-warning';
-                            showJoinButton = true;
                             break;
                         case 'active':
                             statusText = 'Đang diễn ra';
                             statusClass = 'bg-success';
-                            showJoinButton = false;
                             break;
                         case 'completed':
                             statusText = 'Đã kết thúc';
                             statusClass = 'bg-secondary';
-                            showJoinButton = false;
                             break;
                         default:
                             statusText = 'Không xác định';
                             statusClass = 'bg-secondary';
-                            showJoinButton = false;
                     }
 
                     $('#modalEventStatus').text(statusText).removeClass().addClass('badge ' + statusClass + ' event-status-badge');
-
-                    // Hiển thị/ẩn nút đăng ký
-                    const joinEventBtn = $('#joinEventBtn');
-                    if (showJoinButton) {
-                        joinEventBtn.show();
-                        // Xử lý sự kiện click cho nút đăng ký
-                        joinEventBtn.off('click').on('click', function () {
-                            if (confirm('Bạn có chắc chắn muốn đăng ký tham gia sự kiện "' + eventTitle + '" không?')) {
-                                // Gửi request đến servlet để đăng ký với cả eventId và clubId
-                                window.location.href = '${pageContext.request.contextPath}/clubsForHome?action=joinEvent&eventId=' + eventId + '&clubId=' + clubId;
-                            }
-                        });
-                    } else {
-                        joinEventBtn.hide();
-                    }
                 });
 
                 // Reset modal khi đóng
@@ -657,7 +639,6 @@
                     $('#modalEventStart').text('');
                     $('#modalEventEnd').text('');
                     $('#modalEventStatus').text('').removeClass();
-                    $('#joinEventBtn').hide();
                 });
             });
         </script>
@@ -715,6 +696,23 @@
                 session.removeAttribute("message");
             %>
         </c:if>
+
+        <c:if test="${joinEvent == true}">
+                    <script>
+                        document.addEventListener("DOMContentLoaded", () => {
+                            iziToast.success({
+                                title: "Đăng ký tham gia sự kiện thành công",
+                                message: "${message}",
+                                position: 'topRight',
+                                timeout: 5000
+                            });
+                        });
+                    </script>
+                    <%
+                        session.removeAttribute("joinEvent");
+                        session.removeAttribute("message");
+                    %>
+                </c:if>
             
             <c:if test="${joinSuccess == false}">
         <script>

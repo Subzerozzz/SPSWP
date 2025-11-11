@@ -1,10 +1,7 @@
 package com.fall25.sp.swp.quanly.controller.home;
 
 import com.fall25.sp.swp.quanly.config.GlobalConfig;
-import com.fall25.sp.swp.quanly.dal.implement.AccountDAO;
-import com.fall25.sp.swp.quanly.dal.implement.ClubDAO;
-import com.fall25.sp.swp.quanly.dal.implement.EventDAO;
-import com.fall25.sp.swp.quanly.dal.implement.RequestJoinClubDAO;
+import com.fall25.sp.swp.quanly.dal.implement.*;
 import com.fall25.sp.swp.quanly.entity.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -48,7 +45,18 @@ public class ClubsForHome extends HttpServlet {
         if (accountClub == null) {
             request.getRequestDispatcher("view/guest/authen/login.jsp").forward(request, response);
         } else {
-
+            RequestJoinEventDAO  requestJoinEventDAO = new RequestJoinEventDAO();
+            Integer eventId = Integer.parseInt(request.getParameter("eventId"));
+            System.out.println(eventId);
+            System.out.println(accountClub.getAccount_id());
+            Integer accountId = accountClub.getAccount_id();
+            RequestJoinEvent requestJoinEvent = new RequestJoinEvent();
+            requestJoinEvent.setAccountId(accountId);
+            requestJoinEvent.setEventId(eventId);
+            requestJoinEvent.setStatus("pending");
+            requestJoinEventDAO.insert(requestJoinEvent);
+            request.setAttribute("joinEvent", true);
+            viewDetail(request, response);
         }
     }
 
