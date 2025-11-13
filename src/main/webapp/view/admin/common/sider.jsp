@@ -31,6 +31,7 @@
                                 class="flaticon-classmates"></i><span>Change Password</span></a>
                     </li>
 
+
                     <c:choose>
                         <c:when test="${sessionScope.account_club.role == 'member'}">
                             <li class="nav-item sidebar-nav-item">
@@ -95,6 +96,10 @@
                             </li>
                         </c:when>
                     </c:choose>
+                    <li class="nav-item sidebar-nav-item">
+                                            <a href="${pageContext.request.contextPath}/myRequest?action=view" class="nav-link"><i
+                                                    class="flaticon-classmates"></i><span>Yêu cầu của tôi</span></a>
+                                        </li>
 
 
                     <!--            <li class="nav-item sidebar-nav-item">
